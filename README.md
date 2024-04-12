@@ -1,6 +1,6 @@
-# PSModuleTemplate
+# Sodium
 
-A PowerShell module template that can be used to create new modules.
+A PowerShell module for handling Sodium enchrypted secrets.
 
 ## Prerequisites
 
@@ -12,42 +12,30 @@ This uses the following external resources:
 To install the module from the PowerShell Gallery, you can use the following command:
 
 ```powershell
-Install-PSResource -Name YourModuleName
-Import-Module -Name YourModuleName
+Install-PSResource -Name Sodium
+Import-Module -Name Sodium
 ```
 
 ## Usage
 
 Here is a list of example that are typical use cases for the module.
 
-### Example 1: Greet an entity
-
-Provide examples for typical commands that a user would like to do with the module.
+### Example 1: Convert a string to a Sodium encrypted secret
 
 ```powershell
-Greet-Entity -Name 'World'
-Hello, World!
+$secret = "123456"
+$encryptedSecret = $secret | ConvertTo-SodiumSecret
 ```
 
-### Example 2
-
-Provide examples for typical commands that a user would like to do with the module.
+### Example 2: Convert a Sodium encrypted secret to a string
 
 ```powershell
-Import-Module -Name PSModuleTemplate
+$encryptedSecret = "..."
+$secret = $encryptedSecret | ConvertFrom-SodiumSecret
+Write-Host $secret
+
+123456
 ```
-
-### Find more examples
-
-To find more examples of how to use the module, please refer to the [examples](examples) folder.
-
-Alternatively, you can use the Get-Command -Module 'This module' to find more commands that are available in the module.
-To find examples of each of the commands you can use Get-Help -Examples 'CommandName'.
-
-## Documentation
-
-Link to further documentation if available, or describe where in the repository users can find more detailed documentation about
-the module's functions and features.
 
 ## Contributing
 
