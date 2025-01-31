@@ -7,7 +7,7 @@ namespace PSModule.Sodium.Isolated
     {
         public static (byte[] PublicKey, byte[] PrivateKey) GenerateKeyPair()
         {
-            return PublicKeyBox.GenerateKeyPair();
+            return global::Sodium.PublicKeyBox.GenerateKeyPair();
         }
     }
 }

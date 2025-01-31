@@ -7,12 +7,12 @@ namespace PSModule.Sodium.Isolated
     {
         public static byte[] Create(byte[] secret, byte[] publicKey)
         {
-            return SealedPublicKeyBox.Create(secret, publicKey);
+            return global::Sodium.SealedPublicKeyBox.Create(secret, publicKey);
         }
 
         public static byte[] Open(byte[] cipher, byte[] publicKey, byte[] secretKey)
         {
-            return SealedPublicKeyBox.Open(cipher, publicKey, secretKey);
+            return global::Sodium.SealedPublicKeyBox.Open(cipher, publicKey, secretKey);
         }
     }
 }
