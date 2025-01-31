@@ -2,20 +2,20 @@
     Context "Function 'ConvertTo-SealedPublicKeyBox'" {
         It 'Encrypts and decrypts a secret correctly using SodiumEncryptedString' {
             # Generate a key pair
-            $keyPair = [Sodium.PublicKeyBox]::GenerateKeyPair()
-            $publicKeyBase64 = [System.Convert]::ToBase64String($keyPair.PublicKey)
-            $privateKeyBase64 = [System.Convert]::ToBase64String($keyPair.PrivateKey)
+            $keyPair = New-SodiumKeyPair
+            $publicKey = $keyPair.PublicKey
+            $privateKey = $keyPair.PrivateKey
 
             # Define a secret to test
             $secret = 'Hello world!'
 
-            $encryptedString = ConvertTo-SodiumEncryptedString -Secret $secret -PublicKey $publicKeyBase64
+            $encryptedString = ConvertTo-SodiumEncryptedString -Secret $secret -PublicKey $publicKey
 
             # Decrypt the sealed box using the matching private key
             $params = @{
                 EncryptedSecret = $encryptedString
-                PublicKey       = $publicKeyBase64
-                PrivateKey      = $privateKeyBase64
+                PublicKey       = $publicKey
+                PrivateKey      = $privateKey
             }
             $decryptedString = ConvertFrom-SodiumEncryptedString @params
 
