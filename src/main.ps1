@@ -2,8 +2,7 @@
 $os = ([string][System.Runtime.InteropServices.RuntimeInformation]::OSDescription)
 Write-Verbose "OS:               $os"
 Write-Verbose "OS Architecture:  $arch"
-$libSodiumVersion = '1.0.19'
-$alc = [SodiumIsolatedAssemblyLoadContext]::new()
+# $libSodiumVersion = '1.0.19'
 # if ($IsWindows) {
 #     $libPath = Join-Path $PSScriptRoot "\libs\libsodium\$libSodiumVersion\win-$arch\native\libsodium.dll"
 # }
@@ -20,6 +19,7 @@ $alc = [SodiumIsolatedAssemblyLoadContext]::new()
 $corePath = Join-Path $PSScriptRoot '\libs\Sodium.Core\1.3.5\Sodium.Core.dll'
 Write-Verbose "Sodium.Core Path: $corePath"
 # $null = [System.Reflection.Assembly]::LoadFile($corePath)
+$alc = [SodiumIsolatedAssemblyLoadContext]::new()
 $alc.LoadFromAssemblyPath($corePath)
 
 [Sodium.SodiumCore]::Init()
