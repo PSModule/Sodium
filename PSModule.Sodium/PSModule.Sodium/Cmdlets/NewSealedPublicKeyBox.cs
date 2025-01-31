@@ -1,0 +1,37 @@
+using System;
+using System.Text;
+using System.Management.Automation;
+using PSModule.Sodium.Isolated;
+using System.Security;
+
+namespace PSModule.Sodium
+{
+    [Cmdlet(VerbsCommon.New, "SealedPublicKeyBox")]
+    [OutputType(typeof(string))]
+    public class NewSealedPublicKeyBoxCommand : PSCmdlet
+    {
+        [Parameter(
+            Mandatory = true,
+            Position = 0,
+            ValueFromPipeline = true,
+            ValueFromPipelineByPropertyName = true)]
+        public string Secret { get; set; }
+
+        [Parameter(
+            Mandatory = true,
+            Position = 1,
+            ValueFromPipelineByPropertyName = true)]
+        public string PublicKey { get; set; }
+
+        protected override void ProcessRecord()
+        {
+            var encryptedString = Convert.ToBase64String(
+                SealedPublicKeyBox.Create(
+                    Encoding.UTF8.GetBytes(Secret),
+                    Convert.FromBase64String(PublicKey)
+                )
+            );
+            WriteObject(encryptedString);
+        }
+    }
+}
