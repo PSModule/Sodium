@@ -26,7 +26,7 @@ namespace PSModule.Sodium
         protected override void ProcessRecord()
         {
             var encryptedString = Convert.ToBase64String(
-                SealedPublicKeyBox.Create(
+                SealedPublicKeyBoxHelper.Create(
                     Encoding.UTF8.GetBytes(Secret),
                     Convert.FromBase64String(PublicKey)
                 )
