@@ -3,7 +3,7 @@ using Sodium;
 
 namespace PSModule.Sodium.Isolated
 {
-    public class SealedPublicKeyBoxHelper
+    public class SealedPublicKeyBox
     {
         public static byte[] Create(byte[] byteArr, byte[] publicKey)
         {

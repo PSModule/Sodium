@@ -29,6 +29,5 @@ namespace PSModule.Sodium
             var sealedPublicKeyBox = SealedPublicKeyBoxHelper.Create(byteArr, publicKey);
             WriteObject(Convert.ToBase64String(sealedPublicKeyBox));
         }
-
     }
 }
