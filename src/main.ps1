@@ -10,7 +10,8 @@ if ($IsLinux) {
     $libPath = Join-Path $PSScriptRoot "\libs\libsodium\$libSodiumVersion\linux-$arch\native\libsodium.so"
 }
 if ($IsMacOS) {
-    $libPath = Join-Path $PSScriptRoot "\libs\libsodium\$libSodiumVersion\osx-$arch\native\libsodium.dylib"
+    # $libPath = Join-Path $PSScriptRoot "\libs\libsodium\$libSodiumVersion\osx-$arch\native\libsodium.dylib"
+    $libPath = Join-Path $PSScriptRoot "\libs\libsodium\$libSodiumVersion\osx-arm\native\libsodium.dylib"
 }
 Write-Verbose "Library Path:    $libPath"
 $null = [System.Runtime.InteropServices.NativeLibrary]::Load($libPath)
