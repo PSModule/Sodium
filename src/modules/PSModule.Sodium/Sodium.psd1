@@ -1,5 +1,5 @@
 @{
-
+    RootModule      = 'PSModule.Sodium.dll'
     CmdletsToExport = @(
         'ConvertTo-SodiumEncryptedString'
     )
@@ -11,5 +11,4 @@
             )
         }
     }
-    RootModule      = 'lib/PSModule.Sodium/PSModule.Sodium.dll'
 }
