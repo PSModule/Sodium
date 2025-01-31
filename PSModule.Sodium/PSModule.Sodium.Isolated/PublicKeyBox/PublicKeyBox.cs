@@ -3,11 +3,11 @@ using Sodium;
 
 namespace PSModule.Sodium.Isolated
 {
-    public static class PublicKeyBox
+    public static class PublicKeyBoxHelper
     {
         public static (byte[] PublicKey, byte[] PrivateKey) GenerateKeyPair()
         {
-            return global::Sodium.PublicKeyBox.GenerateKeyPair();
+            return PublicKeyBox.GenerateKeyPair();
         }
     }
 }
