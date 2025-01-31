@@ -24,10 +24,5 @@
         [string] $PublicKey
     )
 
-    [System.Convert]::ToBase64String(
-        [Sodium.SealedPublicKeyBox]::Create(
-            [System.Text.Encoding]::UTF8.GetBytes($Secret),
-            [System.Convert]::FromBase64String($PublicKey)
-        )
-    )
+    New-SealedPublicKeyBox -Secret $Secret -PublicKey $PublicKey
 }

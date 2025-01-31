@@ -23,9 +23,5 @@
     [CmdletBinding()]
     param()
 
-    $keyPair = [Sodium.PublicKeyBox]::GenerateKeyPair()
-    [pscustomobject]@{
-        PublicKey  = [System.Convert]::ToBase64String($keyPair.PublicKey)
-        PrivateKey = [System.Convert]::ToBase64String($keyPair.PrivateKey)
-    }
+    New-KeyPair
 }

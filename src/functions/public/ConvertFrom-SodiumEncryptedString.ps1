@@ -16,10 +16,6 @@
         ConvertFrom-SodiumEncryptedString @params
 
         Decrypts the given encrypted secret using the specified public and private keys and returns the original string.
-
-        .NOTES
-        Uses the Sodium library for encryption and decryption.
-        Ensure the provided keys are correctly formatted in base64.
     #>
     [OutputType([string])]
     [CmdletBinding()]
@@ -38,24 +34,9 @@
     )
 
     try {
-        # Convert from base64 to raw bytes
-        $sealedBoxBytes = [System.Convert]::FromBase64String($EncryptedSecret)
-        $publicKeyBytes = [System.Convert]::FromBase64String($PublicKey)
-        $privateKeyBytes = [System.Convert]::FromBase64String($PrivateKey)
-
-        # Decrypt using the SealedPublicKeyBox class from Sodium
-        $decryptedBytes = [Sodium.SealedPublicKeyBox]::Open(
-            $sealedBoxBytes,
-            $privateKeyBytes,
-            $publicKeyBytes
-        )
-
-        # Convert decrypted bytes back to a string
-        $decryptedString = [System.Text.Encoding]::UTF8.GetString($decryptedBytes)
-
-        return $decryptedString
+        Open-SealedPublicKeyBox -EncryptedSecret $EncryptedSecret -PrivateKey $PrivateKey -PublicKey $PublicKey
     } catch {
-        Write-Error "Failed to decrypt the sealed message."
+        Write-Error 'Failed to decrypt the sealed message.'
         throw $_
     }
 }
