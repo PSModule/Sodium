@@ -1,6 +1,6 @@
 ﻿$arch = ([string][System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture).ToLower()
 Write-Verbose "OS Architecture: $arch"
-$libSodiumVersion = '1.0.20.1'
+$libSodiumVersion = '1.0.19.2'
 if ($IsWindows) {
     $libPath = Join-Path $PSScriptRoot "\libs\libsodium\$libSodiumVersion\win-$arch\native\libsodium.dll"
 }
