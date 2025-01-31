@@ -24,3 +24,12 @@
         }
     }
 }
+
+Describe 'Sodium.Core' {
+    Context "Class should not be in default AssemblyLoadContext" {
+        It 'Should not be in default AssemblyLoadContext' {
+            $assembly = [System.AppDomain]::CurrentDomain.GetAssemblies() | Where-Object { $_.GetName().Name -eq 'Sodium.Core' }
+            $assembly | Should -BeNullOrEmpty
+        }
+    }
+}
