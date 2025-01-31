@@ -24,7 +24,7 @@ finally {
 
 # Copy selected unmanaged runtimes/[selected]/native/* assemblies to the isolated folder
 Get-ChildItem -Path "$PSScriptRoot/PSModule.Sodium/bin/$Configuration/net8.0/publish/runtimes" -Directory |
-    Where-Object { $_.Name -match "(win-x(64|86))|(linux-(arm|x)64)" } |
+    Where-Object { $_.Name -match "(win-x(64|86))|(linux-(arm|x)64)|(osx-(arm|x)64)" } |
     ForEach-Object { Copy-Item -Path $_.FullName -Destination (Join-Path -Path $runtimesLibPath -ChildPath $_.Name) -Recurse }
 
 # Copy Nested Binary Module managed assemblies to lib
