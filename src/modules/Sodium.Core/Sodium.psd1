@@ -1,0 +1,3 @@
+@{
+    RootModule = 'Sodium.Core.dll'
+}
