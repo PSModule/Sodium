@@ -1,7 +1,7 @@
-﻿$arch = ([string][System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture).ToLower()
-$os = ([string][System.Runtime.InteropServices.RuntimeInformation]::OSDescription)
-Write-Verbose "OS:              $os"
-Write-Verbose "OS Architecture: $arch"
+﻿# $arch = ([string][System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture).ToLower()
+# $os = ([string][System.Runtime.InteropServices.RuntimeInformation]::OSDescription)
+# Write-Verbose "OS:              $os"
+# Write-Verbose "OS Architecture: $arch"
 # $libSodiumVersion = '1.0.19.2'
 # if ($IsWindows) {
 #     $libPath = Join-Path $PSScriptRoot "\libs\libsodium\$libSodiumVersion\win-$arch\native\libsodium.dll"
@@ -15,6 +15,11 @@ Write-Verbose "OS Architecture: $arch"
 # Write-Verbose "Library Path: $libPath"
 # $null = [System.Runtime.InteropServices.NativeLibrary]::Load($libPath)
 
-$corePath = Join-Path $PSScriptRoot '\libs\Sodium.Core\1.3.5\Sodium.Core.dll'
-$null = [System.Reflection.Assembly]::LoadFile($corePath)
+# $corePath = Join-Path $PSScriptRoot '\libs\Sodium.Core\1.3.5\Sodium.Core.dll'
+# $null = [System.Reflection.Assembly]::LoadFile($corePath)
+# [Sodium.SodiumCore]::Init()
+
+
+$corePath = Join-Path $PSScriptRoot '\libs\Sodium.Core.dll'
+Add-Type -Path $corePath
 [Sodium.SodiumCore]::Init()
