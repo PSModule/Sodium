@@ -14,4 +14,3 @@ $null = [System.Runtime.InteropServices.NativeLibrary]::Load($libPath)
 
 $corePath = Join-Path $PSScriptRoot '\libs\Sodium.Core\1.3.5\Sodium.Core.dll'
 $null = [System.Reflection.Assembly]::LoadFile($corePath)
-Add-Type -Path $corePath
