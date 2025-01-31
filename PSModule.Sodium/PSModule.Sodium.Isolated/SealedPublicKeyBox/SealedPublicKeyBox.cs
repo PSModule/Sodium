@@ -1,4 +1,7 @@
-﻿namespace PSModule.Sodium.Isolated
+﻿
+using Sodium;
+
+namespace PSModule.Sodium.Isolated
 {
     public class SealedPublicKeyBox
     {

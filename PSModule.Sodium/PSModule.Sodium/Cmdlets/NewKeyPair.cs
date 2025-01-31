@@ -1,8 +1,8 @@
 using System;
 using System.Text;
 using System.Management.Automation;
-using PSModule.Sodium.Isolated;
 using System.Security;
+using PSModule.Sodium.Isolated;
 
 namespace PSModule.Sodium
 {

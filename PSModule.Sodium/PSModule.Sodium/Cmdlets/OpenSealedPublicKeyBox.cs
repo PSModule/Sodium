@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using System.Management.Automation;
+using System.Security;
 using PSModule.Sodium.Isolated;
 
 namespace PSModule.Sodium
