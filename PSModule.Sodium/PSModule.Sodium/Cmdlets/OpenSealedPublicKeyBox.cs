@@ -21,21 +21,21 @@ namespace PSModule.Sodium
             Mandatory = true,
             Position = 1,
             ValueFromPipelineByPropertyName = true)]
-        public string PrivateKey { get; set; }
+        public string PublicKey { get; set; }
 
         [Parameter(
             Mandatory = true,
             Position = 1,
             ValueFromPipelineByPropertyName = true)]
-        public string PublicKey { get; set; }
+        public string PrivateKey { get; set; }
 
         protected override void ProcessRecord()
         {
             var decryptedString = Encoding.UTF8.GetString(
                 SealedPublicKeyBoxHelper.Open(
                     Convert.FromBase64String(EncryptedSecret),
-                    Convert.FromBase64String(PublicKey),
-                    Convert.FromBase64String(PrivateKey)
+                    Convert.FromBase64String(PrivateKey),
+                    Convert.FromBase64String(PublicKey)
                 )
             );
             WriteObject(decryptedString);

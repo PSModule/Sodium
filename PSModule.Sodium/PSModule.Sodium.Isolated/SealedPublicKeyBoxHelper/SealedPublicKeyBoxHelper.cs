@@ -10,9 +10,9 @@ namespace PSModule.Sodium.Isolated
             return SealedPublicKeyBox.Create(secret, publicKey);
         }
 
-        public static byte[] Open(byte[] cipher, byte[] publicKey, byte[] secretKey)
+        public static byte[] Open(byte[] secret, byte[] privateKey, byte[] publicKey)
         {
-            return SealedPublicKeyBox.Open(cipher, publicKey, secretKey);
+            return SealedPublicKeyBox.Open(secret, privateKey, publicKey);
         }
     }
 }
