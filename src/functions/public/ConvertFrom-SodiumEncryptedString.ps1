@@ -9,18 +9,13 @@
 
         .EXAMPLE
         $params = @{
-            EncryptedSecret = "c29tZS1lbmNyeXB0ZWQtc3RyaW5n"
-            PublicKey       = "cHVibGljLWtleQ=="
-            PrivateKey      = "cHJpdmF0ZS1rZXk="
+            EncryptedSecret = $encryptedSecret
+            PublicKey       = $publicKey
+            PrivateKey      = $privateKey
         }
         ConvertFrom-SodiumEncryptedString @params
 
         Decrypts the given encrypted secret using the specified public and private keys and returns the original string.
-
-        .EXAMPLE
-        $decryptedText = ConvertFrom-SodiumEncryptedString -EncryptedSecret $encryptedSecret -PublicKey $publicKey -PrivateKey $privateKey
-
-        Stores the decrypted text in a variable for further use.
 
         .NOTES
         Uses the Sodium library for encryption and decryption.
