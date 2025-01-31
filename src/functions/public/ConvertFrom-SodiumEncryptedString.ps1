@@ -60,7 +60,7 @@
 
         return $decryptedString
     } catch {
-        Write-Error "Failed to decrypt the sealed message. $_"
-        return $null
+        Write-Error "Failed to decrypt the sealed message."
+        throw $_
     }
 }
