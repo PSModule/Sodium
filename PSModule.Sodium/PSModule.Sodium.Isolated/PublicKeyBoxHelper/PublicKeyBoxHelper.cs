@@ -1,7 +1,4 @@
-﻿
-using Sodium;
-
-namespace PSModule.Sodium.Isolated
+﻿namespace PSModule.Sodium.Isolated
 {
     public static class PublicKeyBoxHelper
     {
