@@ -1,13 +1,14 @@
 ﻿$arch = ([string][System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture).ToLower()
 Write-Verbose "OS Architecture: $arch"
+$libSodiumVersion = '1.0.19.2'
 if ($IsWindows) {
-    $libPath = Join-Path $PSScriptRoot "\libs\libsodium\1.0.19.0\win-$arch\native\libsodium.dll"
+    $libPath = Join-Path $PSScriptRoot "\libs\libsodium\$libSodiumVersion\win-$arch\native\libsodium.dll"
 }
 if ($IsLinux) {
-    $libPath = Join-Path $PSScriptRoot "\libs\libsodium\1.0.19.0\linux-$arch\native\libsodium.so"
+    $libPath = Join-Path $PSScriptRoot "\libs\libsodium\$libSodiumVersion\linux-$arch\native\libsodium.so"
 }
 if ($IsMacOS) {
-    $libPath = Join-Path $PSScriptRoot "\libs\libsodium\1.0.19.0\osx-$arch\native\libsodium.dylib"
+    $libPath = Join-Path $PSScriptRoot "\libs\libsodium\$libSodiumVersion\osx-$arch\native\libsodium.dylib"
 }
 Write-Verbose "Library Path: $libPath"
 $null = [System.Runtime.InteropServices.NativeLibrary]::Load($libPath)
