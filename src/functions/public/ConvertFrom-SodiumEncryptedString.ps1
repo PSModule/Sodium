@@ -33,10 +33,5 @@
         [string] $PrivateKey
     )
 
-    try {
-        Open-SealedPublicKeyBox -EncryptedSecret $EncryptedSecret -PrivateKey $PrivateKey -PublicKey $PublicKey
-    } catch {
-        Write-Error 'Failed to decrypt the sealed message.'
-        throw $_
-    }
+    Open-SealedPublicKeyBox -EncryptedSecret $EncryptedSecret -PrivateKey $PrivateKey -PublicKey $PublicKey
 }
