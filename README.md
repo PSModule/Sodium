@@ -101,8 +101,8 @@ You can help by picking up an existing issue or submitting a new one if you have
 
 ### Module Isolation Logic
 
-- [Resolving PowerShell module assembly dependency conflicts | PowerShell Docs @ Microsoft Learn](https://learn.microsoft.com/en-us/powershell/scripting/dev-cross-plat/resolving-dependency-conflicts?view=powershell-7.4#more-robust-solutions)
-- [rjmholt/ModuleDependencyIsolationExample | GitHub Repo](https://github.com/rjmholt/ModuleDependencyIsolationExample)
+- Resolving PowerShell module assembly dependency conflicts | [PowerShell Docs @ Microsoft Learn](https://learn.microsoft.com/en-us/powershell/scripting/dev-cross-plat/resolving-dependency-conflicts?view=powershell-7.4#more-robust-solutions)
+- rjmholt/ModuleDependencyIsolationExample [GitHub](https://github.com/rjmholt/ModuleDependencyIsolationExample)
 
 ### Libsodium
 
