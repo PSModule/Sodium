@@ -3,43 +3,43 @@
 @(
     [PSCustomObject]@{
         Name            = 'libsodium'
-        Path            = "$PSScriptRootlib\libsodium"
+        Path            = "$PSScriptRoot\libsodium"
         RequiredVersion = '1.0.19'
         Important       = 'runtimes'
     }
     [PSCustomObject]@{
         Name            = 'libsodium'
-        Path            = "$PSScriptRootlib\libsodium"
+        Path            = "$PSScriptRoot\libsodium"
         RequiredVersion = '1.0.19.1'
         Important       = 'runtimes'
     }
     [PSCustomObject]@{
         Name            = 'libsodium'
-        Path            = "$PSScriptRootlib\libsodium"
+        Path            = "$PSScriptRoot\libsodium"
         RequiredVersion = '1.0.19.2'
         Important       = 'runtimes'
     }
     [PSCustomObject]@{
         Name            = 'libsodium'
-        Path            = "$PSScriptRootlib\libsodium"
+        Path            = "$PSScriptRoot\libsodium"
         RequiredVersion = '1.0.20.0'
         Important       = 'runtimes'
     }
     [PSCustomObject]@{
         Name            = 'libsodium'
-        Path            = "$PSScriptRootlib\libsodium"
+        Path            = "$PSScriptRoot\libsodium"
         RequiredVersion = '1.0.20.1'
         Important       = 'runtimes'
     }
     [PSCustomObject]@{
         Name            = 'Sodium.Core'
-        Path            = "$PSScriptRootlib\Sodium.Core"
+        Path            = "$PSScriptRoot\Sodium.Core"
         RequiredVersion = '1.3.5'
         Important       = 'lib'
     }
     # [PSCustomObject]@{
     #     Name            = 'Sodium.Core'
-    #     Path            = "$PSScriptRootlib\Sodium.Core"
+    #     Path            = "$PSScriptRoot\Sodium.Core"
     #     RequiredVersion = '1.4.0-preview.1'
     #     Important       = 'lib'
     # }

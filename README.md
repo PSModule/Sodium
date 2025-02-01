@@ -14,7 +14,6 @@ This module relies on the following external resources:
 - The [libsodium](https://github.com/jedisct1/libsodium) library for cryptographic operations.
 - The [Sodium.Core](https://github.com/ektrah/libsodium-core) library, which provides .NET bindings.
 
-
 ## Installation
 
 To install the module from the PowerShell Gallery, use the following command:
