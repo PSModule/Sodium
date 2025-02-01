@@ -10,10 +10,10 @@ namespace PSModule.Sodium
     [OutputType(typeof(string))]
     public class NewSealedPublicKeyBoxCommand : PSCmdlet
     {
-        [Parameter(Mandatory = true]
+        [Parameter(Mandatory = true)]
         public string Secret { get; set; }
 
-        [Parameter(Mandatory = true]
+        [Parameter(Mandatory = true)]
         public string PublicKey { get; set; }
 
         protected override void ProcessRecord()
