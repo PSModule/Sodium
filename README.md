@@ -1,69 +1,110 @@
-# PSModuleTemplate
+# Sodium
 
-A PowerShell module template that can be used to create new modules.
+A PowerShell module that provides [`Sodium.Core`](https://github.com/ektrah/libsodium-core) functionality.
+
+This module was initially created to serve the needs of the [GitHub PowerShell module](https://github.com/PSModule/GitHub).
+GitHub's method for creating or updating [secrets via the REST API](https://docs.github.com/en/rest/guides/encrypting-secrets-for-the-rest-api?apiVersion=2022-11-28#example-encrypting-a-secret-using-c)
+requires that secrets be encrypted using the [libsodium](https://github.com/jedisct1/libsodium) library.
 
 ## Prerequisites
 
-This uses the following external resources:
-- The [PSModule framework](https://github.com/PSModule) for building, testing and publishing the module.
+This module relies on the following external resources:
+
+- The [PSModule framework](https://github.com/PSModule) for building, testing, and publishing the module.
+- The [libsodium](https://github.com/jedisct1/libsodium) library for cryptographic operations.
+- The [Sodium.Core](https://github.com/ektrah/libsodium-core) library, which provides .NET bindings.
 
 ## Installation
 
-To install the module from the PowerShell Gallery, you can use the following command:
+To install the module from the PowerShell Gallery, use the following command:
 
 ```powershell
-Install-PSResource -Name YourModuleName
-Import-Module -Name YourModuleName
+Install-PSResource -Name Sodium
+Import-Module -Name Sodium
 ```
 
-## Usage
+## Examples
 
-Here is a list of example that are typical use cases for the module.
+### Example 1: Generate a new key pair
 
-### Example 1: Greet an entity
-
-Provide examples for typical commands that a user would like to do with the module.
+The module provides functionality to create a new cryptographic key pair.
+The keys are returned as a PowerShell custom object with `PublicKey` and `PrivateKey` properties, encoded in base64 format.
 
 ```powershell
-Greet-Entity -Name 'World'
-Hello, World!
+New-SodiumKeyPair
+
+PublicKey                                    PrivateKey
+---------                                    ----------
+9fv51aqi00MYN4UR7Ew/DLXMS9t1NapLs7yyo+vegz4= MiJAFUZxZ1UCbQTwKfH7HY6AhIFYQlnok5fBD2K+y/g=
 ```
 
-### Example 2
+### Example 2: Encrypt a secret using a public key
 
-Provide examples for typical commands that a user would like to do with the module.
+After generating a key pair, a secret can be encrypted using the associated public key.
+Below, a secret is encrypted using the public key from the previous example.
 
 ```powershell
-Import-Module -Name PSModuleTemplate
+ConvertTo-SodiumEncryptedString -Secret "mysecret" -PublicKey "9fv51aqi00MYN4UR7Ew/DLXMS9t1NapLs7yyo+vegz4="
+
+905j4S/JyP9XBBmOIdHSOXiDu7fUtZo9TFIMnAfBMESgcVBwttLnEyxJn4xPEX5OMKQ+Bc4P6Hg=
 ```
 
-### Find more examples
+### Example 3: Decrypt a Sodium-encrypted string
 
-To find more examples of how to use the module, please refer to the [examples](examples) folder.
+To decrypt an encrypted string, both the private and public keys are required.
 
-Alternatively, you can use the Get-Command -Module 'This module' to find more commands that are available in the module.
-To find examples of each of the commands you can use Get-Help -Examples 'CommandName'.
+```powershell
+$params = @{
+    EncryptedSecret = '905j4S/JyP9XBBmOIdHSOXiDu7fUtZo9TFIMnAfBMESgcVBwttLnEyxJn4xPEX5OMKQ+Bc4P6Hg='
+    PublicKey       = '9fv51aqi00MYN4UR7Ew/DLXMS9t1NapLs7yyo+vegz4='
+    PrivateKey      = 'MiJAFUZxZ1UCbQTwKfH7HY6AhIFYQlnok5fBD2K+y/g='
+}
+ConvertFrom-SodiumEncryptedString @params
 
-## Documentation
+mysecret
+```
 
-Link to further documentation if available, or describe where in the repository users can find more detailed documentation about
-the module's functions and features.
+### Finding More Examples
+
+For additional examples, refer to the [examples](examples) folder.
+
+Alternatively, you can use the following command to list all available commands in this module:
+
+```powershell
+Get-Command -Module Sodium
+```
+
+To view examples for a specific command, use:
+
+```powershell
+Get-Help <CommandName> -Examples
+```
 
 ## Contributing
 
-Coder or not, you can contribute to the project! We welcome all contributions.
+Coder or not, you can contribute to this project! We welcome all contributions.
 
 ### For Users
 
-If you don't code, you still sit on valuable information that can make this project even better. If you experience that the
-product does unexpected things, throw errors or is missing functionality, you can help by submitting bugs and feature requests.
-Please see the issues tab on this project and submit a new issue that matches your needs.
+If you don't code, you still have valuable insights that can improve this project.
+If the module behaves unexpectedly, throws errors, or lacks functionality, you can help by submitting bug reports and feature requests.
+Please check the [issues](https://github.com/PSModule/Sodium/issues) tab and submit a new issue if needed.
 
 ### For Developers
 
-If you do code, we'd love to have your contributions. Please read the [Contribution guidelines](CONTRIBUTING.md) for more information.
-You can either help by picking up an existing issue or submit a new one if you have an idea for a new feature or improvement.
+If you are a developer, we welcome your contributions.
+Please read the [Contribution Guidelines](CONTRIBUTING.md) for more information.
+
+You can help by picking up an existing issue or submitting a new one if you have an idea for a feature or improvement.
 
 ## Acknowledgements
 
-Here is a list of people and projects that helped this project in some way.
+### Module Isolation Logic
+
+- Resolving PowerShell module assembly dependency conflicts | [PowerShell Docs @ Microsoft Learn](https://learn.microsoft.com/en-us/powershell/scripting/dev-cross-plat/resolving-dependency-conflicts?view=powershell-7.4#more-robust-solutions)
+- rjmholt/ModuleDependencyIsolationExample [GitHub](https://github.com/rjmholt/ModuleDependencyIsolationExample)
+
+### Libsodium
+
+- **Sodium.Core** | [GitHub](https://github.com/ektrah/libsodium-core)
+- **libsodium** | [Docs](https://doc.libsodium.org/) | [GitHub](https://github.com/jedisct1/libsodium)

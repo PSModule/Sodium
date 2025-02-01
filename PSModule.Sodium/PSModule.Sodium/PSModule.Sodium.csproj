@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\PSModule.Sodium.Isolated\PSModule.Sodium.Isolated.csproj" />
+        <PackageReference Include="System.Management.Automation" Version="7.4.0" PrivateAssets="All" />
+    </ItemGroup>
+
+</Project>
