@@ -28,7 +28,7 @@ Import-Module -Name Sodium
 ### Example 1: Generate a new key pair
 
 The module provides functionality to create a new cryptographic key pair.
-The keys are returned as a PowerShell custom object with `PublicKey` and `PrivateKey` properties, encoded in Base64 format.
+The keys are returned as a PowerShell custom object with `PublicKey` and `PrivateKey` properties, encoded in base64 format.
 
 ```powershell
 New-SodiumKeyPair
