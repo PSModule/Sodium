@@ -28,3 +28,6 @@ jobs:
   Process-PSModule:
     uses: PSModule/Process-PSModule/.github/workflows/workflow.yml@macOSdebug
     secrets: inherit
+    with:
+      Debug: true
+      Verbose: true
