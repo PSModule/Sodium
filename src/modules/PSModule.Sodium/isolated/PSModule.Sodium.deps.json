@@ -15,7 +15,7 @@
           "PSModule.Sodium.dll": {}
         }
       },
-      "libsodium/1.0.19.2": {
+      "libsodium/1.0.20.1": {
         "runtimeTargets": {
           "runtimes/ios-arm64/native/libsodium.a": {
             "rid": "ios-arm64",
@@ -80,17 +80,17 @@
           "runtimes/win-arm64/native/libsodium.dll": {
             "rid": "win-arm64",
             "assetType": "native",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "1.0.20.0"
           },
           "runtimes/win-x64/native/libsodium.dll": {
             "rid": "win-x64",
             "assetType": "native",
-            "fileVersion": "1.0.19.0"
+            "fileVersion": "1.0.20.0"
           },
           "runtimes/win-x86/native/libsodium.dll": {
             "rid": "win-x86",
             "assetType": "native",
-            "fileVersion": "1.0.19.0"
+            "fileVersion": "1.0.20.0"
           }
         }
       },
@@ -311,9 +311,9 @@
         }
       },
       "Newtonsoft.Json/13.0.3": {},
-      "Sodium.Core/1.4.0-preview.1": {
+      "Sodium.Core/1.4.0-preview.2": {
         "dependencies": {
-          "libsodium": "1.0.19.2"
+          "libsodium": "1.0.20.1"
         },
         "runtime": {
           "lib/net8.0/Sodium.Core.dll": {
@@ -436,7 +436,7 @@
       },
       "PSModule.Sodium.Isolated/1.0.0": {
         "dependencies": {
-          "Sodium.Core": "1.4.0-preview.1"
+          "Sodium.Core": "1.4.0-preview.2"
         },
         "runtime": {
           "PSModule.Sodium.Isolated.dll": {
@@ -453,12 +453,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "libsodium/1.0.19.2": {
+    "libsodium/1.0.20.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Cyu2NWfItRvNlXxg9mvAlSDpSj7yZ7zME0hwowh8C+zad3izWsWDOvm6FGCgPZtO1WZZI0tSvnmleSei5+VqyQ==",
-      "path": "libsodium/1.0.19.2",
-      "hashPath": "libsodium.1.0.19.2.nupkg.sha512"
+      "sha512": "sha512-pkiceEqJDQFHjbga3k/oPfTVX9g+GKJZ1VrkuiLhaymt9YNw1Dr7cX9hNuZuNaWcr9WD0moW55k4pMwzQ7JaZQ==",
+      "path": "libsodium/1.0.20.1",
+      "hashPath": "libsodium.1.0.20.1.nupkg.sha512"
     },
     "Microsoft.ApplicationInsights/2.21.0": {
       "type": "package",
@@ -523,12 +523,12 @@
       "path": "newtonsoft.json/13.0.3",
       "hashPath": "newtonsoft.json.13.0.3.nupkg.sha512"
     },
-    "Sodium.Core/1.4.0-preview.1": {
+    "Sodium.Core/1.4.0-preview.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-xNONtcoXrzjyMR+ka7wF/OLSAEAsdVPTKDeqWD/PKKlyeebzExJR2POpWIyjpknq+qHlrGY0e3gBvjtoDOiBxw==",
-      "path": "sodium.core/1.4.0-preview.1",
-      "hashPath": "sodium.core.1.4.0-preview.1.nupkg.sha512"
+      "sha512": "sha512-eNx2/QqIuO75ZJxZvdabVRIJjjXwtf1sbxQNgoDXFo27uaa14YveuRYENuPF0nySrdbLKMBCt/rfByqh2RBqLw==",
+      "path": "sodium.core/1.4.0-preview.2",
+      "hashPath": "sodium.core.1.4.0-preview.2.nupkg.sha512"
     },
     "System.CodeDom/8.0.0": {
       "type": "package",
