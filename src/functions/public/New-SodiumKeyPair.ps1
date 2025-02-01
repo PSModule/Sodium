@@ -13,6 +13,9 @@
 
         Generates a new key pair and returns a custom object containing the base64-encoded
         public and private keys.
+
+        .LINK
+        https://psmodule.io/Sodium/Functions/New-SodiumKeyPair/
     #>
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
         'PSUseShouldProcessForStateChangingFunctions', '',

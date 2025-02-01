@@ -11,6 +11,9 @@
         ConvertTo-SodiumEncryptedString -Secret "mysecret" -PublicKey "BASE64_PUBLIC_KEY"
 
         Encrypts the secret "mysecret" using the provided base64-encoded public key and returns a base64-encoded sealed box.
+
+        .LINK
+        https://psmodule.io/Sodium/Functions/ConvertTo-SodiumEncryptedString/
     #>
     [OutputType([string])]
     [CmdletBinding()]

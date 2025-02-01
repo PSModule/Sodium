@@ -16,6 +16,9 @@
         ConvertFrom-SodiumEncryptedString @params
 
         Decrypts the given encrypted secret using the specified public and private keys and returns the original string.
+
+        .LINK
+        https://psmodule.io/Sodium/Functions/ConvertFrom-SodiumEncryptedString/
     #>
     [OutputType([string])]
     [CmdletBinding()]
