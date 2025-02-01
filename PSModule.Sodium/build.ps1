@@ -13,44 +13,60 @@
 
     .LINK
     https://learn.microsoft.com/en-us/powershell/scripting/dev-cross-plat/resolving-dependency-conflicts?view=powershell-7.4#more-robust-solutions
+
+    .LINK
+    https://github.com/rjmholt/ModuleDependencyIsolationExample
 #>
 
 param(
+    # The configuration to build the module in. Defaults to 'Release'.
     [ValidateSet('Debug', 'Release')]
-    [string]
-    $Configuration = 'Release'
+    [string] $Configuration = 'Release',
+
+    # The target framework to build the module for. Defaults to 'net8.0'.
+    [string] $TargetFramework = 'net8.0'
 )
+
 $repoRootPath = (Get-Item -Path $PSScriptRoot).Parent
 Write-Verbose "Repo Root Path: $repoRootPath"
-$outPath = Join-Path -Path $repoRootPath.FullName 'src\modules\PSModule.Sodium'
-Write-Verbose "Out Path:       $outPath"
-if (Test-Path $outPath) {
-    $outPath | Get-ChildItem -Exclude *.psd1 -Force -Recurse | Remove-Item -Force -Recurse
-}
-$isolatedLibPath = Join-Path -Path $outPath -ChildPath isolated
-$runtimesLibPath = Join-Path -Path $isolatedLibPath -ChildPath runtimes
 
+Write-Verbose 'Building PSModule.Sodium'
 Push-Location "$PSScriptRoot/PSModule.Sodium"
 try {
     dotnet publish --configuration $Configuration
+    if ([int]$LASTEXISTCODE -ne 0) {
+        Write-Warning "[$LASTEXITCODE]"
+        throw "Failed to build PSModule.Sodium"
+    }
 } finally {
     Pop-Location
 }
 
-# Copy selected unmanaged runtimes/[selected]/native/* assemblies to the isolated folder
-New-Item -Path $runtimesLibPath -ItemType Directory -Force
-Get-ChildItem -Path "$PSScriptRoot/PSModule.Sodium/bin/$Configuration/net8.0/publish/runtimes" -Directory |
-    Where-Object { $_.Name -match '(win-x(64|86))|(linux-(arm|x)64)|(osx-(arm|x)64)' } |
-    ForEach-Object { Copy-Item -Path $_.FullName -Destination (Join-Path -Path $runtimesLibPath -ChildPath $_.Name) -Recurse }
-
-# Copy Nested Binary Module managed assemblies to lib
-New-Item -Path $outPath -ItemType Directory -Force
-Get-ChildItem -Path "$PSScriptRoot/PSModule.Sodium/bin/$Configuration/net8.0/publish" -File |
+Write-Verbose "Creating lib and isolated folders in the 'PSModule.Sodium' nested module"
+Write-Verbose 'Copy nested binary module to:'
+$outPath = Join-Path -Path $repoRootPath.FullName 'src\modules\PSModule.Sodium'
+Write-Verbose "-> [$outPath]"
+$outPath | Get-ChildItem | Remove-Item -Force -Recurse
+$out = New-Item -Path $outPath -ItemType Directory -Force
+Get-ChildItem -Path "$PSScriptRoot/PSModule.Sodium/bin/$Configuration/$TargetFramework/publish" -File |
     Where-Object { $_.BaseName -eq 'PSModule.Sodium' -and $_.Extension -in '.dll' } |
-    ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $outPath }
+    ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $out }
 
-# Copy other managed assemblies to lib/isolated
-New-Item -Path $isolatedLibPath -ItemType Directory -Force
-Get-ChildItem -Path "$PSScriptRoot/PSModule.Sodium/bin/$Configuration/net8.0/publish" -File |
+Write-Verbose 'Copy other managed assemblies to:'
+$isolatedLibPath = Join-Path -Path $outPath -ChildPath 'isolated'
+Write-Verbose "-> [$isolatedLibPath]"
+$isolatedLib = New-Item -Path $isolatedLibPath -ItemType Directory -Force
+Get-ChildItem -Path "$PSScriptRoot/PSModule.Sodium/bin/$Configuration/$TargetFramework/publish" -File |
     Where-Object { $_.BaseName -ne 'PSModule.Sodium' } |
-    ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $isolatedLibPath }
+    ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $isolatedLib }
+
+Write-Verbose 'Copy unmanaged runtime assemblies to:'
+$runtimesLibPath = Join-Path -Path $isolatedLibPath -ChildPath 'runtimes'
+Write-Verbose "-> [$runtimesLibPath]"
+$runtimesLib = New-Item -Path $runtimesLibPath -ItemType Directory -Force
+Get-ChildItem -Path "$PSScriptRoot/PSModule.Sodium/bin/$Configuration/$TargetFramework/publish/runtimes" -Directory |
+    Where-Object { $_.Name -match '(win-x(64|86))|(linux-(arm|x)64)|(osx-(arm|x)64)' } |
+    ForEach-Object {
+        $destination = Join-Path -Path $runtimesLib -ChildPath $_.Name
+        Copy-Item -Path $_.FullName -Destination $destination -Recurse
+    }

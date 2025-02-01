@@ -24,6 +24,8 @@
         }
     }
 
+    # .LINK
+    # https://github.com/jborean93/PowerShell-Yayaml/blob/main/module/Yayaml.psm1
     Context 'Isolated Assemblies' {
         $IsolatedAssemblies = @(
             'Sodium.Core'

@@ -1,6 +1,7 @@
-# PSModuleTemplate
+# Sodium
 
-A PowerShell module template that can be used to create new modules.
+A PowerShell module that provides `Sodium.Core` and `libsodium` functionality.
+
 
 ## Prerequisites
 
@@ -66,4 +67,12 @@ You can either help by picking up an existing issue or submit a new one if you h
 
 ## Acknowledgements
 
-Here is a list of people and projects that helped this project in some way.
+Module isolation logic:
+
+- [Resolving PowerShell module assembly dependency conflicts | PowerShell Docs @ Microsoft Learn]https://learn.microsoft.com/en-us/powershell/scripting/dev-cross-plat/resolving-dependency-conflicts?view=powershell-7.4#more-robust-solutions
+- [https://github.com/rjmholt/ModuleDependencyIsolationExample](https://github.com/rjmholt/ModuleDependencyIsolationExample)
+
+Libsodium:
+
+- Sodium.Core | [](https://github.com/ektrah/libsodium-core)
+- libsodium | [Docs](https://doc.libsodium.org/) | [GitHub](https://github.com/jedisct1/libsodium)
