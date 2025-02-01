@@ -23,13 +23,20 @@
             $decryptedString | Should -Be $secret
         }
     }
-}
 
-Describe 'Sodium.Core' {
-    Context "Class should not be in default AssemblyLoadContext" {
-        It 'Should not be in default AssemblyLoadContext' {
-            $assembly = [System.AppDomain]::CurrentDomain.GetAssemblies() | Where-Object { $_.GetName().Name -eq 'Sodium.Core' }
-            $assembly | Should -BeNullOrEmpty
+    Context 'Isolated Assemblies' {
+        $IsolatedAssemblies = @(
+            'Sodium.Core'
+            'PSModule.Sodium.Isolated'
+        )
+        $IsolatedTestCases = $IsolatedAssemblies | ForEach-Object {
+            @{
+                Name = $_
+            }
+        }
+        It 'Should be in the IsolatedAssemblyLoadContext [<Name>]' -ForEach $IsolatedTestCases {
+            $assembly = [System.AppDomain]::CurrentDomain.GetAssemblies() | Where-Object { $_.GetName().Name -eq $Name }
+            [Runtime.Loader.AssemblyLoadContext]::GetLoadContext($assembly).Name | Should -Be 'IsolatedAssemblyLoadContext'
         }
     }
 }
