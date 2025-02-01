@@ -1,8 +1,7 @@
 using System;
 using System.Text;
 using System.Management.Automation;
-using System.Security;
-using PSModule.Sodium.Isolated;
+using Sodium;
 
 namespace PSModule.Sodium
 {
@@ -12,7 +11,7 @@ namespace PSModule.Sodium
     {
         protected override void ProcessRecord()
         {
-            (byte[] publicKey, byte[] privateKey) = PublicKeyBoxHelper.GenerateKeyPair();
+            (byte[] publicKey, byte[] privateKey) = PublicKeyBox.GenerateKeyPair();
             var publicKeyString = Convert.ToBase64String(publicKey);
             var privateKeyString = Convert.ToBase64String(privateKey);
             WriteObject(new { PublicKey = publicKeyString, PrivateKey = privateKeyString });

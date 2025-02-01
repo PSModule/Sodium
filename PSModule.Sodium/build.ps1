@@ -27,11 +27,14 @@ param(
     [string] $TargetFramework = 'net8.0'
 )
 
-$repoRootPath = (Get-Item -Path $PSScriptRoot).Parent
+$runPath = $PSScriptRoot
+$runPath = 'C:\Repos\GitHub\PSModule\Module\Sodium\PSModule.Sodium'
+
+$repoRootPath = (Get-Item -Path $runPath).Parent
 Write-Verbose "Repo Root Path: $repoRootPath"
 
 Write-Verbose 'Building PSModule.Sodium'
-Push-Location "$PSScriptRoot/PSModule.Sodium"
+Push-Location "$runPath/PSModule.Sodium"
 try {
     dotnet publish --configuration $Configuration
     if ([int]$LASTEXISTCODE -ne 0) {
@@ -48,23 +51,15 @@ $outPath = Join-Path -Path $repoRootPath.FullName 'src\modules\PSModule.Sodium'
 Write-Verbose "-> [$outPath]"
 $outPath | Get-ChildItem | Remove-Item -Force -Recurse
 $out = New-Item -Path $outPath -ItemType Directory -Force
-Get-ChildItem -Path "$PSScriptRoot/PSModule.Sodium/bin/$Configuration/$TargetFramework/publish" -File |
+Get-ChildItem -Path "$runPath/PSModule.Sodium/bin/$Configuration/$TargetFramework/publish" -File |
     Where-Object { $_.BaseName -eq 'PSModule.Sodium' -and $_.Extension -in '.dll' } |
     ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $out }
-
-Write-Verbose 'Copy other managed assemblies to:'
-$isolatedLibPath = Join-Path -Path $outPath -ChildPath 'isolated'
-Write-Verbose "-> [$isolatedLibPath]"
-$isolatedLib = New-Item -Path $isolatedLibPath -ItemType Directory -Force
-Get-ChildItem -Path "$PSScriptRoot/PSModule.Sodium/bin/$Configuration/$TargetFramework/publish" -File |
-    Where-Object { $_.BaseName -ne 'PSModule.Sodium' } |
-    ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $isolatedLib }
 
 Write-Verbose 'Copy unmanaged runtime assemblies to:'
 $runtimesLibPath = Join-Path -Path $isolatedLibPath -ChildPath 'runtimes'
 Write-Verbose "-> [$runtimesLibPath]"
 $runtimesLib = New-Item -Path $runtimesLibPath -ItemType Directory -Force
-Get-ChildItem -Path "$PSScriptRoot/PSModule.Sodium/bin/$Configuration/$TargetFramework/publish/runtimes" -Directory |
+Get-ChildItem -Path "$runPath/PSModule.Sodium/bin/$Configuration/$TargetFramework/publish/runtimes" -Directory |
     Where-Object { $_.Name -match '(win-x(64|86))|(linux-(arm|x)64)|(osx-(arm|x)64)' } |
     ForEach-Object {
         $destination = Join-Path -Path $runtimesLib -ChildPath $_.Name

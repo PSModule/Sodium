@@ -1,8 +1,7 @@
 using System;
 using System.Text;
 using System.Management.Automation;
-using System.Security;
-using PSModule.Sodium.Isolated;
+using Sodium;
 
 namespace PSModule.Sodium
 {
@@ -19,7 +18,7 @@ namespace PSModule.Sodium
         protected override void ProcessRecord()
         {
             var encryptedString = Convert.ToBase64String(
-                SealedPublicKeyBoxHelper.Create(
+                SealedPublicKeyBox.Create(
                     Encoding.UTF8.GetBytes(Secret),
                     Convert.FromBase64String(PublicKey)
                 )
