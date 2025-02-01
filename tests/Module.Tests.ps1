@@ -37,6 +37,8 @@
             }
         }
         It 'Should be in the IsolatedAssemblyLoadContext [<Name>]' -ForEach $IsolatedTestCases {
+            codesign -v libsodium.dylib
+
             $assembly = [System.AppDomain]::CurrentDomain.GetAssemblies() | Where-Object { $_.GetName().Name -eq $Name }
             [Runtime.Loader.AssemblyLoadContext]::GetLoadContext($assembly).Name | Should -Be 'IsolatedAssemblyLoadContext'
         }
