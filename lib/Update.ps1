@@ -1,43 +1,45 @@
-﻿@(
+﻿# This script is only to debug versions locally. It is not used in the module or in the build process.
+
+@(
     [PSCustomObject]@{
         Name            = 'libsodium'
-        Path            = 'C:\Repos\GitHub\PSModule\Module\Sodium\lib\libsodium'
+        Path            = "$PSScriptRootlib\libsodium"
         RequiredVersion = '1.0.19'
         Important       = 'runtimes'
     }
     [PSCustomObject]@{
         Name            = 'libsodium'
-        Path            = 'C:\Repos\GitHub\PSModule\Module\Sodium\lib\libsodium'
+        Path            = "$PSScriptRootlib\libsodium"
         RequiredVersion = '1.0.19.1'
         Important       = 'runtimes'
     }
     [PSCustomObject]@{
         Name            = 'libsodium'
-        Path            = 'C:\Repos\GitHub\PSModule\Module\Sodium\lib\libsodium'
+        Path            = "$PSScriptRootlib\libsodium"
         RequiredVersion = '1.0.19.2'
         Important       = 'runtimes'
     }
     [PSCustomObject]@{
         Name            = 'libsodium'
-        Path            = 'C:\Repos\GitHub\PSModule\Module\Sodium\lib\libsodium'
+        Path            = "$PSScriptRootlib\libsodium"
         RequiredVersion = '1.0.20.0'
         Important       = 'runtimes'
     }
     [PSCustomObject]@{
         Name            = 'libsodium'
-        Path            = 'C:\Repos\GitHub\PSModule\Module\Sodium\lib\libsodium'
+        Path            = "$PSScriptRootlib\libsodium"
         RequiredVersion = '1.0.20.1'
         Important       = 'runtimes'
     }
     [PSCustomObject]@{
         Name            = 'Sodium.Core'
-        Path            = 'C:\Repos\GitHub\PSModule\Module\Sodium\lib\Sodium.Core'
+        Path            = "$PSScriptRootlib\Sodium.Core"
         RequiredVersion = '1.3.5'
         Important       = 'lib'
     }
     # [PSCustomObject]@{
     #     Name            = 'Sodium.Core'
-    #     Path            = 'C:\Repos\GitHub\PSModule\Module\Sodium\lib\Sodium.Core'
+    #     Path            = "$PSScriptRootlib\Sodium.Core"
     #     RequiredVersion = '1.4.0-preview.1'
     #     Important       = 'lib'
     # }
