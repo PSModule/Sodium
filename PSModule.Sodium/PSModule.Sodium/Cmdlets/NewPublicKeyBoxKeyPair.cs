@@ -6,9 +6,9 @@ using PSModule.Sodium.Isolated;
 
 namespace PSModule.Sodium
 {
-    [Cmdlet(VerbsCommon.New, "KeyPair")]
+    [Cmdlet(VerbsCommon.New, "PublicKeyBoxKeyPair")]
     [OutputType(typeof(string))]
-    public class NewKeyPairCommand : PSCmdlet
+    public class NewPublicKeyBoxKeyPairCommand : PSCmdlet
     {
         protected override void ProcessRecord()
         {

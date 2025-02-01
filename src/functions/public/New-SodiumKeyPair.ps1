@@ -23,5 +23,5 @@
     [CmdletBinding()]
     param()
 
-    New-KeyPair
+    New-PublicKeyBoxKeyPair
 }

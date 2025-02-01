@@ -10,23 +10,13 @@ namespace PSModule.Sodium
     [OutputType(typeof(string))]
     public class OpenSealedPublicKeyBoxCommand : PSCmdlet
     {
-        [Parameter(
-            Mandatory = true,
-            Position = 0,
-            ValueFromPipeline = true,
-            ValueFromPipelineByPropertyName = true)]
+        [Parameter(Mandatory = true]
         public string EncryptedSecret { get; set; }
 
-        [Parameter(
-            Mandatory = true,
-            Position = 1,
-            ValueFromPipelineByPropertyName = true)]
+        [Parameter(Mandatory = true]
         public string PublicKey { get; set; }
 
-        [Parameter(
-            Mandatory = true,
-            Position = 1,
-            ValueFromPipelineByPropertyName = true)]
+        [Parameter(Mandatory = true]
         public string PrivateKey { get; set; }
 
         protected override void ProcessRecord()
