@@ -4,11 +4,11 @@
         <TargetFramework>net8.0</TargetFramework>
         <AssemblyName>PSModule.Sodium</AssemblyName>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    </PropertyGroup>
 
+    </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="System.Management.Automation" Version="7.4.0" PrivateAssets="All" />
-        <PackageReference Include="Sodium.Core" Version="1.4.0-preview.2" />
+        <PackageReference Include="Sodium.Core" Version="1.3.3" />
     </ItemGroup>
 
 </Project>

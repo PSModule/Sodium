@@ -1,7 +1,4 @@
-Get-ChildItem -Path "$PSScriptRoot/../scr/libs" -Directory -Recurse | ForEach-Object {
-    Write-Warning "Deleting $($_.FullName)"
-    Remove-Item -Path $_.FullName -Recurse -Force
-}
+Remove-Item -Path "$PSScriptRoot/../src/libs" -Recurse -Force -ErrorAction SilentlyContinue
 
 $targetRuntimes = @(
     'linux-x64'
