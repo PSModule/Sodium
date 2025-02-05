@@ -52,7 +52,9 @@
         $decryptedBytes = New-Object byte[] ($ciphertext.Length - $overhead)
 
         # Attempt to decrypt
-        $result = [PSModule.Sodium]::crypto_box_seal_open($decryptedBytes, $ciphertext, [uint64]$ciphertext.Length, $publicKeyByteArray, $privateKeyByteArray)
+        $result = [PSModule.Sodium]::crypto_box_seal_open(
+            $decryptedBytes, $ciphertext, [uint64]$ciphertext.Length, $publicKeyByteArray, $privateKeyByteArray
+        )
 
         if ($result -ne 0) {
             throw 'Decryption failed.'
