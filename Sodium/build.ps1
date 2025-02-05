@@ -6,8 +6,17 @@ $targetRuntimes = @(
     'osx-x64'
 )
 
-foreach ($tr in $targetRuntimes) {
-    dotnet publish -r $tr
-    Remove-Item -Force -Recurse -Path "$PSScriptRoot/PSSodium/$tr" -ErrorAction Ignore
-    Copy-Item -Recurse -Force -Path "$PSScriptRoot/bin/Debug/net8.0/$tr/publish" -Destination "$PSScriptRoot/PSSodium/$tr"
+Push-Location $path
+$targetRuntimes | ForEach-Object {
+    dotnet publish --runtime $_
+    Copy-Item -Recurse -Force -Path "$PSScriptRoot/bin/Release/net8.0/$_/publish" -Destination "$PSScriptRoot/../src/modules/PSModule.Sodium/$_"
 }
+Pop-Location
+
+
+# Get-ChildItem -Path $path -Directory -Recurse | Where-Object { $_.Name -in 'bin', 'obj' } | ForEach-Object {
+#     Write-Warning "Deleting $($_.FullName)"
+#     Remove-Item -Path $_.FullName -Recurse
+# }
+
+
