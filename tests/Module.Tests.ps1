@@ -24,10 +24,9 @@
         }
     }
 
-    # .LINK
-    # https://github.com/jborean93/PowerShell-Yayaml/blob/main/module/Yayaml.psm1
     Context 'Isolated Assemblies' {
         $IsolatedAssemblies = @(
+            'libsodium'
             'Sodium.Core'
             'PSModule.Sodium.Isolated'
         )
@@ -37,10 +36,6 @@
             }
         }
         It 'Should be in the IsolatedAssemblyLoadContext [<Name>]' -ForEach $IsolatedTestCases {
-            if ($IsMacOS) {
-                codesign -v /Users/runner/work/Sodium/Sodium/outputs/modules/Sodium/modules/PSModule.Sodium/isolated/runtimes/osx-arm64/native/libsodium.dylib
-            }
-
             $assembly = [System.AppDomain]::CurrentDomain.GetAssemblies() | Where-Object { $_.GetName().Name -eq $Name }
             [Runtime.Loader.AssemblyLoadContext]::GetLoadContext($assembly).Name | Should -Be 'IsolatedAssemblyLoadContext'
         }
