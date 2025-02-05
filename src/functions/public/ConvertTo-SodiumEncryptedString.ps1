@@ -27,5 +27,19 @@
         [string] $PublicKey
     )
 
-    New-SealedPublicKeyBox -Secret $Secret -PublicKey $PublicKey
+    $publicKey = [Convert]::FromBase64String($PublicKey)
+    $secretBytes = [System.Text.Encoding]::UTF8.GetBytes($Secret)
+
+    $overhead = [Sodium]::crypto_box_sealbytes().ToUInt32()
+    $cipherLength = $secretBytes.Length + $overhead
+    $ciphertext = New-Object byte[] $cipherLength
+
+    # Encrypt message
+    $result = [Sodium]::crypto_box_seal($ciphertext, $secretBytes, [uint64]$secretBytes.Length, $publicKey)
+
+    if ($result -ne 0) {
+        throw 'Encryption failed.'
+    }
+
+    return [Convert]::ToBase64String($ciphertext)
 }

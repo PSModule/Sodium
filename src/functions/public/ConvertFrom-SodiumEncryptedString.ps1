@@ -36,5 +36,19 @@
         [string] $PrivateKey
     )
 
-    Open-SealedPublicKeyBox -EncryptedSecret $EncryptedSecret -PrivateKey $PrivateKey -PublicKey $PublicKey
+    $ciphertext = [Convert]::FromBase64String($EncryptedSecret)
+    $publicKeyNorm = [Convert]::FromBase64String($PublicKey)
+    $privateKeyNorm = [Convert]::FromBase64String($PrivateKey)
+
+    $overhead = [Sodium]::crypto_box_sealbytes().ToUInt32()
+    $decryptedBytes = New-Object byte[] ($ciphertext.Length - $overhead)
+
+    # Attempt to decrypt
+    $result = [Sodium]::crypto_box_seal_open($decryptedBytes, $ciphertext, [uint64]$ciphertext.Length, $publicKeyNorm, $privateKeyNorm)
+
+    if ($result -ne 0) {
+        throw 'Decryption failed. Invalid key or corrupted ciphertext.'
+    }
+
+    return [System.Text.Encoding]::UTF8.GetString($decryptedBytes)
 }

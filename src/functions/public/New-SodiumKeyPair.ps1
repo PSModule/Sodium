@@ -26,5 +26,19 @@
     [CmdletBinding()]
     param()
 
-    New-PublicKeyBoxKeyPair
+    $pkSize = [Sodium]::crypto_box_publickeybytes().ToUInt32()
+    $skSize = [Sodium]::crypto_box_secretkeybytes().ToUInt32()
+
+    $publicKey = New-Object byte[] $pkSize
+    $privateKey = New-Object byte[] $skSize
+
+    # Generate key pair
+    [Sodium]::crypto_box_keypair($publicKey, $privateKey) | Out-Null
+
+    # Convert to Base64 for easy storage/transfer
+    return @{
+        PublicKey  = [Convert]::ToBase64String($publicKey)
+        PrivateKey = [Convert]::ToBase64String($privateKey)
+    }
+
 }
