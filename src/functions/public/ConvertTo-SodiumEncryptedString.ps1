@@ -26,20 +26,25 @@
         [Parameter(Mandatory)]
         [string] $PublicKey
     )
-
-    $publicKey = [Convert]::FromBase64String($PublicKey)
-    $secretBytes = [System.Text.Encoding]::UTF8.GetBytes($Secret)
-
-    $overhead = [Sodium]::crypto_box_sealbytes().ToUInt32()
-    $cipherLength = $secretBytes.Length + $overhead
-    $ciphertext = New-Object byte[] $cipherLength
-
-    # Encrypt message
-    $result = [Sodium]::crypto_box_seal($ciphertext, $secretBytes, [uint64]$secretBytes.Length, $publicKey)
-
-    if ($result -ne 0) {
-        throw 'Encryption failed.'
+    begin {
+        Initialize-Sodium
     }
 
-    return [Convert]::ToBase64String($ciphertext)
+    process {
+        $publicKey = [Convert]::FromBase64String($PublicKey)
+        $secretBytes = [System.Text.Encoding]::UTF8.GetBytes($Secret)
+
+        $overhead = [PSModule.Sodium]::crypto_box_sealbytes().ToUInt32()
+        $cipherLength = $secretBytes.Length + $overhead
+        $ciphertext = New-Object byte[] $cipherLength
+
+        # Encrypt message
+        $result = [PSModule.Sodium]::crypto_box_seal($ciphertext, $secretBytes, [uint64]$secretBytes.Length, $publicKey)
+
+        if ($result -ne 0) {
+            throw 'Encryption failed.'
+        }
+
+        return [Convert]::ToBase64String($ciphertext)
+    }
 }

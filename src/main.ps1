@@ -1,24 +1,22 @@
 switch ($true) {
     $IsLinux {
-        & "$PSScriptRoot/libs/linux-x64/main.ps1"
+        Import-Module "$PSScriptRoot/libs/linux-x64/PSModule.Sodium.dll"
     }
     $IsMacOS {
         if ("$(sysctl -n machdep.cpu.brand_string)" -Like 'Apple*') {
-            & "$PSScriptRoot/libs/osx-arm64/main.ps1"
+            Import-Module "$PSScriptRoot/libs/osx-arm64/PSModule.Sodium.dll"
         } else {
-            & "$PSScriptRoot/libs/osx-x64/main.ps1"
+            Import-Module "$PSScriptRoot/libs/osx-x64/PSModule.Sodium.dll"
         }
     }
     $IsWindows {
         if ([System.Environment]::Is64BitProcess) {
-            & "$PSScriptRoot/libs/win-x64/main.ps1"
+            Import-Module "$PSScriptRoot/libs/win-x64/PSModule.Sodium.dll"
         } else {
-            & "$PSScriptRoot/libs/win-x86/main.ps1"
+            Import-Module "$PSScriptRoot/libs/win-x86/PSModule.Sodium.dll"
         }
     }
     default {
         throw 'Unsupported platform. Please refer to the documentation for more information.'
     }
 }
-
-[Sodium]::sodium_init()

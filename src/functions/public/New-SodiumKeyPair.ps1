@@ -26,18 +26,24 @@
     [CmdletBinding()]
     param()
 
-    $pkSize = [Sodium]::crypto_box_publickeybytes().ToUInt32()
-    $skSize = [Sodium]::crypto_box_secretkeybytes().ToUInt32()
+    begin {
+        Initialize-Sodium
+    }
 
-    $publicKey = New-Object byte[] $pkSize
-    $privateKey = New-Object byte[] $skSize
+    process {
+        $pkSize = [PSModule.Sodium]::crypto_box_publickeybytes().ToUInt32()
+        $skSize = [PSModule.Sodium]::crypto_box_secretkeybytes().ToUInt32()
 
-    # Generate key pair
-    $null = [Sodium]::crypto_box_keypair($publicKey, $privateKey)
+        $publicKey = New-Object byte[] $pkSize
+        $privateKey = New-Object byte[] $skSize
 
-    # Convert to Base64 for easy storage/transfer
-    return [pscustomobject]@{
-        PublicKey  = [Convert]::ToBase64String($publicKey)
-        PrivateKey = [Convert]::ToBase64String($privateKey)
+        # Generate key pair
+        $null = [PSModule.Sodium]::crypto_box_keypair($publicKey, $privateKey)
+
+        # Convert to Base64 for easy storage/transfer
+        return [pscustomobject]@{
+            PublicKey  = [Convert]::ToBase64String($publicKey)
+            PrivateKey = [Convert]::ToBase64String($privateKey)
+        }
     }
 }

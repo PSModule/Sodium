@@ -36,19 +36,25 @@
         [string] $PrivateKey
     )
 
-    $ciphertext = [Convert]::FromBase64String($EncryptedSecret)
-    $publicKeyNorm = [Convert]::FromBase64String($PublicKey)
-    $privateKeyNorm = [Convert]::FromBase64String($PrivateKey)
-
-    $overhead = [Sodium]::crypto_box_sealbytes().ToUInt32()
-    $decryptedBytes = New-Object byte[] ($ciphertext.Length - $overhead)
-
-    # Attempt to decrypt
-    $result = [Sodium]::crypto_box_seal_open($decryptedBytes, $ciphertext, [uint64]$ciphertext.Length, $publicKeyNorm, $privateKeyNorm)
-
-    if ($result -ne 0) {
-        throw 'Decryption failed. Invalid key or corrupted ciphertext.'
+    begin {
+        Initialize-Sodium
     }
 
-    return [System.Text.Encoding]::UTF8.GetString($decryptedBytes)
+    process {
+        $ciphertext = [Convert]::FromBase64String($EncryptedSecret)
+        $publicKeyNorm = [Convert]::FromBase64String($PublicKey)
+        $privateKeyNorm = [Convert]::FromBase64String($PrivateKey)
+
+        $overhead = [PSModule.Sodium]::crypto_box_sealbytes().ToUInt32()
+        $decryptedBytes = New-Object byte[] ($ciphertext.Length - $overhead)
+
+        # Attempt to decrypt
+        $result = [PSModule.Sodium]::crypto_box_seal_open($decryptedBytes, $ciphertext, [uint64]$ciphertext.Length, $publicKeyNorm, $privateKeyNorm)
+
+        if ($result -ne 0) {
+            throw 'Decryption failed. Invalid key or corrupted ciphertext.'
+        }
+
+        return [System.Text.Encoding]::UTF8.GetString($decryptedBytes)
+    }
 }
