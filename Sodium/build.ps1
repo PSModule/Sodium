@@ -1,3 +1,8 @@
+Get-ChildItem -Path "$PSScriptRoot/../scr/libs" -Directory -Recurse | ForEach-Object {
+    Write-Warning "Deleting $($_.FullName)"
+    Remove-Item -Path $_.FullName -Recurse -Force
+}
+
 $targetRuntimes = @(
     'linux-x64'
     'win-x64'
@@ -6,17 +11,16 @@ $targetRuntimes = @(
     'osx-x64'
 )
 
-Push-Location $path
+Push-Location $PSScriptRoot
 $targetRuntimes | ForEach-Object {
-    dotnet publish --runtime $_
-    Copy-Item -Recurse -Force -Path "$PSScriptRoot/bin/Release/net8.0/$_/publish" -Destination "$PSScriptRoot/../src/modules/PSModule.Sodium/$_"
+    dotnet publish --runtime $_ --configuration Release
+    $source = "$PSScriptRoot/bin/Release/net8.0/$_/publish"
+    $destination = "$PSScriptRoot/../src/libs/$_"
+    Copy-Item -Path $source -Destination $destination -Recurse -Force
 }
 Pop-Location
 
-
-# Get-ChildItem -Path $path -Directory -Recurse | Where-Object { $_.Name -in 'bin', 'obj' } | ForEach-Object {
-#     Write-Warning "Deleting $($_.FullName)"
-#     Remove-Item -Path $_.FullName -Recurse
-# }
-
-
+Get-ChildItem -Path $PSScriptRoot -Directory -Recurse | Where-Object { $_.Name -in 'bin', 'obj' } | ForEach-Object {
+    Write-Warning "Deleting $($_.FullName)"
+    Remove-Item -Path $_.FullName -Recurse -Force
+}

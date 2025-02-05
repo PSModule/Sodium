@@ -11,9 +11,9 @@ namespace PSModule.Sodium
     {
         protected override void ProcessRecord()
         {
-            (byte[] publicKey, byte[] privateKey) = PublicKeyBox.GenerateKeyPair();
-            var publicKeyString = Convert.ToBase64String(publicKey);
-            var privateKeyString = Convert.ToBase64String(privateKey);
+            KeyPair keys = PublicKeyBox.GenerateKeyPair();
+            var publicKeyString = Convert.ToBase64String(keys.PublicKey);
+            var privateKeyString = Convert.ToBase64String(keys.PrivateKey);
             WriteObject(new { PublicKey = publicKeyString, PrivateKey = privateKeyString });
         }
     }
