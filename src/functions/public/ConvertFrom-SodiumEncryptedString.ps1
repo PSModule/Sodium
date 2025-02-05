@@ -48,11 +48,11 @@
         if ($publicKeyByteArray.Length -ne 32) { throw 'Invalid public key.' }
         if ($privateKeyByteArray.Length -ne 32) { throw 'Invalid private key.' }
 
-        $overhead = [Sodium]::crypto_box_sealbytes().ToUInt32()
+        $overhead = [PSModule.Sodium]::crypto_box_sealbytes().ToUInt32()
         $decryptedBytes = New-Object byte[] ($ciphertext.Length - $overhead)
 
         # Attempt to decrypt
-        $result = [Sodium]::crypto_box_seal_open($decryptedBytes, $ciphertext, [uint64]$ciphertext.Length, $publicKeyByteArray, $privateKeyByteArray)
+        $result = [PSModule.Sodium]::crypto_box_seal_open($decryptedBytes, $ciphertext, [uint64]$ciphertext.Length, $publicKeyByteArray, $privateKeyByteArray)
 
         if ($result -ne 0) {
             throw 'Decryption failed.'
