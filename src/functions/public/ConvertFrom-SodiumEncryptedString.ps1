@@ -25,7 +25,7 @@
     param(
         # The base64-encoded encrypted secret string to decrypt.
         [Parameter(Mandatory)]
-        [string] $EncryptedSecret,
+        [string] $Secret,
 
         # The base64-encoded public key used for decryption.
         [Parameter(Mandatory)]
@@ -41,18 +41,21 @@
     }
 
     process {
-        $ciphertext = [Convert]::FromBase64String($EncryptedSecret)
-        $publicKeyNorm = [Convert]::FromBase64String($PublicKey)
-        $privateKeyNorm = [Convert]::FromBase64String($PrivateKey)
+        $ciphertext = [Convert]::FromBase64String($Secret)
+        $publicKeyByteArray = ConvertTo-ByteArray $PublicKey
+        $privateKeyByteArray = ConvertTo-ByteArray $PrivateKey
 
-        $overhead = [PSModule.Sodium]::crypto_box_sealbytes().ToUInt32()
+        if ($publicKeyByteArray.Length -ne 32) { throw 'Invalid public key.' }
+        if ($privateKeyByteArray.Length -ne 32) { throw 'Invalid private key.' }
+
+        $overhead = [Sodium]::crypto_box_sealbytes().ToUInt32()
         $decryptedBytes = New-Object byte[] ($ciphertext.Length - $overhead)
 
         # Attempt to decrypt
-        $result = [PSModule.Sodium]::crypto_box_seal_open($decryptedBytes, $ciphertext, [uint64]$ciphertext.Length, $publicKeyNorm, $privateKeyNorm)
+        $result = [Sodium]::crypto_box_seal_open($decryptedBytes, $ciphertext, [uint64]$ciphertext.Length, $publicKeyByteArray, $privateKeyByteArray)
 
         if ($result -ne 0) {
-            throw 'Decryption failed. Invalid key or corrupted ciphertext.'
+            throw 'Decryption failed.'
         }
 
         return [System.Text.Encoding]::UTF8.GetString($decryptedBytes)

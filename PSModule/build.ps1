@@ -9,15 +9,15 @@ $targetRuntimes = @(
 )
 
 Push-Location $PSScriptRoot
-$targetRuntimes | ForEach-Object {
-    dotnet publish --runtime $_ --configuration Release
+# $targetRuntimes | ForEach-Object {
+    dotnet publish --configuration Release
     $source = "$PSScriptRoot/bin/Release/net8.0/$_/publish"
     $destination = "$PSScriptRoot/../src/libs/$_"
     Copy-Item -Path $source -Destination $destination -Recurse -Force
 }
-Pop-Location
+# Pop-Location
 
-Get-ChildItem -Path $PSScriptRoot -Directory -Recurse | Where-Object { $_.Name -in 'bin', 'obj' } | ForEach-Object {
-    Write-Warning "Deleting $($_.FullName)"
-    Remove-Item -Path $_.FullName -Recurse -Force
-}
+# Get-ChildItem -Path $PSScriptRoot -Directory -Recurse | Where-Object { $_.Name -in 'bin', 'obj' } | ForEach-Object {
+#     Write-Warning "Deleting $($_.FullName)"
+#     Remove-Item -Path $_.FullName -Recurse -Force
+# }
