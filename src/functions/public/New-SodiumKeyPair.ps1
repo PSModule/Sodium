@@ -33,12 +33,11 @@
     $privateKey = New-Object byte[] $skSize
 
     # Generate key pair
-    [Sodium]::crypto_box_keypair($publicKey, $privateKey) | Out-Null
+    $null = [Sodium]::crypto_box_keypair($publicKey, $privateKey)
 
     # Convert to Base64 for easy storage/transfer
-    return @{
+    return [pscustomobject]@{
         PublicKey  = [Convert]::ToBase64String($publicKey)
         PrivateKey = [Convert]::ToBase64String($privateKey)
     }
-
 }
