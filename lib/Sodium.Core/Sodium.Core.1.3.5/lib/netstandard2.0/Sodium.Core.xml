@@ -1,0 +1,1447 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Sodium.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Sodium.CryptoHash">
+            <summary>Provides hashing via selected primitive.</summary>
+        </member>
+        <member name="M:Sodium.CryptoHash.Hash(System.String)">
+            <summary>Hashes a string using the default algorithm (This is what you want to use)</summary>
+            <param name="message">The message.</param>
+            <returns>Hex-encoded hash.</returns>
+        </member>
+        <member name="M:Sodium.CryptoHash.Hash(System.Byte[])">
+            <summary>Hashes a byte array using the default algorithm (This is what you want to use)</summary>
+            <param name="message">The message.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Sodium.CryptoHash.Sha512(System.String)">
+            <summary>Hashes a string using the SHA512 algorithm</summary>
+            <param name="message">The message.</param>
+            <returns>Hex-encoded hash.</returns>
+        </member>
+        <member name="M:Sodium.CryptoHash.Sha512(System.Byte[])">
+            <summary>Hashes a byte array using the SHA512 algorithm</summary>
+            <param name="message">The message.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Sodium.CryptoHash.Sha256(System.String)">
+            <summary>Hashes a string using the SHA256 algorithm</summary>
+            <param name="message">The message.</param>
+            <returns>Hex-encoded hash.</returns>
+        </member>
+        <member name="M:Sodium.CryptoHash.Sha256(System.Byte[])">
+            <summary>Hashes a byte array using the SHA256 algorithm</summary>
+            <param name="message">The message.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Sodium.DetachedBox">
+            <summary>A ciphertext / mac pair.</summary>
+        </member>
+        <member name="M:Sodium.DetachedBox.#ctor">
+            <summary>Initializes a new instance of the <see cref="T:Sodium.DetachedBox"/> class.</summary>
+        </member>
+        <member name="M:Sodium.DetachedBox.#ctor(System.Byte[],System.Byte[])">
+            <summary>Initializes a new instance of the <see cref="T:Sodium.DetachedBox"/> class.</summary>
+            <param name="cipherText">The cipher.</param>
+            <param name="mac">The 16 byte mac.</param>
+        </member>
+        <member name="P:Sodium.DetachedBox.CipherText">
+            <summary>Gets or sets the Cipher.</summary>
+        </member>
+        <member name="P:Sodium.DetachedBox.Mac">
+            <summary>Gets or sets the MAC.</summary>
+        </member>
+        <member name="T:Sodium.GenericHash">
+            <summary>
+            Multipurpose hash function.
+            </summary>
+        </member>
+        <member name="M:Sodium.GenericHash.GenerateKey">
+            <summary>Generates a random 64 byte key.</summary>
+            <returns>Returns a byte array with 64 random bytes</returns>
+        </member>
+        <member name="M:Sodium.GenericHash.Hash(System.String,System.String,System.Int32)">
+            <summary>Hashes a message, with an optional key, using the BLAKE2b primitive.</summary>
+            <param name="message">The message to be hashed.</param>
+            <param name="key">The key; may be null, otherwise between 16 and 64 bytes.</param>
+            <param name="bytes">The size (in bytes) of the desired result.</param>
+            <returns>Returns a byte array.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.BytesOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.GenericHash.Hash(System.String,System.Byte[],System.Int32)">
+            <summary>Hashes a message, with an optional key, using the BLAKE2b primitive.</summary>
+            <param name="message">The message to be hashed.</param>
+            <param name="key">The key; may be null, otherwise between 16 and 64 bytes.</param>
+            <param name="bytes">The size (in bytes) of the desired result.</param>
+            <returns>Returns a byte array.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.BytesOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.GenericHash.Hash(System.Byte[],System.Byte[],System.Int32)">
+            <summary>Hashes a message, with an optional key, using the BLAKE2b primitive.</summary>
+            <param name="message">The message to be hashed.</param>
+            <param name="key">The key; may be null, otherwise between 16 and 64 bytes.</param>
+            <param name="bytes">The size (in bytes) of the desired result.</param>
+            <returns>Returns a byte array.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.BytesOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.GenericHash.HashSaltPersonal(System.String,System.String,System.String,System.String,System.Int32)">
+            <summary>Generates a hash based on a key, salt and personal strings</summary>
+            <returns><c>byte</c> hashed message</returns>
+            <param name="message">Message.</param>
+            <param name="key">Key.</param>
+            <param name="salt">Salt.</param>
+            <param name="personal">Personal.</param>
+            <param name="bytes">The size (in bytes) of the desired result.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.SaltOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.PersonalOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.GenericHash.HashSaltPersonal(System.Byte[],System.Byte[],System.Byte[],System.Byte[],System.Int32)">
+            <summary>Generates a hash based on a key, salt and personal bytes</summary>
+            <returns><c>byte</c> hashed message</returns>
+            <param name="message">Message.</param>
+            <param name="key">Key.</param>
+            <param name="salt">Salt.</param>
+            <param name="personal">Personal string.</param>
+            <param name="bytes">The size (in bytes) of the desired result.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.SaltOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.PersonalOutOfRangeException"></exception>
+        </member>
+        <member name="T:Sodium.GenericHash.GenericHashAlgorithm">
+            <summary>
+            Blake2b implementation of HashAlgorithm suitable for hashing streams.
+            </summary>
+        </member>
+        <member name="M:Sodium.GenericHash.GenericHashAlgorithm.#ctor(System.String,System.Int32)">
+            <summary>
+            Initializes the hashing algorithm.
+            </summary>
+            <param name="key">The key; may be null, otherwise between 16 and 64 bytes.</param>
+            <param name="bytes">The size (in bytes) of the desired result.</param>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.BytesOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.GenericHash.GenericHashAlgorithm.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Initializes the hashing algorithm.
+            </summary>
+            <param name="key">The key; may be null, otherwise between 16 and 64 bytes.</param>
+            <param name="bytes">The size (in bytes) of the desired result.</param>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.BytesOutOfRangeException"></exception>
+        </member>
+        <member name="T:Sodium.KeyPair">
+            <summary>A public / private key pair.</summary>
+        </member>
+        <member name="M:Sodium.KeyPair.#ctor(System.Byte[],System.Byte[])">
+            <summary>Initializes a new instance of the <see cref="T:Sodium.KeyPair"/> class.</summary>
+            <param name="publicKey">The public key.</param>
+            <param name="privateKey">The private key.</param>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+        </member>
+        <member name="P:Sodium.KeyPair.PublicKey">
+            <summary>Gets the Public Key.</summary>
+        </member>
+        <member name="P:Sodium.KeyPair.PrivateKey">
+            <summary>Gets the Private Key.</summary>
+        </member>
+        <member name="M:Sodium.KeyPair.Dispose">
+            <summary>Dispose of private key in memory.</summary>
+        </member>
+        <member name="T:Sodium.OneTimeAuth">
+            <summary>One Time Message Authentication</summary>
+        </member>
+        <member name="M:Sodium.OneTimeAuth.GenerateKey">
+            <summary>Generates a random 32 byte key.</summary>
+            <returns>Returns a byte array with 32 random bytes</returns>
+        </member>
+        <member name="M:Sodium.OneTimeAuth.Sign(System.String,System.Byte[])">
+            <summary>Signs a message using Poly1305</summary>
+            <param name="message">The message.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>16 byte authentication code.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.OneTimeAuth.Sign(System.Byte[],System.Byte[])">
+            <summary>Signs a message using Poly1305</summary>
+            <param name="message">The message.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>16 byte authentication code.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.OneTimeAuth.Verify(System.String,System.Byte[],System.Byte[])">
+            <summary>Verifies a message signed with the Sign method.</summary>
+            <param name="message">The message.</param>
+            <param name="signature">The 16 byte signature.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>True if verified.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.SignatureOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.OneTimeAuth.Verify(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Verifies a message signed with the Sign method.</summary>
+            <param name="message">The message.</param>
+            <param name="signature">The 16 byte signature.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>True if verified.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.SignatureOutOfRangeException"></exception>
+        </member>
+        <member name="T:Sodium.PasswordHash">
+            <summary>Hashes passwords using the argon2i and scrypt algorithm</summary>
+        </member>
+        <member name="T:Sodium.PasswordHash.ArgonAlgorithm">
+            <summary>Represents available Argon algorithms</summary>
+        </member>
+        <member name="F:Sodium.PasswordHash.ArgonAlgorithm.Argon_2I13">
+            <summary>2I13, default Argon algorithm</summary>
+        </member>
+        <member name="F:Sodium.PasswordHash.ArgonAlgorithm.Argon_2ID13">
+            <summary>2ID13 Argon algorithm</summary>
+        </member>
+        <member name="T:Sodium.PasswordHash.StrengthArgon">
+            <summary>Represents predefined and useful limits for ArgonHashBinary() and ArgonHashString().</summary>
+        </member>
+        <member name="F:Sodium.PasswordHash.StrengthArgon.Interactive">
+            <summary>For interactive sessions (fast: uses 32MB of RAM).</summary>
+        </member>
+        <member name="F:Sodium.PasswordHash.StrengthArgon.Medium">
+            <summary>For medium use (medium: uses 64MB of RAM)</summary>
+        </member>
+        <member name="F:Sodium.PasswordHash.StrengthArgon.Moderate">
+            <summary>For normal use (moderate: uses 128MB of RAM).</summary>
+        </member>
+        <member name="F:Sodium.PasswordHash.StrengthArgon.Sensitive">
+            <summary>For highly sensitive data (slow: uses 512MB of RAM).</summary>
+        </member>
+        <member name="M:Sodium.PasswordHash.ArgonGenerateSalt">
+            <summary>Generates a random 16 byte salt for the Argon2i algorithm.</summary>
+            <returns>Returns a byte array with 16 random bytes</returns>
+        </member>
+        <member name="M:Sodium.PasswordHash.ArgonHashBinary(System.String,System.String,Sodium.PasswordHash.StrengthArgon,System.Int64,Sodium.PasswordHash.ArgonAlgorithm)">
+            <summary>Derives a secret key of any size from a password and a salt.</summary>
+            <param name="password">The password.</param>
+            <param name="salt">The salt.</param>
+            <param name="limit">The limit for computation.</param>
+            <param name="outputLength">The length of the computed output array.</param>
+            <param name="alg">Argon Algorithm</param>
+            <returns>Returns a byte array of the given size.</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.SaltOutOfRangeException"></exception>
+            <exception cref="T:System.OutOfMemoryException"></exception>
+        </member>
+        <member name="M:Sodium.PasswordHash.ArgonHashBinary(System.String,System.String,System.Int64,System.Int32,System.Int64,Sodium.PasswordHash.ArgonAlgorithm)">
+            <summary>
+            Derives a secret key of any size from a password and a salt.
+            </summary>
+            <param name="password">The password.</param>
+            <param name="salt">The salt.</param>
+            <param name="opsLimit">Represents a maximum amount of computations to perform.</param>
+            <param name="memLimit">Is the maximum amount of RAM that the function will use, in bytes.</param>
+            <param name="outputLength">The length of the computed output array.</param>
+            <param name="alg">Argon Algorithm</param>
+            <returns>Returns a byte array of the given size.</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.SaltOutOfRangeException"></exception>
+            <exception cref="T:System.OutOfMemoryException"></exception>
+        </member>
+        <member name="M:Sodium.PasswordHash.ArgonHashBinary(System.Byte[],System.Byte[],Sodium.PasswordHash.StrengthArgon,System.Int64,Sodium.PasswordHash.ArgonAlgorithm)">
+            <summary>Derives a secret key of any size from a password and a salt.</summary>
+            <param name="password">The password.</param>
+            <param name="salt">The salt.</param>
+            <param name="limit">The limit for computation.</param>
+            <param name="outputLength">The length of the computed output array.</param>
+            <param name="alg">Argon Algorithm</param>
+            <returns>Returns a byte array of the given size.</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.SaltOutOfRangeException"></exception>
+            <exception cref="T:System.OutOfMemoryException"></exception>
+        </member>
+        <member name="M:Sodium.PasswordHash.ArgonHashBinary(System.Byte[],System.Byte[],System.Int64,System.Int32,System.Int64,Sodium.PasswordHash.ArgonAlgorithm)">
+            <summary>
+            Derives a secret key of any size from a password and a salt.
+            </summary>
+            <param name="password">The password.</param>
+            <param name="salt">The salt.</param>
+            <param name="opsLimit">Represents a maximum amount of computations to perform.</param>
+            <param name="memLimit">Is the maximum amount of RAM that the function will use, in bytes.</param>
+            <param name="outputLength">The length of the computed output array.</param>
+            <param name="alg">Argon Algorithm</param>
+            <returns>Returns a byte array of the given size.</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.SaltOutOfRangeException"></exception>
+            <exception cref="T:System.OutOfMemoryException"></exception>
+        </member>
+        <member name="M:Sodium.PasswordHash.ArgonHashString(System.String,Sodium.PasswordHash.StrengthArgon)">
+            <summary>Returns the hash in a string format, which includes the generated salt.</summary>
+            <param name="password">The password.</param>
+            <param name="limit">The limit for computation.</param>
+            <returns>Returns an zero-terminated ASCII encoded string of the computed password and hash.</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+            <exception cref="T:System.OutOfMemoryException"></exception>
+        </member>
+        <member name="M:Sodium.PasswordHash.ArgonHashString(System.String,System.Int64,System.Int32)">
+            <summary>Returns the hash in a string format, which includes the generated salt.</summary>
+            <param name="password">The password.</param>
+            <param name="opsLimit">Represents a maximum amount of computations to perform.</param>
+            <param name="memLimit">Is the maximum amount of RAM that the function will use, in bytes.</param>
+            <returns>Returns an zero-terminated ASCII encoded string of the computed password and hash.</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+            <exception cref="T:System.OutOfMemoryException"></exception>
+        </member>
+        <member name="M:Sodium.PasswordHash.ArgonHashStringVerify(System.String,System.String)">
+            <summary>Verifies that a hash generated with ArgonHashString matches the supplied password.</summary>
+            <param name="hash">The hash.</param>
+            <param name="password">The password.</param>
+            <returns><c>true</c> on success; otherwise, <c>false</c>.</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:Sodium.PasswordHash.ArgonHashStringVerify(System.Byte[],System.Byte[])">
+            <summary>Verifies that a hash generated with ArgonHashString matches the supplied password.</summary>
+            <param name="hash">The hash.</param>
+            <param name="password">The password.</param>
+            <returns><c>true</c> on success; otherwise, <c>false</c>.</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:Sodium.PasswordHash.ArgonPasswordNeedsRehash(System.Byte[],System.Int64,System.Int32)">
+            <summary>
+            Checks if the current password hash needs rehashing
+            </summary>
+            <param name="hash">Password that needs rehashing</param>
+            <param name="opsLimit"></param>
+            <param name="memLimit"></param>
+            <returns></returns>
+        </member>
+        <member name="F:Sodium.PasswordHash.HashType.Argon">
+            <summary></summary>
+        </member>
+        <member name="F:Sodium.PasswordHash.HashType.Scrypt">
+            <summary></summary>
+        </member>
+        <member name="M:Sodium.PasswordHash.GenerateSalt(Sodium.PasswordHash.HashType)">
+            <summary>Generates a random byte salt.</summary>
+            <param name="hashType"></param>
+            <returns>Returns a byte array with 16 or 32 random bytes</returns>
+        </member>
+        <member name="T:Sodium.PasswordHash.Strength">
+            <summary>Represents predefined and useful limits for ScryptHashBinary() and ScryptHashString().</summary>
+        </member>
+        <member name="F:Sodium.PasswordHash.Strength.Interactive">
+            <summary>For interactive sessions (fast: uses 16MB of RAM).</summary>
+        </member>
+        <member name="F:Sodium.PasswordHash.Strength.Moderate">
+            <summary>For normal use (moderate: uses 100MB of RAM).</summary>
+        </member>
+        <member name="F:Sodium.PasswordHash.Strength.Medium">
+            <summary>For normal use (moderate: uses 128MB of RAM).</summary>
+        </member>
+        <member name="F:Sodium.PasswordHash.Strength.MediumSlow">
+            <summary>For more sensitive use (moderate: uses 128MB of RAM).</summary>
+        </member>
+        <member name="F:Sodium.PasswordHash.Strength.Sensitive">
+            <summary>For highly sensitive data (slow: uses more than 1GB of RAM).</summary>
+        </member>
+        <member name="M:Sodium.PasswordHash.ScryptGenerateSalt">
+            <summary>Generates a random 32 byte salt for the Scrypt algorithm.</summary>
+            <returns>Returns a byte array with 32 random bytes</returns>
+        </member>
+        <member name="M:Sodium.PasswordHash.ScryptHashBinary(System.String,System.String,Sodium.PasswordHash.Strength,System.Int64)">
+            <summary>Derives a secret key of any size from a password and a salt.</summary>
+            <param name="password">The password.</param>
+            <param name="salt">The salt.</param>
+            <param name="limit">The limit for computation.</param>
+            <param name="outputLength">The length of the computed output array.</param>
+            <returns>Returns a byte array of the given size.</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.SaltOutOfRangeException"></exception>
+            <exception cref="T:System.OutOfMemoryException"></exception>
+        </member>
+        <member name="M:Sodium.PasswordHash.ScryptHashBinary(System.String,System.String,System.Int64,System.Int32,System.Int64)">
+            <summary>
+            Derives a secret key of any size from a password and a salt.
+            </summary>
+            <param name="password">The password.</param>
+            <param name="salt">The salt.</param>
+            <param name="opsLimit">Represents a maximum amount of computations to perform.</param>
+            <param name="memLimit">Is the maximum amount of RAM that the function will use, in bytes.</param>
+            <param name="outputLength">The length of the computed output array.</param>
+            <returns>Returns a byte array of the given size.</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.SaltOutOfRangeException"></exception>
+            <exception cref="T:System.OutOfMemoryException"></exception>
+        </member>
+        <member name="M:Sodium.PasswordHash.ScryptHashBinary(System.Byte[],System.Byte[],Sodium.PasswordHash.Strength,System.Int64)">
+            <summary>Derives a secret key of any size from a password and a salt.</summary>
+            <param name="password">The password.</param>
+            <param name="salt">The salt.</param>
+            <param name="limit">The limit for computation.</param>
+            <param name="outputLength">The length of the computed output array.</param>
+            <returns>Returns a byte array of the given size.</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.SaltOutOfRangeException"></exception>
+            <exception cref="T:System.OutOfMemoryException"></exception>
+        </member>
+        <member name="M:Sodium.PasswordHash.ScryptHashBinary(System.Byte[],System.Byte[],System.Int64,System.Int32,System.Int64)">
+            <summary>
+            Derives a secret key of any size from a password and a salt.
+            </summary>
+            <param name="password">The password.</param>
+            <param name="salt">The salt.</param>
+            <param name="opsLimit">Represents a maximum amount of computations to perform.</param>
+            <param name="memLimit">Is the maximum amount of RAM that the function will use, in bytes.</param>
+            <param name="outputLength">The length of the computed output array.</param>
+            <returns>Returns a byte array of the given size.</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.SaltOutOfRangeException"></exception>
+            <exception cref="T:System.OutOfMemoryException"></exception>
+        </member>
+        <member name="M:Sodium.PasswordHash.ScryptHashString(System.String,Sodium.PasswordHash.Strength)">
+            <summary>Returns the hash in a string format, which includes the generated salt.</summary>
+            <param name="password">The password.</param>
+            <param name="limit">The limit for computation.</param>
+            <returns>Returns an zero-terminated ASCII encoded string of the computed password and hash.</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+            <exception cref="T:System.OutOfMemoryException"></exception>
+        </member>
+        <member name="M:Sodium.PasswordHash.ScryptHashString(System.String,System.Int64,System.Int32)">
+            <summary>Returns the hash in a string format, which includes the generated salt.</summary>
+            <param name="password">The password.</param>
+            <param name="opsLimit">Represents a maximum amount of computations to perform.</param>
+            <param name="memLimit">Is the maximum amount of RAM that the function will use, in bytes.</param>
+            <returns>Returns an zero-terminated ASCII encoded string of the computed password and hash.</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+            <exception cref="T:System.OutOfMemoryException"></exception>
+        </member>
+        <member name="M:Sodium.PasswordHash.ScryptHashStringVerify(System.String,System.String)">
+            <summary>Verifies that a hash generated with ScryptHashString matches the supplied password.</summary>
+            <param name="hash">The hash.</param>
+            <param name="password">The password.</param>
+            <returns><c>true</c> on success; otherwise, <c>false</c>.</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:Sodium.PasswordHash.ScryptHashStringVerify(System.Byte[],System.Byte[])">
+            <summary>Verifies that a hash generated with ScryptHashString matches the supplied password.</summary>
+            <param name="hash">The hash.</param>
+            <param name="password">The password.</param>
+            <returns><c>true</c> on success; otherwise, <c>false</c>.</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:Sodium.PasswordHash.ScryptPasswordNeedsRehash(System.Byte[],System.Int64,System.Int32)">
+            <summary>
+            Checks if the current SCrypt password hash needs rehashing.  Will return false
+            if the hash values don't match what is expected.
+            </summary>
+            <param name="hash">Password that needs rehashing</param>
+            <param name="opsLimit">Expected opsLimit</param>
+            <param name="memLimit">Expected memLimit</param>
+            <returns>True if the hash has the expected ops and mem limits, false otherwise.</returns>
+        </member>
+        <member name="T:Sodium.PublicKeyAuth">
+            <summary>Public-key signatures</summary>
+        </member>
+        <member name="M:Sodium.PublicKeyAuth.GenerateKeyPair">
+            <summary>Creates a new key pair based on a random seed.</summary>
+            <returns>A KeyPair.</returns>
+        </member>
+        <member name="M:Sodium.PublicKeyAuth.GenerateKeyPair(System.Byte[])">
+            <summary>Creates a new key pair based on the provided seed.</summary>
+            <param name="seed">The seed.</param>
+            <returns>A KeyPair.</returns>
+            <exception cref="T:Sodium.Exceptions.SeedOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.PublicKeyAuth.Sign(System.String,System.Byte[])">
+            <summary>Signs a message with Ed25519.</summary>
+            <param name="message">The message.</param>
+            <param name="key">The 64 byte private key.</param>
+            <returns>Signed message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.PublicKeyAuth.Sign(System.Byte[],System.Byte[])">
+            <summary>Signs a message with Ed25519.</summary>
+            <param name="message">The message.</param>
+            <param name="key">The 64 byte private key.</param>
+            <returns>Signed message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.PublicKeyAuth.Verify(System.Byte[],System.Byte[])">
+            <summary>Verifies a message signed with the Sign method.</summary>
+            <param name="signedMessage">The signed message.</param>
+            <param name="key">The 32 byte public key.</param>
+            <returns>Message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.PublicKeyAuth.SignDetached(System.String,System.Byte[])">
+            <summary>Signs a message with Ed25519.</summary>
+            <param name="message">The message.</param>
+            <param name="key">The 64 byte private key.</param>
+            <returns>The signature.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.PublicKeyAuth.SignDetached(System.Byte[],System.Byte[])">
+            <summary>Signs a message with Ed25519.</summary>
+            <param name="message">The message.</param>
+            <param name="key">The 64 byte private key.</param>
+            <returns>The signature.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.PublicKeyAuth.VerifyDetached(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Verifies a message signed with the SignDetached method.</summary>
+            <param name="signature">The signature.</param>
+            <param name="message">The message.</param>
+            <param name="key">The 32 byte public key.</param>
+            <returns><c>true</c> on success; otherwise, <c>false</c>.</returns>
+            <exception cref="T:Sodium.Exceptions.SignatureOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.PublicKeyAuth.ConvertEd25519PublicKeyToCurve25519PublicKey(System.Byte[])">
+            <summary>Converts the ed25519 public key to curve25519 public key.</summary>
+            <param name="ed25519PublicKey">Ed25519 public key.</param>
+            <returns>The curve25519 public key.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.PublicKeyAuth.ConvertEd25519SecretKeyToCurve25519SecretKey(System.Byte[])">
+            <summary>Converts the ed25519 secret key to curve25519 secret key.</summary>
+            <param name="ed25519SecretKey">Ed25519 secret key.</param>
+            <returns>The curve25519 secret key.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.PublicKeyAuth.ExtractEd25519SeedFromEd25519SecretKey(System.Byte[])">
+            <summary>
+            Extracts the seed from the Ed25519 secret key.
+            </summary>
+            <param name="ed25519SecretKey">The 64 byte Ed25519 secret key.</param>
+            <returns>The associated seed.</returns>
+        </member>
+        <member name="M:Sodium.PublicKeyAuth.ExtractEd25519PublicKeyFromEd25519SecretKey(System.Byte[])">
+            <summary>
+            Extracts the Ed25519 public key from the Ed25519 secret key.
+            </summary>
+            <param name="ed25519SecretKey">The 64 byte Ed25519 secret key.</param>
+            <returns>The associated ed25519PublicKey.</returns>
+        </member>
+        <member name="T:Sodium.PublicKeyBox">
+            <summary>Create and Open Boxes.</summary>
+        </member>
+        <member name="M:Sodium.PublicKeyBox.GenerateKeyPair">
+            <summary>Creates a new key pair based on a random seed.</summary>
+            <returns>A KeyPair.</returns>
+        </member>
+        <member name="M:Sodium.PublicKeyBox.GenerateKeyPair(System.Byte[])">
+            <summary>Creates a new key pair based on the provided private key.</summary>
+            <param name="privateKey">The private key.</param>
+            <returns>A KeyPair.</returns>
+            <exception cref="T:Sodium.Exceptions.SeedOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.PublicKeyBox.GenerateSeededKeyPair(System.Byte[])">
+            <summary>Creates a new key pair based on the provided seed.</summary>
+            <param name="seed">Seed data.</param>
+            <returns>A KeyPair.</returns>
+            <exception cref="T:Sodium.Exceptions.SeedOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.PublicKeyBox.GenerateNonce">
+            <summary>Generates a random 24 byte nonce.</summary>
+            <returns>Returns a byte array with 24 random bytes</returns>
+        </member>
+        <member name="M:Sodium.PublicKeyBox.Create(System.String,System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Creates a Box</summary>
+            <param name="message">The message.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="secretKey">The secret key to sign message with.</param>
+            <param name="publicKey">The recipient's public key.</param>
+            <returns>The encrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.PublicKeyBox.Create(System.Byte[],System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Creates a Box</summary>
+            <param name="message">The message.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="secretKey">The secret key to sign message with.</param>
+            <param name="publicKey">The recipient's public key.</param>
+            <returns>The encrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.PublicKeyBox.CreateDetached(System.String,System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Creates detached a Box</summary>
+            <param name="message">The message.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="secretKey">The secret key to sign message with.</param>
+            <param name="publicKey">The recipient's public key.</param>
+            <returns>A detached object with a cipher and a mac.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.PublicKeyBox.CreateDetached(System.Byte[],System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Creates a detached Box</summary>
+            <param name="message">The message.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="secretKey">The secret key to sign message with.</param>
+            <param name="publicKey">The recipient's public key.</param>
+            <returns>A detached object with a cipher and a mac.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.PublicKeyBox.Open(System.Byte[],System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Opens a Box</summary>
+            <param name="cipherText"></param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="secretKey">The recipient's secret key.</param>
+            <param name="publicKey">The sender's public key.</param>
+            <returns>The decrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.PublicKeyBox.OpenDetached(System.String,System.Byte[],System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Opens a detached Box</summary>
+            <param name="cipherText">Hex-encoded string to be opened.</param>
+            <param name="mac">The 16 byte mac.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="secretKey">The recipient's secret key.</param>
+            <param name="publicKey">The sender's public key.</param>
+            <returns>The decrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.MacOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.PublicKeyBox.OpenDetached(Sodium.DetachedBox,System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Opens a detached Box</summary>
+            <param name="detached">A detached object.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="secretKey">The recipient's secret key.</param>
+            <param name="publicKey">The sender's public key.</param>
+            <returns>The decrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.MacOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.PublicKeyBox.OpenDetached(System.Byte[],System.Byte[],System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Opens a detached Box</summary>
+            <param name="cipherText">The cipherText.</param>
+            <param name="mac">The 16 byte mac.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="secretKey">The recipient's secret key.</param>
+            <param name="publicKey">The sender's public key.</param>
+            <returns>The decrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.MacOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="T:Sodium.ScalarMult">
+            <summary>Scalar Multiplication</summary>
+        </member>
+        <member name="M:Sodium.ScalarMult.Base(System.Byte[])">
+            <summary>
+            Diffie-Hellman (function computes the public key)
+            </summary>
+            <param name="secretKey">A secret key.</param>
+            <returns>A computed public key.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.ScalarMult.Mult(System.Byte[],System.Byte[])">
+            <summary>
+            Diffie-Hellman (function computes a secret shared by the two keys) 
+            </summary>
+            <param name="secretKey">A secret key.</param>
+            <param name="publicKey">A public key.</param>
+            <returns>A computed secret shared.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+        </member>
+        <member name="T:Sodium.SealedPublicKeyBox">
+            <summary> Create and Open SealedPublicKeyBoxes. </summary>
+        </member>
+        <member name="M:Sodium.SealedPublicKeyBox.Create(System.String,Sodium.KeyPair)">
+            <summary> Creates a SealedPublicKeyBox</summary>
+            <param name="message">The message.</param>
+            <param name="recipientKeyPair">The recipientKeyPair key pair (uses only the public key).</param>
+            <returns>The anonymously encrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.SealedPublicKeyBox.Create(System.Byte[],Sodium.KeyPair)">
+            <summary> Creates a SealedPublicKeyBox</summary>
+            <param name="message">The message.</param>
+            <param name="recipientKeyPair">The recipientKeyPair key pair (uses only the public key).</param>
+            <returns>The anonymously encrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.SealedPublicKeyBox.Create(System.String,System.Byte[])">
+            <summary> Creates a SealedPublicKeyBox</summary>
+            <param name="message">The message.</param>
+            <param name="recipientPublicKey">The 32 byte recipient's public key.</param>
+            <returns>The anonymously encrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.SealedPublicKeyBox.Create(System.Byte[],System.Byte[])">
+            <summary> Creates a SealedPublicKeyBox</summary>
+            <param name="message">The message.</param>
+            <param name="recipientPublicKey">The 32 byte recipient's public key.</param>
+            <returns>The anonymously encrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.SealedPublicKeyBox.Open(System.String,Sodium.KeyPair)">
+            <summary>Opens a SealedPublicKeyBox</summary>
+            <param name="cipherText">Hex-encoded cipherText to be opened.</param>
+            <param name="recipientKeyPair">The recipient's key pair.</param>
+            <returns>The decrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.SealedPublicKeyBox.Open(System.Byte[],Sodium.KeyPair)">
+            <summary>Opens a SealedPublicKeyBox</summary>
+            <param name="cipherText">The cipherText to be opened.</param>
+            <param name="recipientKeyPair">The recipient's key pair.</param>
+            <returns>The decrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.SealedPublicKeyBox.Open(System.String,System.Byte[],System.Byte[])">
+            <summary>Opens a SealedPublicKeyBox</summary>
+            <param name="cipherText">Hex-encoded cipherText to be opened.</param>
+            <param name="recipientSecretKey">The recipient's secret key.</param>
+            <param name="recipientPublicKey">The recipient's public key.</param>
+            <returns>The decrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.SealedPublicKeyBox.Open(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Opens a SealedPublicKeyBox</summary>
+            <param name="cipherText">The cipherText to be opened.</param>
+            <param name="recipientSecretKey">The recipient's secret key.</param>
+            <param name="recipientPublicKey">The recipient's public key.</param>
+            <returns>The decrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="T:Sodium.SecretAeadAes">
+            <summary>Authenticated Encryption with Additional Data using AES-GCM.</summary>
+            <remarks>Only supported on modern x86/x64 processors.</remarks>
+        </member>
+        <member name="P:Sodium.SecretAeadAes.IsAvailable">
+            <summary>Detect if the current CPU supports the required instructions (SSSE3, aesni, pcmul).</summary>
+            <returns><c>true</c> if the CPU supports the necessary instructions, otherwise <c>false</c></returns>
+            <remarks>Use <see cref="T:Sodium.SecretAeadChaCha20Poly1305"/> if portability is required.</remarks>
+        </member>
+        <member name="M:Sodium.SecretAeadAes.GenerateNonce">
+            <summary>Generates a random 12 byte nonce.</summary>
+            <returns>Returns a byte array with 12 random bytes.</returns>
+        </member>
+        <member name="M:Sodium.SecretAeadAes.Encrypt(System.Byte[],System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            Encrypts a message with an authentication tag and additional data using AES-GCM.
+            </summary>
+            <param name="message">The message to be encrypted.</param>
+            <param name="nonce">The 12 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <param name="additionalData">The additional data; may be null.</param>
+            <returns>The encrypted message with additional data.</returns>
+            <remarks>The nonce should never ever be reused with the same key.</remarks>
+            <remarks>The recommended way to generate it is to use GenerateNonce() for the first message, and increment it for each subsequent message using the same key.</remarks>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.AdditionalDataOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.SecretAeadAes.Decrypt(System.Byte[],System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            Decrypts a cipher with an authentication tag and additional data using AES-GCM.
+            </summary>
+            <param name="cipher">The cipher to be decrypted.</param>
+            <param name="nonce">The 12 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <param name="additionalData">The additional data; may be null.</param>
+            <returns>The decrypted cipher.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.AdditionalDataOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="T:Sodium.SecretAeadChaCha20Poly1305">
+            <summary>Authenticated Encryption with Additional Data.</summary>
+        </member>
+        <member name="M:Sodium.SecretAeadChaCha20Poly1305.GenerateNonce">
+            <summary>Generates a random 8 byte nonce.</summary>
+            <returns>Returns a byte array with 8 random bytes.</returns>
+        </member>
+        <member name="M:Sodium.SecretAeadChaCha20Poly1305.Encrypt(System.Byte[],System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            Encrypts a message with an authentication tag and additional data.
+            </summary>
+            <param name="message">The message to be encrypted.</param>
+            <param name="nonce">The 8 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <param name="additionalData">The additional data; may be null.</param>
+            <returns>The encrypted message with additional data.</returns>
+            <remarks>The nonce should never ever be reused with the same key.</remarks>
+            <remarks>The recommended way to generate it is to use GenerateNonce() for the first message, and increment it for each subsequent message using the same key.</remarks>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.AdditionalDataOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.SecretAeadChaCha20Poly1305.Decrypt(System.Byte[],System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            Decrypts a cipher with an authentication tag and additional data.
+            </summary>
+            <param name="cipher">The cipher to be decrypted.</param>
+            <param name="nonce">The 8 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <param name="additionalData">The additional data; may be null.</param>
+            <returns>The decrypted cipher.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.AdditionalDataOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="T:Sodium.SecretAeadChaCha20Poly1305IETF">
+            <summary>Authenticated Encryption with Additional Data using ChaCha20-Poly1305.</summary>
+        </member>
+        <member name="M:Sodium.SecretAeadChaCha20Poly1305IETF.GenerateNonce">
+            <summary>Generates a random 12 byte nonce.</summary>
+            <returns>Returns a byte array with 12 random bytes.</returns>
+        </member>
+        <member name="M:Sodium.SecretAeadChaCha20Poly1305IETF.Encrypt(System.Byte[],System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            Encrypts a message with an authentication tag and additional data using ChaCha20-Poly1305.
+            </summary>
+            <param name="message">The message to be encrypted.</param>
+            <param name="nonce">The 12 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <param name="additionalData">The additional data; may be null.</param>
+            <returns>The encrypted message with additional data.</returns>
+            <remarks>The nonce should never ever be reused with the same key.</remarks>
+            <remarks>The recommended way to generate it is to use GenerateNonce() for the first message, and increment it for each subsequent message using the same key.</remarks>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.AdditionalDataOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.SecretAeadChaCha20Poly1305IETF.Decrypt(System.Byte[],System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            Decrypts a cipher with an authentication tag and additional data using ChaCha20-Poly1305.
+            </summary>
+            <param name="cipher">The cipher to be decrypted.</param>
+            <param name="nonce">The 12 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <param name="additionalData">The additional data; may be null.</param>
+            <returns>The decrypted cipher.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.AdditionalDataOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="T:Sodium.SecretAeadXChaCha20Poly1305">
+            <summary>Authenticated Encryption with Additional Data using XChaCha20-Poly1305.</summary>
+        </member>
+        <member name="M:Sodium.SecretAeadXChaCha20Poly1305.GenerateNonce">
+            <summary>Generates a random 24 byte nonce.</summary>
+            <returns>Returns a byte array with 24 random bytes.</returns>
+        </member>
+        <member name="M:Sodium.SecretAeadXChaCha20Poly1305.Encrypt(System.Byte[],System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            Encrypts a message with an authentication tag and additional data using XChaCha20-Poly1305.
+            </summary>
+            <param name="message">The message to be encrypted.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <param name="additionalData">The additional data; may be null.</param>
+            <returns>The encrypted message with additional data.</returns>
+            <remarks>The nonce should never ever be reused with the same key.</remarks>
+            <remarks>The recommended way to generate it is to use GenerateNonce() for the first message, and increment it for each subsequent message using the same key.</remarks>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.AdditionalDataOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.SecretAeadXChaCha20Poly1305.Decrypt(System.Byte[],System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            Decrypts a cipher with an authentication tag and additional data using XChaCha20-Poly1305.
+            </summary>
+            <param name="cipher">The cipher to be decrypted.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <param name="additionalData">The additional data; may be null.</param>
+            <returns>The decrypted cipher.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.AdditionalDataOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="T:Sodium.SecretBox">
+            <summary>Create and Open Secret Boxes.</summary>
+        </member>
+        <member name="M:Sodium.SecretBox.GenerateKey">
+            <summary>Generates a random 32 byte key.</summary>
+            <returns>Returns a byte array with 32 random bytes</returns>
+        </member>
+        <member name="M:Sodium.SecretBox.GenerateNonce">
+            <summary>Generates a random 24 byte nonce.</summary>
+            <returns>Returns a byte array with 24 random bytes</returns>
+        </member>
+        <member name="M:Sodium.SecretBox.Create(System.String,System.Byte[],System.Byte[])">
+            <summary>Creates a Secret Box</summary>
+            <param name="message">Hex-encoded string to be encrypted.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>The encrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.SecretBox.Create(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Creates a Secret Box</summary>
+            <param name="message">The message.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>The encrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.SecretBox.CreateDetached(System.String,System.Byte[],System.Byte[])">
+            <summary>Creates detached a Secret Box</summary>
+            <param name="message">Hex-encoded string to be encrypted.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>A detached object with a cipher and a mac.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.SecretBox.CreateDetached(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Creates detached a Secret Box</summary>
+            <param name="message">The message.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>A detached object with a cipher and a mac.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.SecretBox.Open(System.String,System.Byte[],System.Byte[])">
+            <summary>Opens a Secret Box</summary>
+            <param name="cipherText">Hex-encoded string to be opened.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="key">The 32 byte nonce.</param>
+            <returns>The decrypted text.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.SecretBox.Open(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Opens a Secret Box</summary>
+            <param name="cipherText">The cipherText.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="key">The 32 byte nonce.</param>
+            <returns>The decrypted text.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.SecretBox.OpenDetached(System.String,System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Opens a detached Secret Box</summary>
+            <param name="cipherText">Hex-encoded string to be opened</param>
+            <param name="mac">The 16 byte mac.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="key">The 32 byte nonce.</param>
+            <returns>The decrypted text.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.MacOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.SecretBox.OpenDetached(Sodium.DetachedBox,System.Byte[],System.Byte[])">
+            <summary>Opens a detached Secret Box</summary>
+            <param name="detached">A detached object.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="key">The 32 byte nonce.</param>
+            <returns>The decrypted text.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.MacOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.SecretBox.OpenDetached(System.Byte[],System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Opens a detached Secret Box</summary>
+            <param name="cipherText">The cipherText.</param>
+            <param name="mac">The 16 byte mac.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="key">The 32 byte nonce.</param>
+            <returns>The decrypted text.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.MacOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="T:Sodium.SecretKeyAuth">
+            <summary>One Time Message Authentication</summary>
+        </member>
+        <member name="M:Sodium.SecretKeyAuth.GenerateKey">
+            <summary>Generates a random 32 byte key.</summary>
+            <returns>Returns a byte array with 32 random bytes</returns>
+        </member>
+        <member name="M:Sodium.SecretKeyAuth.Sign(System.String,System.Byte[])">
+            <summary>Signs a message with HMAC-SHA512-256.</summary>
+            <param name="message">The message.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>32 byte authentication code.</returns>
+        </member>
+        <member name="M:Sodium.SecretKeyAuth.Sign(System.Byte[],System.Byte[])">
+            <summary>Signs a message with HMAC-SHA512-256.</summary>
+            <param name="message">The message.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>32 byte authentication code.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.SecretKeyAuth.Verify(System.String,System.Byte[],System.Byte[])">
+            <summary>Verifies a message signed with the Sign method.</summary>
+            <param name="message">The message.</param>
+            <param name="signature">The 32 byte signature.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>True if verified.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.SignatureOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.SecretKeyAuth.Verify(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Verifies a message signed with the Sign method.</summary>
+            <param name="message">The message.</param>
+            <param name="signature">The 32 byte signature.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>True if verified.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.SignatureOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.SecretKeyAuth.SignHmacSha256(System.Byte[],System.Byte[])">
+            <summary>Signs a message with HMAC-SHA-256.</summary>
+            <param name="message">The message.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>32 byte authentication code.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.SecretKeyAuth.SignHmacSha256(System.String,System.Byte[])">
+            <summary>Signs a message with HMAC-SHA-256.</summary>
+            <param name="message">The message.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>32 byte authentication code.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.SecretKeyAuth.SignHmacSha512(System.Byte[],System.Byte[])">
+            <summary>Signs a message with HMAC-SHA-512.</summary>
+            <param name="message">The message.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>64 byte authentication code.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.SecretKeyAuth.SignHmacSha512(System.String,System.Byte[])">
+            <summary>Signs a message with HMAC-SHA-512.</summary>
+            <param name="message">The message.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>64 byte authentication code.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.SecretKeyAuth.VerifyHmacSha256(System.String,System.Byte[],System.Byte[])">
+            <summary>Verifies a message signed with the SignHmacSha256 method.</summary>
+            <param name="message">The message.</param>
+            <param name="signature">The 32 byte signature.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>True if verified.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.SignatureOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.SecretKeyAuth.VerifyHmacSha256(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Verifies a message signed with the SignHmacSha256 method.</summary>
+            <param name="message">The message.</param>
+            <param name="signature">The 32 byte signature.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>True if verified.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.SignatureOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.SecretKeyAuth.VerifyHmacSha512(System.String,System.Byte[],System.Byte[])">
+            <summary>Verifies a message signed with the SignHmacSha512 method.</summary>
+            <param name="message">The message.</param>
+            <param name="signature">The 64 byte signature.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>True if verified.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.SignatureOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.SecretKeyAuth.VerifyHmacSha512(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Verifies a message signed with the SignHmacSha512 method.</summary>
+            <param name="message">The message.</param>
+            <param name="signature">The 64 byte signature.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>True if verified.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.SignatureOutOfRangeException"></exception>
+        </member>
+        <member name="T:Sodium.ShortHash">
+            <summary>Short hash function.</summary>
+        </member>
+        <member name="M:Sodium.ShortHash.GenerateKey">
+            <summary>Generates a random 16 byte key.</summary>
+            <returns>Returns a byte array with 16 random bytes</returns>
+        </member>
+        <member name="M:Sodium.ShortHash.Hash(System.String,System.String)">
+            <summary>Hashes a message, with a key, using the SipHash-2-4 primitive.</summary>
+            <param name="message">The message to be hashed.</param>
+            <param name="key">The key; must be 16 bytes.</param>
+            <returns>Returns 8 byte array.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.ShortHash.Hash(System.String,System.Byte[])">
+            <summary>Hashes a message, with a key, using the SipHash-2-4 primitive.</summary>
+            <param name="message">The message to be hashed.</param>
+            <param name="key">The key; must be 16 bytes.</param>
+            <returns>Returns 8 byte array.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+        </member>
+        <member name="M:Sodium.ShortHash.Hash(System.Byte[],System.Byte[])">
+            <summary>Hashes a message, with a key, using the SipHash-2-4 primitive.</summary>
+            <param name="message">The message to be hashed.</param>
+            <param name="key">The key; must be 16 bytes.</param>
+            <returns>Returns 8 byte array.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+        </member>
+        <member name="T:Sodium.SodiumCore">
+            <summary>
+            libsodium core information.
+            </summary>
+        </member>
+        <member name="M:Sodium.SodiumCore.GetRandomBytes(System.Int32)">
+            <summary>Gets random bytes</summary>
+            <param name="count">The count of bytes to return.</param>
+            <returns>An array of random bytes.</returns>
+        </member>
+        <member name="M:Sodium.SodiumCore.GetRandomNumber(System.Int32)">
+            <summary>
+            Gets a random number.
+            </summary>
+            <param name="upperBound">Integer between 0 and 2147483647.</param>
+            <returns>An unpredictable value between 0 and upperBound (excluded).</returns>
+        </member>
+        <member name="M:Sodium.SodiumCore.SodiumVersionString">
+            <summary>
+            Returns the version of libsodium in use.
+            </summary>
+            <returns>
+            The sodium version string.
+            </returns>
+        </member>
+        <member name="M:Sodium.SodiumCore.Init">
+            <summary>Initialize libsodium.</summary>
+            <remarks>This only needs to be done once, so this prevents repeated calls.</remarks>
+        </member>
+        <member name="T:Sodium.StreamEncryption">
+            <summary>Encrypt and decrypt messages via XSalsa20 or ChaCha20</summary>
+        </member>
+        <member name="M:Sodium.StreamEncryption.GenerateKey">
+            <summary>Generates a random 32 byte key.</summary>
+            <returns>Returns a byte array with 32 random bytes</returns>
+        </member>
+        <member name="M:Sodium.StreamEncryption.GenerateNonce">
+            <summary>Generates a random 24 byte nonce.</summary>
+            <returns>Returns a byte array with 24 random bytes</returns>
+        </member>
+        <member name="M:Sodium.StreamEncryption.GenerateNonceChaCha20">
+            <summary>Generates a random 8 byte nonce.</summary>
+            <returns>Returns a byte array with 8 random bytes</returns>
+        </member>
+        <member name="M:Sodium.StreamEncryption.GenerateNonceChaCha20Ietf">
+            <summary>Generates a random 12 byte nonce.</summary>
+            <returns>Returns a byte array with 12 random bytes</returns>
+        </member>
+        <member name="M:Sodium.StreamEncryption.GenerateNonceXChaCha20">
+            <summary>Generates a random 24 byte nonce.</summary>
+            <returns>Returns a byte array with 24 random bytes</returns>
+        </member>
+        <member name="M:Sodium.StreamEncryption.Encrypt(System.String,System.Byte[],System.Byte[])">
+            <summary>Encrypts messages via XSalsa20</summary>
+            <param name="message">The message to be encrypted.</param>
+            <param name="nonce">The nonce.</param>
+            <param name="key">The key.</param>
+            <returns>The encrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.StreamEncryption.Encrypt(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Encrypts messages via XSalsa20</summary>
+            <param name="message">The message to be encrypted.</param>
+            <param name="nonce">The nonce.</param>
+            <param name="key">The key.</param>
+            <returns>The encrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.StreamEncryption.EncryptChaCha20(System.String,System.Byte[],System.Byte[])">
+            <summary>Encrypts messages via ChaCha20</summary>
+            <param name="message">The message to be encrypted.</param>
+            <param name="nonce">The 8 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>The encrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.StreamEncryption.EncryptChaCha20(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Encrypts messages via ChaCha20</summary>
+            <param name="message">The message to be encrypted.</param>
+            <param name="nonce">The 8 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>The encrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.StreamEncryption.EncryptChaCha20Ietf(System.String,System.Byte[],System.Byte[])">
+            <summary>Encrypts messages via ChaCha20 IETF</summary>
+            <param name="message">The message to be encrypted.</param>
+            <param name="nonce">The 12 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>The encrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.StreamEncryption.EncryptChaCha20Ietf(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Encrypts messages via ChaCha20 IETF</summary>
+            <param name="message">The message to be encrypted.</param>
+            <param name="nonce">The 12 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>The encrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.StreamEncryption.EncryptXChaCha20(System.String,System.Byte[],System.Byte[])">
+            <summary>Encrypts messages via XChaCha20</summary>
+            <param name="message">The message to be encrypted.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>The encrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.StreamEncryption.EncryptXChaCha20(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Encrypts messages via XChaCha20</summary>
+            <param name="message">The message to be encrypted.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>The encrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.StreamEncryption.Decrypt(System.String,System.Byte[],System.Byte[])">
+            <summary>Decrypts messages via XSalsa20</summary>
+            <param name="cipherText">The ciphertext as hex-encoded string.</param>
+            <param name="nonce">The nonce.</param>
+            <param name="key">The key.</param>
+            <returns>The decrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.StreamEncryption.Decrypt(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Decrypts messages via XSalsa20</summary>
+            <param name="cipherText">The ciphertext to be opened.</param>
+            <param name="nonce">The nonce.</param>
+            <param name="key">The key.</param>
+            <returns>The decrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.StreamEncryption.DecryptChaCha20(System.String,System.Byte[],System.Byte[])">
+            <summary>Decrypts messages via ChaCha20</summary>
+            <param name="cipherText">The ciphertext as hex-encoded string.</param>
+            <param name="nonce">The 8 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>The decrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.StreamEncryption.DecryptChaCha20(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Decrypts messages via ChaCha20</summary>
+            <param name="cipherText">The ciphertext to be opened.</param>
+            <param name="nonce">The 8 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>The decrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.StreamEncryption.DecryptChaCha20Ietf(System.String,System.Byte[],System.Byte[])">
+            <summary>Decrypts messages via ChaCha20 IETF</summary>
+            <param name="cipherText">The ciphertext as hex-encoded string.</param>
+            <param name="nonce">The 12 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>The decrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.StreamEncryption.DecryptChaCha20Ietf(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Decrypts messages via ChaCha20</summary>
+            <param name="cipherText">The ciphertext to be opened.</param>
+            <param name="nonce">The 12 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>The decrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.StreamEncryption.DecryptXChaCha20(System.String,System.Byte[],System.Byte[])">
+            <summary>Decrypts messages via XChaCha20</summary>
+            <param name="cipherText">The ciphertext as hex-encoded string.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>The decrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="M:Sodium.StreamEncryption.DecryptXChaCha20(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>Decrypts messages via XChaCha20</summary>
+            <param name="cipherText">The ciphertext to be opened.</param>
+            <param name="nonce">The 24 byte nonce.</param>
+            <param name="key">The 32 byte key.</param>
+            <returns>The decrypted message.</returns>
+            <exception cref="T:Sodium.Exceptions.KeyOutOfRangeException"></exception>
+            <exception cref="T:Sodium.Exceptions.NonceOutOfRangeException"></exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+        </member>
+        <member name="T:Sodium.Utilities">
+            <summary>Various utility methods.</summary>
+        </member>
+        <member name="T:Sodium.Utilities.Base64Variant">
+            <summary>Represents Base64 encoding variants.</summary>
+        </member>
+        <member name="F:Sodium.Utilities.Base64Variant.Original">
+            <summary>Original Base64 encoding variant.</summary>
+        </member>
+        <member name="F:Sodium.Utilities.Base64Variant.OriginalNoPadding">
+            <summary>Original Base64 encoding variant with no padding.</summary>
+        </member>
+        <member name="F:Sodium.Utilities.Base64Variant.UrlSafe">
+            <summary>Urlsafe Base64 encoding variant.</summary>
+        </member>
+        <member name="F:Sodium.Utilities.Base64Variant.UrlSafeNoPadding">
+            <summary>Urlsafe Base64 encoding variant with no padding.</summary>
+        </member>
+        <member name="M:Sodium.Utilities.BinaryToBase64(System.Byte[],Sodium.Utilities.Base64Variant)">
+            <summary>Takes byte array and converts it to Base64 encoded string.</summary>
+            <param name="data">Data to be encoded.</param>
+            <param name="variant">Base64 encoding variant.</param>
+            <exception cref="T:System.OverflowException"></exception>
+            <returns>Base64 encoded string.</returns>
+        </member>
+        <member name="M:Sodium.Utilities.Base64ToBinary(System.String,System.String,Sodium.Utilities.Base64Variant)">
+            <summary>Converts Base64 encoded string to byte array.</summary>
+            <param name="base64">Base64 encoded string.</param>
+            <param name="ignoredChars">Characters which will be ignored in decoding.</param>
+            <param name="variant">Base64 encoding variant</param>
+            <exception cref="T:System.Exception"></exception>
+            <returns>A byte array of decoded Base64 string</returns>
+        </member>
+        <member name="M:Sodium.Utilities.Increment(System.Byte[])">
+            <summary>
+            Takes a unsigned number, and increments it.
+            </summary>
+            <param name="value">The value to increment.</param>
+            <returns>The incremented value.</returns>
+        </member>
+        <member name="M:Sodium.Utilities.Compare(System.Byte[],System.Byte[])">
+            <summary>
+            Compares two values in constant time.
+            </summary>
+            <param name="a">The first value.</param>
+            <param name="b">The second value.</param>
+            <returns><c>true</c> if the values are equal, otherwise <c>false</c></returns>
+        </member>
+        <member name="T:Sodium.Utilities.HexFormat">
+            <summary>Represents HEX formats.</summary>
+        </member>
+        <member name="F:Sodium.Utilities.HexFormat.None">
+            <summary>a hex string without seperators.</summary>
+        </member>
+        <member name="F:Sodium.Utilities.HexFormat.Colon">
+            <summary>a hex string with colons (dd:33:dd).</summary>
+        </member>
+        <member name="F:Sodium.Utilities.HexFormat.Hyphen">
+            <summary>a hex string with hyphens (dd-33-dd).</summary>
+        </member>
+        <member name="F:Sodium.Utilities.HexFormat.Space">
+            <summary>a hex string with spaces (dd 33 dd).</summary>
+        </member>
+        <member name="T:Sodium.Utilities.HexCase">
+            <summary>Represents HEX cases.</summary>
+        </member>
+        <member name="F:Sodium.Utilities.HexCase.Lower">
+            <summary>lower-case hex-encoded.</summary>
+        </member>
+        <member name="F:Sodium.Utilities.HexCase.Upper">
+            <summary>upper-case hex-encoded</summary>
+        </member>
+        <member name="M:Sodium.Utilities.BinaryToHex(System.Byte[])">
+            <summary>Takes a byte array and returns a hex-encoded string.</summary>
+            <param name="data">Data to be encoded.</param>
+            <returns>Hex-encoded string, lodercase.</returns>
+            <exception cref="T:System.OverflowException"></exception>
+        </member>
+        <member name="M:Sodium.Utilities.BinaryToHex(System.Byte[],Sodium.Utilities.HexFormat,Sodium.Utilities.HexCase)">
+            <summary>Takes a byte array and returns a hex-encoded string.</summary>
+            <param name="data">Data to be encoded.</param>
+            <param name="format">Output format.</param>
+            <param name="hcase">Lowercase or uppercase.</param>
+            <returns>Hex-encoded string.</returns>
+            <remarks>Bit fiddling by CodeInChaos.</remarks>
+            <remarks>This method don`t use libsodium, but it can be useful for generating human readable fingerprints.</remarks>
+        </member>
+        <member name="M:Sodium.Utilities.HexToBinary(System.String)">
+            <summary>Converts a hex-encoded string to a byte array.</summary>
+            <param name="hex">Hex-encoded data.</param>
+            <returns>A byte array of the decoded string.</returns>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+    </members>
+</doc>

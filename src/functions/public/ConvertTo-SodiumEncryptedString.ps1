@@ -26,6 +26,29 @@
         [Parameter(Mandatory)]
         [string] $PublicKey
     )
+    begin {
+        Initialize-Sodium
+    }
 
-    New-SealedPublicKeyBox -Secret $Secret -PublicKey $PublicKey
+    process {
+        # Convert public key from Base64 or space-separated string
+        $publicKeyByteArray = ConvertTo-ByteArray $PublicKey
+        if ($publicKeyByteArray.Length -ne 32) {
+            throw "Invalid public key. Expected 32 bytes but got $($publicKeyByteArray.Length)."
+        }
+
+        $secretBytes = [System.Text.Encoding]::UTF8.GetBytes($Secret)
+        $overhead = [PSModule.Sodium]::crypto_box_sealbytes().ToUInt32()
+        $cipherLength = $secretBytes.Length + $overhead
+        $ciphertext = New-Object byte[] $cipherLength
+
+        # Encrypt message
+        $result = [PSModule.Sodium]::crypto_box_seal($ciphertext, $secretBytes, [uint64]$secretBytes.Length, $publicKeyByteArray)
+
+        if ($result -ne 0) {
+            throw 'Encryption failed.'
+        }
+
+        return [Convert]::ToBase64String($ciphertext)
+    }
 }
