@@ -10,8 +10,8 @@ $targetRuntimes = @(
 
 Push-Location $PSScriptRoot
 $targetRuntimes | ForEach-Object {
-    dotnet publish -r $_
-    $source = "$PSScriptRoot/bin/Release/net8.0/$_/publish"
+    dotnet publish -r $_ --configuration Release
+    $source = "$PSScriptRoot/bin/Release/netstandard2.0/$_/publish"
     $destination = "$PSScriptRoot/../src/libs/$_"
     Copy-Item -Path $source -Destination $destination -Recurse -Force
 }
