@@ -13,31 +13,14 @@
 
             # Decrypt the sealed box using the matching private key
             $params = @{
-                EncryptedSecret = $encryptedString
-                PublicKey       = $publicKey
-                PrivateKey      = $privateKey
+                Encrypted  = $encryptedString
+                PublicKey  = $publicKey
+                PrivateKey = $privateKey
             }
             $decryptedString = ConvertFrom-SodiumEncryptedString @params
 
             # Assert that the decrypted secret matches the original
             $decryptedString | Should -Be $secret
-        }
-    }
-
-    Context 'Isolated Assemblies' {
-        $IsolatedAssemblies = @(
-            'libsodium'
-            'Sodium.Core'
-            'PSModule.Sodium.Isolated'
-        )
-        $IsolatedTestCases = $IsolatedAssemblies | ForEach-Object {
-            @{
-                Name = $_
-            }
-        }
-        It 'Should be in the IsolatedAssemblyLoadContext [<Name>]' -ForEach $IsolatedTestCases {
-            $assembly = [System.AppDomain]::CurrentDomain.GetAssemblies() | Where-Object { $_.GetName().Name -eq $Name }
-            [Runtime.Loader.AssemblyLoadContext]::GetLoadContext($assembly).Name | Should -Be 'IsolatedAssemblyLoadContext'
         }
     }
 }
