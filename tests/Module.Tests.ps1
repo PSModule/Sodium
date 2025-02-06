@@ -13,7 +13,7 @@
 
             # Decrypt the sealed box using the matching private key
             $params = @{
-                Encrypted  = $encryptedString
+                Secret     = $encryptedString
                 PublicKey  = $publicKey
                 PrivateKey = $privateKey
             }
