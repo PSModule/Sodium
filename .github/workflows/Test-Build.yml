@@ -27,6 +27,6 @@ jobs:
         uses: PSModule/GitHub-Script@v1
         with:
           Script: |
-            Import-Module src/libs/osx-arm64/PSModule.Sodium.dll
+            . src/main.ps1
             . src/functions/private/Initialize-Sodium.ps1
             Initialize-Sodium
