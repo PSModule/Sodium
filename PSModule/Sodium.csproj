@@ -1,15 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <AssemblyName>PSModule.Sodium</AssemblyName>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="PowerShellStandard.Library" Version="7.0.0-preview.1" PrivateAssets="All" />
-        <!-- <PackageReference Include="System.Management.Automation" Version="7.4.0" PrivateAssets="All" /> -->
-        <PackageReference Include="libsodium" Version="1.0.18.4" />
+        <PackageReference Include="System.Management.Automation" Version="7.4.0" PrivateAssets="All" />
+        <PackageReference Include="libsodium" Version="1.0.21.1" />
     </ItemGroup>
 
 </Project>
