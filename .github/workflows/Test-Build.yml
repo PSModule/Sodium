@@ -28,6 +28,6 @@ jobs:
         with:
           Script: |
             . src/main.ps1
-            Get-ChildItem 'src/functions/' -Recurse | ForEach-Object { . $_.FullName }
+            Get-ChildItem 'src/functions/' -Recurse -File | ForEach-Object { . $_.FullName }
             . examples/GitHubSecretService.ps1
 
