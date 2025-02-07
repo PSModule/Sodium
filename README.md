@@ -1,6 +1,6 @@
 # Sodium
 
-A PowerShell module that provides [`Sodium.Core`](https://github.com/ektrah/libsodium-core) functionality.
+A PowerShell module that provides direct bindings to the [`libsodium`](https://github.com/jedisct1/libsodium) cryptographic library.
 
 This module was initially created to serve the needs of the [GitHub PowerShell module](https://github.com/PSModule/GitHub).
 GitHub's method for creating or updating [secrets via the REST API](https://docs.github.com/en/rest/guides/encrypting-secrets-for-the-rest-api?apiVersion=2022-11-28#example-encrypting-a-secret-using-c)
@@ -12,7 +12,6 @@ This module relies on the following external resources:
 
 - The [PSModule framework](https://github.com/PSModule) for building, testing, and publishing the module.
 - The [libsodium](https://github.com/jedisct1/libsodium) library for cryptographic operations.
-- The [Sodium.Core](https://github.com/ektrah/libsodium-core) library, which provides .NET bindings.
 
 ## Installation
 
@@ -99,12 +98,6 @@ You can help by picking up an existing issue or submitting a new one if you have
 
 ## Acknowledgements
 
-### Module Isolation Logic
+This module would not be possible without the following resources:
 
-- Resolving PowerShell module assembly dependency conflicts | [PowerShell Docs @ Microsoft Learn](https://learn.microsoft.com/en-us/powershell/scripting/dev-cross-plat/resolving-dependency-conflicts?view=powershell-7.4#more-robust-solutions)
-- rjmholt/ModuleDependencyIsolationExample [GitHub](https://github.com/rjmholt/ModuleDependencyIsolationExample)
-
-### Libsodium
-
-- **Sodium.Core** | [GitHub](https://github.com/ektrah/libsodium-core)
 - **libsodium** | [Docs](https://doc.libsodium.org/) | [GitHub](https://github.com/jedisct1/libsodium)
