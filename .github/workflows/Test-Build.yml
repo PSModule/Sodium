@@ -9,9 +9,9 @@ permissions:
   contents: write
 
 jobs:
-  Build-Test:
-    name: Build-Test
-    runs-on: macos-latest
+  Build:
+    name: Build
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -21,7 +21,28 @@ jobs:
         with:
           Script: |
             ./PSModule/build.ps1
-            Get-ChildItem -Recurse | Select-Object -ExpandProperty FullName | Sort-Object
+            Get-ChildItem -Recurse | Select-Object -ExpandProperty FullName | Sort-Object¨
+            Copy-Item -Path examples/GitHubSecretService.ps1 -Destination ./src/GitHubSecretService.ps1
+
+      # Upload articats
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Sodium
+          path: ./src
+
+  Test:
+    name: Test
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      # Download artifacts
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: Sodium
 
       - name: Test
         uses: PSModule/GitHub-Script@v1
@@ -29,5 +50,5 @@ jobs:
           Script: |
             . src/main.ps1
             Get-ChildItem 'src/functions/' -Recurse -File | ForEach-Object { . $_.FullName }
-            . examples/GitHubSecretService.ps1
+            . src/GitHubSecretService.ps1
 
