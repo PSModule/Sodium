@@ -1,4 +1,4 @@
-name: Test-Build
+name: Build-Test
 
 on:
   workflow_dispatch:
@@ -9,21 +9,21 @@ permissions:
   contents: write
 
 jobs:
-  Test-Build:
-    name: Test-Build
+  Build-Test:
+    name: Build-Test
     runs-on: macos-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Test-Build
+      - name: Build
         uses: PSModule/GitHub-Script@v1
         with:
           Script: |
             ./PSModule/build.ps1
             Get-ChildItem -Recurse | Select-Object -ExpandProperty FullName | Sort-Object
 
-      - name: Test-Build
+      - name: Test
         uses: PSModule/GitHub-Script@v1
         with:
           Script: |
