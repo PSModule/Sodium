@@ -20,7 +20,7 @@
       "libsodium/1.0.18.4": {
         "native": {
           "runtimes/win-x86/native/libsodium.dll": {
-            "fileVersion": "1.0.18.0"
+            "fileVersion": "0.0.0.0"
           }
         }
       },
