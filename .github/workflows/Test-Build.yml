@@ -32,6 +32,7 @@ jobs:
 
   Test:
     name: Test
+    needs: Build
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
