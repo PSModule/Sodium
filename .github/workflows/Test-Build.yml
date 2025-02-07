@@ -24,7 +24,6 @@ jobs:
             Get-ChildItem -Recurse | Select-Object -ExpandProperty FullName | Sort-Object¨
             Copy-Item -Path examples/GitHubSecretService.ps1 -Destination ./src/GitHubSecretService.ps1
 
-      # Upload articats
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -38,7 +37,6 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      # Download artifacts
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
