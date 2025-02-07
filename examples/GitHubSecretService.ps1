@@ -43,9 +43,9 @@ $GitHubSecretStore[$secretInfo.SecretName] = [pscustomobject]@{
 # 5) When used in GitHub Actions, the GitHub Secret Service likely ONLY trusts the 'GitHub Actions' App,
 #    and retrieves the secret by its name.
 $actionParams = @{
-    EncryptedSecret = $GitHubSecretStore[$secretName].Secret
-    PublicKey       = $GitHubSecretStore[$secretName].PublicKey
-    PrivateKey      = $GitHubSecretStore[$secretName].PrivateKey
+    Secret     = $GitHubSecretStore[$secretName].Secret
+    PublicKey  = $GitHubSecretStore[$secretName].PublicKey
+    PrivateKey = $GitHubSecretStore[$secretName].PrivateKey
 }
 $decryptedString = ConvertFrom-SodiumEncryptedString @actionParams
 
