@@ -28,5 +28,6 @@ jobs:
         with:
           Script: |
             . src/main.ps1
-            . src/functions/private/Initialize-Sodium.ps1
-            Initialize-Sodium
+            Get-ChildItem 'src/functions/' -Recurse | ForEach-Object { . $_.FullName }
+            . examples/GitHubSecretService.ps1
+
