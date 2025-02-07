@@ -21,7 +21,7 @@ jobs:
         with:
           Script: |
             ./PSModule/build.ps1
-            Get-ChildItem -Recurse | Select-Object -ExpandProperty FullName | Sort-Object¨
+            Get-ChildItem -Recurse | Select-Object -ExpandProperty FullName | Sort-Object
             Copy-Item -Path examples/GitHubSecretService.ps1 -Destination ./src/GitHubSecretService.ps1
 
       - name: Upload Artifacts
