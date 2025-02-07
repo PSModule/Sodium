@@ -11,7 +11,7 @@ permissions:
 jobs:
   Test-Build:
     name: Test-Build
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -19,7 +19,14 @@ jobs:
       - name: Test-Build
         uses: PSModule/GitHub-Script@v1
         with:
-          Script: ./PSModule/build.ps1
+          Script: |
+            ./PSModule/build.ps1
+            Get-ChildItem -Recurse | Select-Object -ExpandProperty FullName | Sort-Object
 
-      - name: Debug
-        uses: PSModule/Debug@v0
+      - name: Test-Build
+        uses: PSModule/GitHub-Script@v1
+        with:
+          Script: |
+            Import-Module src/libs/osx-arm64/PSModule.Sodium.dll
+            . src/functions/private/Initialize-Sodium.ps1
+            Initialize-Sodium
