@@ -16,6 +16,9 @@
 
         .LINK
         https://psmodule.io/Sodium/Functions/New-SodiumKeyPair/
+
+        .LINK
+        https://doc.libsodium.org/public-key_cryptography/sealed_boxes
     #>
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
         'PSUseShouldProcessForStateChangingFunctions', '',

@@ -14,6 +14,9 @@
 
         .LINK
         https://psmodule.io/Sodium/Functions/ConvertTo-SodiumSealedBox/
+
+        .LINK
+        https://doc.libsodium.org/public-key_cryptography/sealed_boxes
     #>
     [OutputType([string])]
     [CmdletBinding()]
