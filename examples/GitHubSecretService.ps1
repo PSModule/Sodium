@@ -22,7 +22,7 @@ $userInfo = @{
 }
 
 # 3a) You encrypt the secret with the public key.
-$encryptedSecret = ConvertTo-SodiumEncryptedString -Secret $secret -PublicKey $userInfo.PublicKey
+$encryptedSecret = ConvertTo-SodiumSealedBox -Message $secret -PublicKey $userInfo.PublicKey
 
 # 3b) You send the encrypted secret to GitHub with the name of the secret and the ID GitHub sent you.
 $secretInfo = @{
@@ -43,11 +43,11 @@ $GitHubSecretStore[$secretInfo.SecretName] = [pscustomobject]@{
 # 5) When used in GitHub Actions, the GitHub Secret Service likely ONLY trusts the 'GitHub Actions' App,
 #    and retrieves the secret by its name.
 $actionParams = @{
-    Secret     = $GitHubSecretStore[$secretName].Secret
+    SealedBox  = $GitHubSecretStore[$secretName].Secret
     PublicKey  = $GitHubSecretStore[$secretName].PublicKey
     PrivateKey = $GitHubSecretStore[$secretName].PrivateKey
 }
-$decryptedString = ConvertFrom-SodiumEncryptedString @actionParams
+$decryptedString = ConvertFrom-SodiumSealedBox @actionParams
 
 # 6) The decrypted secret is now available for use in the GitHub Action.
 Write-Warning $decryptedString
