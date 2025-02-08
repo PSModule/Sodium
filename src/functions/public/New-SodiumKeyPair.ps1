@@ -16,6 +16,9 @@
 
         .LINK
         https://psmodule.io/Sodium/Functions/New-SodiumKeyPair/
+
+        .LINK
+        https://doc.libsodium.org/public-key_cryptography/public-key_signatures
     #>
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
         'PSUseShouldProcessForStateChangingFunctions', '',
@@ -27,7 +30,7 @@
     param()
 
     begin {
-        Initialize-Sodium
+        $null = [PSModule.Sodium]::sodium_init()
     }
 
     process {

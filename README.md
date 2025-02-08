@@ -28,6 +28,7 @@ Import-Module -Name Sodium
 
 The module provides functionality to create a new cryptographic key pair.
 The keys are returned as a PowerShell custom object with `PublicKey` and `PrivateKey` properties, encoded in base64 format.
+For more info on the key pair generation, refer to the [Public-key signatures documentation](https://doc.libsodium.org/public-key_cryptography/public-key_signatures).
 
 ```powershell
 New-SodiumKeyPair
@@ -37,30 +38,34 @@ PublicKey                                    PrivateKey
 9fv51aqi00MYN4UR7Ew/DLXMS9t1NapLs7yyo+vegz4= MiJAFUZxZ1UCbQTwKfH7HY6AhIFYQlnok5fBD2K+y/g=
 ```
 
-### Example 2: Encrypt a secret using a public key
+## Example 2: Encrypt a message using a public key (Sealed Boxes encryption)
 
-After generating a key pair, a secret can be encrypted using the associated public key.
-Below, a secret is encrypted using the public key from the previous example.
+After generating a key pair, a message can be encrypted using the associated public key with [Sealed Boxes encryption](https://doc.libsodium.org/public-key_cryptography/sealed_boxes).
+Below, a message is encrypted using the public key from the previous example.
 
 ```powershell
-ConvertTo-SodiumEncryptedString -Secret "mysecret" -PublicKey "9fv51aqi00MYN4UR7Ew/DLXMS9t1NapLs7yyo+vegz4="
+$params = @{
+    Message   = "mymessage"
+    PublicKey = "9fv51aqi00MYN4UR7Ew/DLXMS9t1NapLs7yyo+vegz4="
+}
+ConvertTo-SodiumSealedBox @params
 
 905j4S/JyP9XBBmOIdHSOXiDu7fUtZo9TFIMnAfBMESgcVBwttLnEyxJn4xPEX5OMKQ+Bc4P6Hg=
 ```
 
-### Example 3: Decrypt a Sodium-encrypted string
+## Example 3: Decrypt a Sodium-encrypted sealed box string
 
-To decrypt an encrypted string, both the private and public keys are required.
+To decrypt a string that was encrypted using [Sealed Boxes encryption](https://doc.libsodium.org/public-key_cryptography/sealed_boxes), both the private and public keys are required.
 
 ```powershell
 $params = @{
-    EncryptedSecret = '905j4S/JyP9XBBmOIdHSOXiDu7fUtZo9TFIMnAfBMESgcVBwttLnEyxJn4xPEX5OMKQ+Bc4P6Hg='
-    PublicKey       = '9fv51aqi00MYN4UR7Ew/DLXMS9t1NapLs7yyo+vegz4='
-    PrivateKey      = 'MiJAFUZxZ1UCbQTwKfH7HY6AhIFYQlnok5fBD2K+y/g='
+    SealedBox  = '905j4S/JyP9XBBmOIdHSOXiDu7fUtZo9TFIMnAfBMESgcVBwttLnEyxJn4xPEX5OMKQ+Bc4P6Hg='
+    PublicKey  = '9fv51aqi00MYN4UR7Ew/DLXMS9t1NapLs7yyo+vegz4='
+    PrivateKey = 'MiJAFUZxZ1UCbQTwKfH7HY6AhIFYQlnok5fBD2K+y/g='
 }
-ConvertFrom-SodiumEncryptedString @params
+ConvertFrom-SodiumSealedBox @params
 
-mysecret
+mymessage
 ```
 
 ### Finding More Examples
