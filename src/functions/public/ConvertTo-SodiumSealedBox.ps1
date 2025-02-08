@@ -1,4 +1,4 @@
-﻿function ConvertTo-SodiumSealedBoxString {
+﻿function ConvertTo-SodiumSealedBox {
     <#
         .SYNOPSIS
         Encrypts a message using a sealed public key box.
@@ -8,12 +8,12 @@
         The result is a base64-encoded sealed box that can only be decrypted by the corresponding private key.
 
         .EXAMPLE
-        ConvertTo-SodiumSealedBoxString -Message "Hello world!" -PublicKey "BASE64_PUBLIC_KEY"
+        ConvertTo-SodiumSealedBox -Message "Hello world!" -PublicKey "BASE64_PUBLIC_KEY"
 
         Encrypts the message "Hello world!" using the provided base64-encoded public key and returns a base64-encoded sealed box.
 
         .LINK
-        https://psmodule.io/Sodium/Functions/ConvertTo-SodiumSealedBoxString/
+        https://psmodule.io/Sodium/Functions/ConvertTo-SodiumSealedBox/
     #>
     [Alias('ConvertTo-SodiumSealedBox')]
     [OutputType([string])]
