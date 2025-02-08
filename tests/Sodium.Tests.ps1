@@ -74,5 +74,24 @@
             $publicKeyBytes.Length | Should -Be 32
             $privateKeyBytes.Length | Should -Be 32
         }
+
+        It 'Generates deterministic keys when a seed is provided' {
+            $seed = 'DeterministicSeed'
+            $keyPair1 = New-SodiumKeyPair -Seed $seed
+            $keyPair2 = New-SodiumKeyPair -Seed $seed
+
+            $keyPair1.PublicKey | Should -Be $keyPair2.PublicKey
+            $keyPair1.PrivateKey | Should -Be $keyPair2.PrivateKey
+        }
+
+        It 'Generates different keys for different seeds' {
+            $seed1 = 'SeedOne'
+            $seed2 = 'SeedTwo'
+            $keyPair1 = New-SodiumKeyPair -Seed $seed1
+            $keyPair2 = New-SodiumKeyPair -Seed $seed2
+
+            $keyPair1.PublicKey | Should -Not -Be $keyPair2.PublicKey
+            $keyPair1.PrivateKey | Should -Not -Be $keyPair2.PrivateKey
+        }
     }
 }

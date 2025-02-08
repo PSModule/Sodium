@@ -38,7 +38,21 @@ PublicKey                                    PrivateKey
 9fv51aqi00MYN4UR7Ew/DLXMS9t1NapLs7yyo+vegz4= MiJAFUZxZ1UCbQTwKfH7HY6AhIFYQlnok5fBD2K+y/g=
 ```
 
-## Example 2: Encrypt a message using a public key (Sealed Boxes encryption)
+### Example 2: Deterministic Key Pair Generation
+
+Generate a key pair deterministically using a seed. The same seed will always produce the same key pair.
+
+```powershell
+New-SodiumKeyPair -Seed 'MySecureSeed'
+
+PublicKey PrivateKey
+-------- - ----------
+WQakMx2mIAQMwLqiZteHUTwmMP6mUdK2FL0WEybWgB8= ci5/7eZ0IbGXtqQMaNvxhJ2d9qwFxA8Kjx+vivSTXqU=
+```
+
+
+
+### Example 3: Encrypt a message using a public key (Sealed Boxes encryption)
 
 After generating a key pair, a message can be encrypted using the associated public key with [Sealed Boxes encryption](https://doc.libsodium.org/public-key_cryptography/sealed_boxes).
 Below, a message is encrypted using the public key from the previous example.
@@ -53,7 +67,7 @@ ConvertTo-SodiumSealedBox @params
 905j4S/JyP9XBBmOIdHSOXiDu7fUtZo9TFIMnAfBMESgcVBwttLnEyxJn4xPEX5OMKQ+Bc4P6Hg=
 ```
 
-## Example 3: Decrypt a Sodium-encrypted sealed box string
+### Example 4: Decrypt a Sodium-encrypted sealed box string
 
 To decrypt a string that was encrypted using [Sealed Boxes encryption](https://doc.libsodium.org/public-key_cryptography/sealed_boxes), both the private and public keys are required.
 
