@@ -29,6 +29,7 @@
     param(
         # The base64-encoded encrypted secret string to decrypt.
         [Parameter(Mandatory)]
+        [Alias('CipherText')]
         [string] $SealedBox,
 
         # The base64-encoded public key used for decryption.
