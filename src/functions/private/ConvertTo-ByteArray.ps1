@@ -33,7 +33,6 @@
     try {
         return [Convert]::FromBase64String($InputString)
     } catch {
-        # If not Base64, assume it's space-separated decimal values
-        return $InputString -split '\s+' | ForEach-Object { [byte]$_ }
+        throw 'Invalid Base64 string. Expected a valid Base64-encoded string.'
     }
 }
