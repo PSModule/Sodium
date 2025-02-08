@@ -45,13 +45,9 @@
     }
 
     process {
-        try {
-            $ciphertext = [Convert]::FromBase64String($SealedBox)
-            $publicKeyByteArray = [Convert]::FromBase64String($PublicKey)
-            $privateKeyByteArray = [Convert]::FromBase64String($PrivateKey)
-        } catch {
-            $PSCmdlet.ThrowTerminatingError($_)
-        }
+        $ciphertext = [Convert]::FromBase64String($SealedBox)
+        $publicKeyByteArray = [Convert]::FromBase64String($PublicKey)
+        $privateKeyByteArray = [Convert]::FromBase64String($PrivateKey)
 
         if ($publicKeyByteArray.Length -ne 32) { throw 'Invalid public key.' }
         if ($privateKeyByteArray.Length -ne 32) { throw 'Invalid private key.' }

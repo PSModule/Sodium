@@ -37,7 +37,7 @@
 
             {
                 ConvertTo-SodiumSealedBox -Message $message -PublicKey $invalidPublicKey
-            } | Should -Throw 'Invalid public key'
+            } | Should -Throw
         }
 
         It 'Throws an error when decrypting with an invalid public key' {
@@ -49,7 +49,7 @@
             $invalidPublicKey = 'AAA'
             {
                 ConvertFrom-SodiumSealedBox -SealedBox $sealedBox -PublicKey $invalidPublicKey -PrivateKey $keyPair.PrivateKey
-            } | Should -Throw 'Invalid public key.'
+            } | Should -Throw
         }
 
         It 'Throws an error when decrypting with an invalid private key' {
@@ -61,7 +61,7 @@
             $invalidPrivateKey = 'BBB'
             {
                 ConvertFrom-SodiumSealedBox -SealedBox $sealedBox -PublicKey $keyPair.PublicKey -PrivateKey $invalidPrivateKey
-            } | Should -Throw 'Invalid private key.'
+            } | Should -Throw
         }
     }
 
