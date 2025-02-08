@@ -17,7 +17,7 @@ switch ($true) {
         } else {
             Import-Module "$PSScriptRoot/libs/win-x86/PSModule.Sodium.dll"
         }
-        $script:Supported = Assert-VisualCRedistributableInstalled -Version '14.29.30037'
+        $script:Supported = Assert-VisualCRedistributableInstalled -Version '14.0'
     }
     default {
         throw 'Unsupported platform. Please refer to the documentation for more information.'
