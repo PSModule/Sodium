@@ -46,7 +46,7 @@
         $ciphertext = New-Object byte[] $cipherLength
 
         # Encrypt message
-        $result = [PSModule.Sodium]::crypto_box_seal($ciphertext, $secretBytes, [uint64]$secretBytes.Length, $publicKeyByteArray)
+        $result = [PSModule.Sodium]::crypto_box_seal($ciphertext, $messageBytes, [uint64]$messageBytes.Length, $publicKeyByteArray)
 
         if ($result -ne 0) {
             throw 'Encryption failed.'
