@@ -1,31 +1,36 @@
-﻿function ConvertFrom-SodiumEncryptedString {
+﻿function ConvertFrom-SodiumSealedBoxString {
     <#
         .SYNOPSIS
-        Decrypts a base64-encoded, Sodium-encrypted string.
+        Decrypts a base64-encoded, Sodium SealedBox-encrypted string.
 
         .DESCRIPTION
-        Converts a base64-encoded, Sodium-encrypted string into its original plaintext form.
+        Converts a base64-encoded, Sodium SealedBox-encrypted string into its original plaintext form.
         Uses the provided public and private keys to decrypt the sealed message.
 
         .EXAMPLE
         $params = @{
-            EncryptedSecret = $encryptedSecret
+            SealedBox       = $encryptedMessage
             PublicKey       = $publicKey
             PrivateKey      = $privateKey
         }
-        ConvertFrom-SodiumEncryptedString @params
+        ConvertFrom-SodiumSealedBox @params
 
-        Decrypts the given encrypted secret using the specified public and private keys and returns the original string.
+        Decrypts the given encrypted message using the specified public and private keys and returns the original string.
 
         .LINK
-        https://psmodule.io/Sodium/Functions/ConvertFrom-SodiumEncryptedString/
+        https://psmodule.io/Sodium/Functions/ConvertFrom-SodiumSealedBox/
+
+        .LINK
+        https://doc.libsodium.org/public-key_cryptography/sealed_boxes
     #>
+    [Alias('ConvertFrom-SodiumSealedBox')]
     [OutputType([string])]
     [CmdletBinding()]
     param(
         # The base64-encoded encrypted secret string to decrypt.
         [Parameter(Mandatory)]
-        [string] $Secret,
+        [Alias('CipherText', 'Cipher')]
+        [string] $SealedBox,
 
         # The base64-encoded public key used for decryption.
         [Parameter(Mandatory)]
@@ -41,7 +46,7 @@
     }
 
     process {
-        $ciphertext = [Convert]::FromBase64String($Secret)
+        $ciphertext = [Convert]::FromBase64String($SealedBox)
         $publicKeyByteArray = ConvertTo-ByteArray $PublicKey
         $privateKeyByteArray = ConvertTo-ByteArray $PrivateKey
 

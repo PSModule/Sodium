@@ -1,26 +1,27 @@
-﻿function ConvertTo-SodiumEncryptedString {
+﻿function ConvertTo-SodiumSealedBoxString {
     <#
         .SYNOPSIS
-        Encrypts a secret using a sealed public key box.
+        Encrypts a message using a sealed public key box.
 
         .DESCRIPTION
-        This function encrypts a given secret using a public key with the SealedPublicKeyBox method from the Sodium library.
+        This function encrypts a given message using a public key with the SealedPublicKeyBox method from the Sodium library.
         The result is a base64-encoded sealed box that can only be decrypted by the corresponding private key.
 
         .EXAMPLE
-        ConvertTo-SodiumEncryptedString -Secret "mysecret" -PublicKey "BASE64_PUBLIC_KEY"
+        ConvertTo-SodiumSealedBoxString -Message "Hello world!" -PublicKey "BASE64_PUBLIC_KEY"
 
-        Encrypts the secret "mysecret" using the provided base64-encoded public key and returns a base64-encoded sealed box.
+        Encrypts the message "Hello world!" using the provided base64-encoded public key and returns a base64-encoded sealed box.
 
         .LINK
-        https://psmodule.io/Sodium/Functions/ConvertTo-SodiumEncryptedString/
+        https://psmodule.io/Sodium/Functions/ConvertTo-SodiumSealedBoxString/
     #>
+    [Alias('ConvertTo-SodiumSealedBox')]
     [OutputType([string])]
     [CmdletBinding()]
     param(
-        # The secret string to be encrypted.
+        # The message string to be encrypted.
         [Parameter(Mandatory)]
-        [string] $Secret,
+        [string] $Message,
 
         # The base64-encoded public key used for encryption.
         [Parameter(Mandatory)]
@@ -37,9 +38,9 @@
             throw "Invalid public key. Expected 32 bytes but got $($publicKeyByteArray.Length)."
         }
 
-        $secretBytes = [System.Text.Encoding]::UTF8.GetBytes($Secret)
+        $messageBytes = [System.Text.Encoding]::UTF8.GetBytes($Message)
         $overhead = [PSModule.Sodium]::crypto_box_sealbytes().ToUInt32()
-        $cipherLength = $secretBytes.Length + $overhead
+        $cipherLength = $messageBytes.Length + $overhead
         $ciphertext = New-Object byte[] $cipherLength
 
         # Encrypt message
