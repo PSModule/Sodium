@@ -41,6 +41,7 @@
     )
 
     begin {
+        if (-not $script:Supported) { throw 'Sodium is not supported on this platform.' }
         $null = [PSModule.Sodium]::sodium_init()
     }
 
