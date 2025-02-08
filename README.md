@@ -50,8 +50,6 @@ PublicKey PrivateKey
 WQakMx2mIAQMwLqiZteHUTwmMP6mUdK2FL0WEybWgB8= ci5/7eZ0IbGXtqQMaNvxhJ2d9qwFxA8Kjx+vivSTXqU=
 ```
 
-
-
 ### Example 3: Encrypt a message using a public key (Sealed Boxes encryption)
 
 After generating a key pair, a message can be encrypted using the associated public key with [Sealed Boxes encryption](https://doc.libsodium.org/public-key_cryptography/sealed_boxes).
