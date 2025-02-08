@@ -35,7 +35,11 @@
 
     process {
         # Convert public key from Base64 or space-separated string
-        $publicKeyByteArray = [Convert]::FromBase64String($PublicKey)
+        try {
+            $publicKeyByteArray = [Convert]::FromBase64String($PublicKey)
+        } catch {
+            $PSCmdlet.ThrowTerminatingError($_)
+        }
         if ($publicKeyByteArray.Length -ne 32) {
             throw "Invalid public key. Expected 32 bytes but got $($publicKeyByteArray.Length)."
         }
