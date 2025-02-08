@@ -23,7 +23,6 @@
         .LINK
         https://doc.libsodium.org/public-key_cryptography/sealed_boxes
     #>
-    [Alias('ConvertFrom-SodiumSealedBox')]
     [OutputType([string])]
     [CmdletBinding()]
     param(

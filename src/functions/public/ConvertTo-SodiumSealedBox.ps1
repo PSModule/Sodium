@@ -15,7 +15,6 @@
         .LINK
         https://psmodule.io/Sodium/Functions/ConvertTo-SodiumSealedBox/
     #>
-    [Alias('ConvertTo-SodiumSealedBox')]
     [OutputType([string])]
     [CmdletBinding()]
     param(
