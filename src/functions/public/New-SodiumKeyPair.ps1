@@ -30,7 +30,7 @@
     param()
 
     begin {
-        Initialize-Sodium
+        $null = [PSModule.Sodium]::sodium_init()
     }
 
     process {

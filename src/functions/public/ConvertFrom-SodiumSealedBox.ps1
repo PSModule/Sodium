@@ -41,13 +41,13 @@
     )
 
     begin {
-        Initialize-Sodium
+        $null = [PSModule.Sodium]::sodium_init()
     }
 
     process {
         $ciphertext = [Convert]::FromBase64String($SealedBox)
-        $publicKeyByteArray = ConvertTo-ByteArray $PublicKey
-        $privateKeyByteArray = ConvertTo-ByteArray $PrivateKey
+        $publicKeyByteArray = [Convert]::FromBase64String($PublicKey)
+        $privateKeyByteArray = [Convert]::FromBase64String($PrivateKey)
 
         if ($publicKeyByteArray.Length -ne 32) { throw 'Invalid public key.' }
         if ($privateKeyByteArray.Length -ne 32) { throw 'Invalid private key.' }

@@ -30,12 +30,12 @@
         [string] $PublicKey
     )
     begin {
-        Initialize-Sodium
+        $null = [PSModule.Sodium]::sodium_init()
     }
 
     process {
         # Convert public key from Base64 or space-separated string
-        $publicKeyByteArray = ConvertTo-ByteArray $PublicKey
+        $publicKeyByteArray = [Convert]::FromBase64String($PublicKey)
         if ($publicKeyByteArray.Length -ne 32) {
             throw "Invalid public key. Expected 32 bytes but got $($publicKeyByteArray.Length)."
         }
