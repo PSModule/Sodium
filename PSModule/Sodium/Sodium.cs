@@ -12,6 +12,9 @@ namespace PSModule
         public static extern int crypto_box_keypair(byte[] pk, byte[] sk);
 
         [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int crypto_box_seed_keypair(byte[] pk, byte[] sk, byte[] seed);
+
+        [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
         public static extern int crypto_box_seal(byte[] ciphertext, byte[] message, ulong mlen, byte[] pk);
 
         [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
