@@ -30,6 +30,7 @@
         .OUTPUTS
         System.String
 
+        .NOTES
         The function returns a base64-encoded sealed box string that can only be decrypted by the corresponding private key.
 
         .LINK

@@ -40,6 +40,7 @@
         .OUTPUTS
         pscustomobject
 
+        .NOTES
         Returns a PowerShell custom object with the following properties:
         - **PublicKey**:  The base64-encoded public key.
         - **PrivateKey**: The base64-encoded private key.

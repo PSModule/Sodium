@@ -35,6 +35,7 @@
         .OUTPUTS
         System.String
 
+        .NOTES
         Returns the original plaintext string after decryption.
         If decryption fails, an exception is thrown.
 
