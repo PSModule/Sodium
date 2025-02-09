@@ -15,7 +15,29 @@
         }
         ConvertFrom-SodiumSealedBox @params
 
+        Output:
+        ```powershell
+        Secret message revealed!
+        ```
+
         Decrypts the given encrypted message using the specified public and private keys and returns the original string.
+
+        .EXAMPLE
+        $encryptedMessage | ConvertFrom-SodiumSealedBox -PublicKey $publicKey -PrivateKey $privateKey
+
+        Output:
+        ```powershell
+        Confidential Data
+        ```
+
+        Uses pipeline input to decrypt the given encrypted message with the specified keys.
+
+        .OUTPUTS
+        System.String
+
+        .NOTES
+        Returns the original plaintext string after decryption.
+        If decryption fails, an exception is thrown.
 
         .LINK
         https://psmodule.io/Sodium/Functions/ConvertFrom-SodiumSealedBox/
@@ -27,7 +49,11 @@
     [CmdletBinding()]
     param(
         # The base64-encoded encrypted secret string to decrypt.
-        [Parameter(Mandatory)]
+        [Parameter(
+            Mandatory,
+            ValueFromPipeline,
+            ValueFromPipelineByPropertyName
+        )]
         [Alias('CipherText')]
         [string] $SealedBox,
 

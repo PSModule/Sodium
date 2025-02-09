@@ -63,6 +63,35 @@
                 ConvertFrom-SodiumSealedBox -SealedBox $sealedBox -PublicKey $keyPair.PublicKey -PrivateKey $invalidPrivateKey
             } | Should -Throw
         }
+
+        It 'Encrypts a message correctly when using pipeline input on ConvertTo-SodiumSealedBox' {
+            $keyPair = New-SodiumKeyPair
+            $publicKey = $keyPair.PublicKey
+            $privateKey = $keyPair.PrivateKey
+            $message = 'Pipeline input encryption test'
+
+            # Pass the message via pipeline input instead of -Message parameter
+            $sealedBox = $message | ConvertTo-SodiumSealedBox -PublicKey $publicKey
+
+            $decryptedString = ConvertFrom-SodiumSealedBox -SealedBox $sealedBox -PublicKey $publicKey -PrivateKey $privateKey
+
+            $decryptedString | Should -Be $message
+        }
+
+        It 'Decrypts a sealed box correctly when using pipeline input on ConvertFrom-SodiumSealedBox' {
+            $keyPair = New-SodiumKeyPair
+            $publicKey = $keyPair.PublicKey
+            $privateKey = $keyPair.PrivateKey
+            $message = 'Pipeline input decryption test'
+
+            # Encrypt using normal parameter binding
+            $sealedBox = ConvertTo-SodiumSealedBox -Message $message -PublicKey $publicKey
+
+            # Pass the sealed box via pipeline input to the decryption function
+            $decryptedString = $sealedBox | ConvertFrom-SodiumSealedBox -PublicKey $publicKey -PrivateKey $privateKey
+
+            $decryptedString | Should -Be $message
+        }
     }
 
     Context 'Key Pair Generation' {
@@ -79,6 +108,15 @@
             $seed = 'DeterministicSeed'
             $keyPair1 = New-SodiumKeyPair -Seed $seed
             $keyPair2 = New-SodiumKeyPair -Seed $seed
+
+            $keyPair1.PublicKey | Should -Be $keyPair2.PublicKey
+            $keyPair1.PrivateKey | Should -Be $keyPair2.PrivateKey
+        }
+
+        It 'Generates deterministic keys when a seed is provided - using a pipeline input' {
+            $seed = 'DeterministicSeed'
+            $keyPair1 = $seed | New-SodiumKeyPair
+            $keyPair2 = $seed | New-SodiumKeyPair
 
             $keyPair1.PublicKey | Should -Be $keyPair2.PublicKey
             $keyPair1.PrivateKey | Should -Be $keyPair2.PrivateKey
