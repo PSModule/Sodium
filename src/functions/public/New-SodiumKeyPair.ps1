@@ -37,6 +37,19 @@
         Generates a deterministic key pair using the given seed string. The same seed will produce
         the same key pair every time.
 
+        .EXAMPLE
+        "MySecureSeed" | New-SodiumKeyPair
+
+        Output:
+        ```powershell
+        PublicKey                                    PrivateKey
+        ---------                                    ----------
+        WQakMx2mIAQMwLqiZteHUTwmMP6mUdK2FL0WEybWgB8= ci5/7eZ0IbGXtqQMaNvxhJ2d9qwFxA8Kjx+vivSTXqU=
+        ```
+
+        Generates a deterministic key pair using the given seed string via pipeline. The same seed will produce
+        the same key pair every time.
+
         .OUTPUTS
 
         PSCustomObject
@@ -62,7 +75,11 @@
     [CmdletBinding(DefaultParameterSetName = 'NewKeyPair')]
     param(
         # A seed value to use for key generation.
-        [Parameter(Mandatory, ParameterSetName = 'SeededKeyPair')]
+        [Parameter(
+            Mandatory,
+            ParameterSetName = 'SeededKeyPair',
+            ValueFromPipeline
+        )]
         [string] $Seed
     )
 
