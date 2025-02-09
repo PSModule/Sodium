@@ -28,7 +28,7 @@
         Uses pipeline input to encrypt the provided message using the specified public key.
 
         .OUTPUTS
-        System.String.
+        System.String
 
         .NOTES
         The function returns a base64-encoded sealed box string that can only be decrypted by the corresponding private key.

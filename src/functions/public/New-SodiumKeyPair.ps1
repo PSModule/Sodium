@@ -39,7 +39,10 @@
 
         .OUTPUTS
 
-        pscustomobject. Returns a PowerShell custom object with the following properties:
+        PSCustomObject
+
+        .NOTES
+        Returns a PowerShell custom object with the following properties:
         - **PublicKey**:  The base64-encoded public key.
         - **PrivateKey**: The base64-encoded private key.
         If key generation fails, an exception is thrown.
@@ -55,7 +58,7 @@
         Scope = 'Function',
         Justification = 'Does not change state'
     )]
-    [OutputType([pscustomobject])]
+    [OutputType([PSCustomObject])]
     [CmdletBinding(DefaultParameterSetName = 'NewKeyPair')]
     param(
         # A seed value to use for key generation.
