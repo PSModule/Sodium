@@ -113,6 +113,15 @@
             $keyPair1.PrivateKey | Should -Be $keyPair2.PrivateKey
         }
 
+        It 'Generates deterministic keys when a seed is provided - using a pipeline input' {
+            $seed = 'DeterministicSeed'
+            $keyPair1 = $seed | New-SodiumKeyPair
+            $keyPair2 = $seed | New-SodiumKeyPair
+
+            $keyPair1.PublicKey | Should -Be $keyPair2.PublicKey
+            $keyPair1.PrivateKey | Should -Be $keyPair2.PrivateKey
+        }
+
         It 'Generates different keys for different seeds' {
             $seed1 = 'SeedOne'
             $seed2 = 'SeedTwo'
