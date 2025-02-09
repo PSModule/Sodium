@@ -37,6 +37,15 @@
         Generates a deterministic key pair using the given seed string. The same seed will produce
         the same key pair every time.
 
+        .OUTPUTS
+        pscustomobject
+
+        Returns a PowerShell custom object with the following properties:
+        - **PublicKey**:  The base64-encoded public key.
+        - **PrivateKey**: The base64-encoded private key.
+
+        If key generation fails, an exception is thrown.
+
         .LINK
         https://psmodule.io/Sodium/Functions/New-SodiumKeyPair/
 
