@@ -33,7 +33,10 @@
         Uses pipeline input to decrypt the given encrypted message with the specified keys.
 
         .OUTPUTS
-        System.String. Returns the original plaintext string after decryption.
+        System.String.
+
+        .NOTES
+        Returns the original plaintext string after decryption.
         If decryption fails, an exception is thrown.
 
         .LINK
