@@ -1,6 +1,5 @@
 # Sodium
 
-
 A PowerShell module that provides direct bindings to the [`libsodium`](https://github.com/jedisct1/libsodium) cryptographic library.
 
 This module was initially created to serve the needs of the [GitHub PowerShell module](https://github.com/PSModule/GitHub).
