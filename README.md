@@ -1,6 +1,5 @@
 # Sodium
 
-
 A PowerShell module that provides direct bindings to the [`libsodium`](https://github.com/jedisct1/libsodium) cryptographic library.
 
 This module was initially created to serve the needs of the [GitHub PowerShell module](https://github.com/PSModule/GitHub).
@@ -72,9 +71,9 @@ To decrypt a string that was encrypted using [Sealed Boxes encryption](https://d
 
 ```powershell
 $params = @{
-    SealedBox  = '905j4S/JyP9XBBmOIdHSOXiDu7fUtZo9TFIMnAfBMESgcVBwttLnEyxJn4xPEX5OMKQ+Bc4P6Hg='
-    PublicKey  = '9fv51aqi00MYN4UR7Ew/DLXMS9t1NapLs7yyo+vegz4='
-    PrivateKey = 'MiJAFUZxZ1UCbQTwKfH7HY6AhIFYQlnok5fBD2K+y/g='
+    SealedBox  = '905j4S/JyP9XBBmOIdHSOXiDu7fUtZo9TFIMnAfBMESgcVBwttLnEyxJn4xPEX5OMKQ+Bc4P6Hg='                            #gitleaks:allow
+    PublicKey  = '9fv51aqi00MYN4UR7Ew/DLXMS9t1NapLs7yyo+vegz4='                                                            #gitleaks:allow
+    PrivateKey = 'MiJAFUZxZ1UCbQTwKfH7HY6AhIFYQlnok5fBD2K+y/g='                                                            #gitleaks:allow
 }
 ConvertFrom-SodiumSealedBox @params
 
