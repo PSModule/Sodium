@@ -13,7 +13,7 @@
 
         Output:
         ```powershell
-        
+
         ```
 
         Derives and returns the public key corresponding to the given base64-encoded private key.
@@ -61,7 +61,7 @@
         if ($Base64) {
             return [System.Convert]::ToBase64String($publicKeyByteArray)
         } else {
-            return [System.Text.Encoding]::UTF8.GetString($publicKeyByteArray)
+            return $publicKeyByteArray
         }
     }
 }

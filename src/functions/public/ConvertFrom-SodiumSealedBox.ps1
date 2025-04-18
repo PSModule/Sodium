@@ -78,19 +78,15 @@
         if ($privateKeyByteArray.Length -ne 32) { throw 'Invalid private key.' }
 
         if ([string]::IsNullOrWhiteSpace($PublicKey)) {
-            $publicKeyByteArray = New-Object byte[] 32
-            $rc = [PSModule.Sodium]::crypto_scalarmult_base($publicKeyByteArray, $privateKeyByteArray)
-            if ($rc -ne 0) { throw 'Unable to derive public key from private key.' }
+            $publicKeyByteArray = Get-SodiumPublicKey -PrivateKey $PrivateKey
         } else {
             $publicKeyByteArray = [System.Convert]::FromBase64String($PublicKey)
             if ($publicKeyByteArray.Length -ne 32) { throw 'Invalid public key.' }
         }
-        # --------------------------------------------------------------------
 
         $overhead = [PSModule.Sodium]::crypto_box_sealbytes().ToUInt32()
         $decryptedBytes = New-Object byte[] ($ciphertext.Length - $overhead)
 
-        # Attempt to decrypt
         $result = [PSModule.Sodium]::crypto_box_seal_open(
             $decryptedBytes, $ciphertext, [UInt64]$ciphertext.Length, $publicKeyByteArray, $privateKeyByteArray
         )
