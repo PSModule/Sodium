@@ -78,7 +78,7 @@
         if ($privateKeyByteArray.Length -ne 32) { throw 'Invalid private key.' }
 
         if ([string]::IsNullOrWhiteSpace($PublicKey)) {
-            $publicKeyByteArray = Get-SodiumPublicKey -PrivateKey $PrivateKey
+            $publicKeyByteArray = Get-SodiumPublicKey -PrivateKey $PrivateKey -AsByteArray
         } else {
             $publicKeyByteArray = [System.Convert]::FromBase64String($PublicKey)
             if ($publicKeyByteArray.Length -ne 32) { throw 'Invalid public key.' }

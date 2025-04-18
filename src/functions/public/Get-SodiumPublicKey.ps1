@@ -19,7 +19,7 @@
         Derives and returns the public key corresponding to the given base64-encoded private key.
 
         .EXAMPLE
-        Get-SodiumPublicKey -PrivateKey 'ci5/7eZ0IbGXtqQMaNvxhJ2d9qwFxA8Kjx+vivSTXqU=' -Base64
+        Get-SodiumPublicKey -PrivateKey 'ci5/7eZ0IbGXtqQMaNvxhJ2d9qwFxA8Kjx+vivSTXqU=' -AsByteArray
 
         Output:
         ```powershell
@@ -34,15 +34,18 @@
         https://psmodule.io/Sodium/Functions/Get-SodiumPublicKey/
     #>
 
-    [OutputType([string])]
+    [OutputType([string], ParameterSetName = 'Base64')]
+    [OutputType([byte[]], ParameterSetName = 'AsByteArray')]
+    [CmdletBinding(DefaultParameterSetName = 'Base64')]
     [CmdletBinding()]
     param(
         # The private key to derive the public key from.
         [Parameter(Mandatory)]
         [string] $PrivateKey,
 
-        # Returns the public key in a base64-encoded format.
-        [switch] $Base64
+        # Returns the byte array
+        [Parameter(Mandatory, ParameterSetName = 'AsByteArray')]
+        [switch] $AsByteArray
     )
 
     begin {
@@ -58,10 +61,10 @@
     }
 
     end {
-        if ($Base64) {
-            return [System.Convert]::ToBase64String($publicKeyByteArray)
-        } else {
+        if ($AsByteArray) {
             return $publicKeyByteArray
+        } else {
+            return [System.Convert]::ToBase64String($publicKeyByteArray)
         }
     }
 }
