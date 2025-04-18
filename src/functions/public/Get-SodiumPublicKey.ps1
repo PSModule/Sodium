@@ -13,7 +13,7 @@
 
         Output:
         ```powershell
-
+        WQakMx2mIAQMwLqiZteHUTwmMP6mUdK2FL0WEybWgB8=
         ```
 
         Derives and returns the public key corresponding to the given base64-encoded private key.
@@ -23,12 +23,45 @@
 
         Output:
         ```powershell
-        WQakMx2mIAQMwLqiZteHUTwmMP6mUdK2FL0WEybWgB8=
+        89
+        6
+        164
+        51
+        29
+        166
+        32
+        4
+        12
+        192
+        186
+        162
+        102
+        215
+        135
+        81
+        60
+        38
+        48
+        254
+        166
+        81
+        210
+        182
+        20
+        189
+        22
+        19
+        38
+        214
+        128
+        31
         ```
-
 
         .OUTPUTS
         string
+
+        .OUTPUTS
+        byte[]
 
         .LINK
         https://psmodule.io/Sodium/Functions/Get-SodiumPublicKey/
