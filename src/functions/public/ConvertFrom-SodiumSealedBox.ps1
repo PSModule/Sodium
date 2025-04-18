@@ -58,7 +58,7 @@
         [string] $SealedBox,
 
         # The base64-encoded public key used for decryption.
-        [Parameter(Mandatory)]
+        [Parameter()]
         [string] $PublicKey,
 
         # The base64-encoded private key used for decryption.
@@ -73,11 +73,20 @@
 
     process {
         $ciphertext = [Convert]::FromBase64String($SealedBox)
-        $publicKeyByteArray = [Convert]::FromBase64String($PublicKey)
-        $privateKeyByteArray = [Convert]::FromBase64String($PrivateKey)
 
-        if ($publicKeyByteArray.Length -ne 32) { throw 'Invalid public key.' }
+        $privateKeyByteArray = [Convert]::FromBase64String($PrivateKey)
         if ($privateKeyByteArray.Length -ne 32) { throw 'Invalid private key.' }
+
+        if ([string]::IsNullOrWhiteSpace($PublicKey)) {
+            # derive public key from private key (Curve25519)
+            $publicKeyByteArray = New-Object byte[] 32
+            $rc = [PSModule.Sodium]::crypto_scalarmult_base($publicKeyByteArray, $privateKeyByteArray)
+            if ($rc -ne 0) { throw 'Unable to derive public key from private key.' }
+        } else {
+            $publicKeyByteArray = [Convert]::FromBase64String($PublicKey)
+            if ($publicKeyByteArray.Length -ne 32) { throw 'Invalid public key.' }
+        }
+        # --------------------------------------------------------------------
 
         $overhead = [PSModule.Sodium]::crypto_box_sealbytes().ToUInt32()
         $decryptedBytes = New-Object byte[] ($ciphertext.Length - $overhead)
