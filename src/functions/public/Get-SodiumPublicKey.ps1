@@ -13,10 +13,19 @@
 
         Output:
         ```powershell
-        WQakMx2mIAQMwLqiZteHUTwmMP6mUdK2FL0WEybWgB8=
+        
         ```
 
         Derives and returns the public key corresponding to the given base64-encoded private key.
+
+        .EXAMPLE
+        Get-SodiumPublicKey -PrivateKey 'ci5/7eZ0IbGXtqQMaNvxhJ2d9qwFxA8Kjx+vivSTXqU=' -Base64
+
+        Output:
+        ```powershell
+        WQakMx2mIAQMwLqiZteHUTwmMP6mUdK2FL0WEybWgB8=
+        ```
+
 
         .OUTPUTS
         string
@@ -30,10 +39,29 @@
     param(
         # The private key to derive the public key from.
         [Parameter(Mandatory)]
-        [string] $PrivateKey
+        [string] $PrivateKey,
+
+        # Returns the public key in a base64-encoded format.
+        [switch] $Base64
     )
 
-    ([Convert]::ToBase64String(
-        [PSModule.Sodium]::crypto_scalarmult_base(
-            [Convert]::FromBase64String($PrivateKey))))
+    begin {
+        if (-not $script:Supported) { throw 'Sodium is not supported on this platform.' }
+        $null = [PSModule.Sodium]::sodium_init()
+    }
+
+    process {
+        $publicKeyByteArray = New-Object byte[] 32
+        $privateKeyByteArray = [System.Convert]::FromBase64String($PrivateKey)
+        $rc = [PSModule.Sodium]::crypto_scalarmult_base($publicKeyByteArray, $privateKeyByteArray)
+        if ($rc -ne 0) { throw 'Unable to derive public key from private key.' }
+    }
+
+    end {
+        if ($Base64) {
+            return [System.Convert]::ToBase64String($publicKeyByteArray)
+        } else {
+            return [System.Text.Encoding]::UTF8.GetString($publicKeyByteArray)
+        }
+    }
 }

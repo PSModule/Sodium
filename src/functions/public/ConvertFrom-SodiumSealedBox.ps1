@@ -72,18 +72,17 @@
     }
 
     process {
-        $ciphertext = [Convert]::FromBase64String($SealedBox)
+        $ciphertext = [System.Convert]::FromBase64String($SealedBox)
 
-        $privateKeyByteArray = [Convert]::FromBase64String($PrivateKey)
+        $privateKeyByteArray = [System.Convert]::FromBase64String($PrivateKey)
         if ($privateKeyByteArray.Length -ne 32) { throw 'Invalid private key.' }
 
         if ([string]::IsNullOrWhiteSpace($PublicKey)) {
-            # derive public key from private key (Curve25519)
             $publicKeyByteArray = New-Object byte[] 32
             $rc = [PSModule.Sodium]::crypto_scalarmult_base($publicKeyByteArray, $privateKeyByteArray)
             if ($rc -ne 0) { throw 'Unable to derive public key from private key.' }
         } else {
-            $publicKeyByteArray = [Convert]::FromBase64String($PublicKey)
+            $publicKeyByteArray = [System.Convert]::FromBase64String($PublicKey)
             if ($publicKeyByteArray.Length -ne 32) { throw 'Invalid public key.' }
         }
         # --------------------------------------------------------------------
@@ -93,7 +92,7 @@
 
         # Attempt to decrypt
         $result = [PSModule.Sodium]::crypto_box_seal_open(
-            $decryptedBytes, $ciphertext, [uint64]$ciphertext.Length, $publicKeyByteArray, $privateKeyByteArray
+            $decryptedBytes, $ciphertext, [UInt64]$ciphertext.Length, $publicKeyByteArray, $privateKeyByteArray
         )
 
         if ($result -ne 0) {
