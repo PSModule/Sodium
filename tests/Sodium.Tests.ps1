@@ -133,4 +133,22 @@
             $keyPair1.PrivateKey | Should -Not -Be $keyPair2.PrivateKey
         }
     }
+
+    Context 'Public Key Derivation' {
+        It 'Get-SodiumPublicKey - Derives the correct public key from a private key' {
+            $keyPair = New-SodiumKeyPair
+            $privateKey = $keyPair.PrivateKey
+            $expectedPublicKey = $keyPair.PublicKey
+
+            $derivedPublicKey = Get-SodiumPublicKey -PrivateKey $privateKey
+
+            $derivedPublicKey | Should -Be $expectedPublicKey
+        }
+
+        It 'Get-SodiumPublicKey - Throws an error when an invalid private key is provided' {
+            $invalidPrivateKey = 'InvalidKey'
+
+            { Get-SodiumPublicKey -PrivateKey $invalidPrivateKey } | Should -Throw
+        }
+    }
 }
