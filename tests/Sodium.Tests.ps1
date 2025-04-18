@@ -1,21 +1,14 @@
 ﻿Describe 'Sodium' {
     Context 'SealedBox - Encryption and Decryption' {
         It 'Encrypts and decrypts a message correctly using valid keys' {
-            # Generate a key pair
             $keyPair = New-SodiumKeyPair
             $publicKey = $keyPair.PublicKey
             $privateKey = $keyPair.PrivateKey
-
-            # Define a message to test
             $message = 'Hello world!'
 
-            # Encrypt the message
-            $sealedBox = ConvertTo-SodiumSealedBox -Message $message -PublicKey $publicKey
+            $encryptedMessage = ConvertTo-SodiumSealedBox -Message $message -PublicKey $publicKey
+            $decryptedString = ConvertFrom-SodiumSealedBox -SealedBox $encryptedMessage -PublicKey $publicKey -PrivateKey $privateKey
 
-            # Decrypt using the matching private key
-            $decryptedString = ConvertFrom-SodiumSealedBox -SealedBox $sealedBox -PublicKey $publicKey -PrivateKey $privateKey
-
-            # Verify that the decrypted string matches the original message
             $decryptedString | Should -Be $message
         }
 
@@ -24,44 +17,26 @@
             $keyPair2 = New-SodiumKeyPair
             $message = 'Test message'
 
-            $sealedBox = ConvertTo-SodiumSealedBox -Message $message -PublicKey $keyPair1.PublicKey
+            $encryptedMessage = ConvertTo-SodiumSealedBox -Message $message -PublicKey $keyPair1.PublicKey
 
-            {
-                ConvertFrom-SodiumSealedBox -SealedBox $sealedBox -PublicKey $keyPair1.PublicKey -PrivateKey $keyPair2.PrivateKey
-            } | Should -Throw 'Decryption failed.'
+            { ConvertFrom-SodiumSealedBox -SealedBox $encryptedMessage -PublicKey $keyPair1.PublicKey -PrivateKey $keyPair2.PrivateKey } |
+                Should -Throw 'Decryption failed.'
         }
 
-        It 'Throws an error when encrypting with an invalid public key' {
+        It 'ConvertTo-SodiumSealedBox -Throws an error when encrypting with an invalid public key' {
             $message = 'Invalid key test'
-            $invalidPublicKey = 'InvalidKey'  # not 32 bytes when converted
+            $invalidPublicKey = 'InvalidKey'
 
-            {
-                ConvertTo-SodiumSealedBox -Message $message -PublicKey $invalidPublicKey
-            } | Should -Throw
+            { ConvertTo-SodiumSealedBox -Message $message -PublicKey $invalidPublicKey } | Should -Throw
         }
 
         It 'Throws an error when decrypting with an invalid public key' {
             $keyPair = New-SodiumKeyPair
             $message = 'Another message'
-            $sealedBox = ConvertTo-SodiumSealedBox -Message $message -PublicKey $keyPair.PublicKey
+            $encryptedMessage = ConvertTo-SodiumSealedBox -Message $message -PublicKey $keyPair.PublicKey
 
-            # Supply a public key that's clearly too short
             $invalidPublicKey = 'AAA'
-            {
-                ConvertFrom-SodiumSealedBox -SealedBox $sealedBox -PublicKey $invalidPublicKey -PrivateKey $keyPair.PrivateKey
-            } | Should -Throw
-        }
-
-        It 'Throws an error when decrypting with an invalid private key' {
-            $keyPair = New-SodiumKeyPair
-            $message = 'Yet another message'
-            $sealedBox = ConvertTo-SodiumSealedBox -Message $message -PublicKey $keyPair.PublicKey
-
-            # Supply a private key that's clearly too short
-            $invalidPrivateKey = 'BBB'
-            {
-                ConvertFrom-SodiumSealedBox -SealedBox $sealedBox -PublicKey $keyPair.PublicKey -PrivateKey $invalidPrivateKey
-            } | Should -Throw
+            { ConvertFrom-SodiumSealedBox -SealedBox $encryptedMessage -PublicKey $invalidPublicKey -PrivateKey $keyPair.PrivateKey } | Should -Throw
         }
 
         It 'Encrypts a message correctly when using pipeline input on ConvertTo-SodiumSealedBox' {
@@ -70,10 +45,8 @@
             $privateKey = $keyPair.PrivateKey
             $message = 'Pipeline input encryption test'
 
-            # Pass the message via pipeline input instead of -Message parameter
-            $sealedBox = $message | ConvertTo-SodiumSealedBox -PublicKey $publicKey
-
-            $decryptedString = ConvertFrom-SodiumSealedBox -SealedBox $sealedBox -PublicKey $publicKey -PrivateKey $privateKey
+            $encryptedMessage = $message | ConvertTo-SodiumSealedBox -PublicKey $publicKey
+            $decryptedString = ConvertFrom-SodiumSealedBox -SealedBox $encryptedMessage -PublicKey $publicKey -PrivateKey $privateKey
 
             $decryptedString | Should -Be $message
         }
@@ -84,13 +57,41 @@
             $privateKey = $keyPair.PrivateKey
             $message = 'Pipeline input decryption test'
 
-            # Encrypt using normal parameter binding
-            $sealedBox = ConvertTo-SodiumSealedBox -Message $message -PublicKey $publicKey
-
-            # Pass the sealed box via pipeline input to the decryption function
-            $decryptedString = $sealedBox | ConvertFrom-SodiumSealedBox -PublicKey $publicKey -PrivateKey $privateKey
+            $encryptedMessage = ConvertTo-SodiumSealedBox -Message $message -PublicKey $publicKey
+            $decryptedString = $encryptedMessage | ConvertFrom-SodiumSealedBox -PublicKey $publicKey -PrivateKey $privateKey
 
             $decryptedString | Should -Be $message
+        }
+    }
+
+    Context 'SealedBox - Decryption without PublicKey' {
+
+        It 'Decrypts a sealed box when only the private key is supplied' {
+            $keyPair = New-SodiumKeyPair
+            $publicKey = $keyPair.PublicKey
+            $privateKey = $keyPair.PrivateKey
+
+            $message = 'Hello with secret key only!'
+            $encryptedMessage = ConvertTo-SodiumSealedBox -Message $message -PublicKey $publicKey
+            $decrypted = ConvertFrom-SodiumSealedBox -SealedBox $encryptedMessage -PrivateKey $privateKey
+
+            $decrypted | Should -Be $message
+        }
+
+        It 'Fails when an incorrect private key is supplied (no public key given)' {
+            $kpGood = New-SodiumKeyPair
+            $kpBad = New-SodiumKeyPair
+            $message = 'Mismatch test'
+            $encryptedMessage = ConvertTo-SodiumSealedBox -Message $message -PublicKey $kpGood.PublicKey
+            { ConvertFrom-SodiumSealedBox -SealedBox $encryptedMessage -PrivateKey $kpBad.PrivateKey } | Should -Throw
+        }
+
+        It 'Accepts pipeline input for the sealed box when no public key is given' {
+            $kp = New-SodiumKeyPair
+            $message = 'Pipeline test'
+            $encryptedMessage = ConvertTo-SodiumSealedBox -Message $message -PublicKey $kp.PublicKey
+            $result = $encryptedMessage | ConvertFrom-SodiumSealedBox -PrivateKey $kp.PrivateKey
+            $result | Should -Be $message
         }
     }
 
@@ -130,6 +131,24 @@
 
             $keyPair1.PublicKey | Should -Not -Be $keyPair2.PublicKey
             $keyPair1.PrivateKey | Should -Not -Be $keyPair2.PrivateKey
+        }
+    }
+
+    Context 'Public Key Derivation' {
+        It 'Get-SodiumPublicKey - Derives the correct public key from a private key' {
+            $keyPair = New-SodiumKeyPair
+            $privateKey = $keyPair.PrivateKey
+            $expectedPublicKey = $keyPair.PublicKey
+
+            $derivedPublicKey = Get-SodiumPublicKey -PrivateKey $privateKey
+
+            $derivedPublicKey | Should -Be $expectedPublicKey
+        }
+
+        It 'Get-SodiumPublicKey - Throws an error when an invalid private key is provided' {
+            $invalidPrivateKey = 'InvalidKey'
+
+            { Get-SodiumPublicKey -PrivateKey $invalidPrivateKey } | Should -Throw
         }
     }
 }

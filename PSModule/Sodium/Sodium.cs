@@ -9,16 +9,16 @@ namespace PSModule
         public static extern int sodium_init();
 
         [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int crypto_box_keypair(byte[] pk, byte[] sk);
+        public static extern int crypto_box_keypair(byte[] publicKey, byte[] privateKey);
 
         [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int crypto_box_seed_keypair(byte[] pk, byte[] sk, byte[] seed);
+        public static extern int crypto_box_seed_keypair(byte[] publicKey, byte[] privateKey, byte[] seed);
 
         [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int crypto_box_seal(byte[] ciphertext, byte[] message, ulong mlen, byte[] pk);
+        public static extern int crypto_box_seal(byte[] ciphertext, byte[] message, ulong mlen, byte[] publicKey);
 
         [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int crypto_box_seal_open(byte[] decrypted, byte[] ciphertext, ulong clen, byte[] pk, byte[] sk);
+        public static extern int crypto_box_seal_open(byte[] decrypted, byte[] ciphertext, ulong clen, byte[] publicKey, byte[] privateKey);
 
         [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
         public static extern UIntPtr crypto_box_publickeybytes();
@@ -28,5 +28,9 @@ namespace PSModule
 
         [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
         public static extern UIntPtr crypto_box_sealbytes();
+
+        [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int crypto_scalarmult_base(byte[] publicKey, byte[] privateKey);
+
     }
 }
