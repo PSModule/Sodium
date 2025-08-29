@@ -2,6 +2,7 @@ Remove-Item -Path "$PSScriptRoot/../src/libs" -Recurse -Force -ErrorAction Silen
 
 $targetRuntimes = @(
     'linux-x64'
+    'linux-arm64'
     'win-x64'
     'win-x86'
     'osx-arm64'

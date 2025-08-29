@@ -1,7 +1,15 @@
 switch ($true) {
     $IsLinux {
-        Import-Module "$PSScriptRoot/libs/linux-x64/PSModule.Sodium.dll"
-        $script:Supported = $true
+        $architecture = (uname -m)
+        if ($architecture -eq 'aarch64') {
+            Import-Module "$PSScriptRoot/libs/linux-arm64/PSModule.Sodium.dll"
+            $script:Supported = $true
+        } elseif ($architecture -eq 'x86_64') {
+            Import-Module "$PSScriptRoot/libs/linux-x64/PSModule.Sodium.dll"
+            $script:Supported = $true
+        } else {
+            throw "Unsupported Linux architecture: $architecture. Please refer to the documentation for supported architectures."
+        }
     }
     $IsMacOS {
         if ("$(sysctl -n machdep.cpu.brand_string)" -Like 'Apple*') {
