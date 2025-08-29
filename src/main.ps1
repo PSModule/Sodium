@@ -1,6 +1,11 @@
 switch ($true) {
     $IsLinux {
-        Import-Module "$PSScriptRoot/libs/linux-x64/PSModule.Sodium.dll"
+        $architecture = (uname -m)
+        if ($architecture -eq 'aarch64') {
+            Import-Module "$PSScriptRoot/libs/linux-arm64/PSModule.Sodium.dll"
+        } else {
+            Import-Module "$PSScriptRoot/libs/linux-x64/PSModule.Sodium.dll"
+        }
         $script:Supported = $true
     }
     $IsMacOS {
