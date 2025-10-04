@@ -16,6 +16,6 @@ updates:
     directory: / # Location of package manifests
     labels:
       - dependencies
-      - nuget
+      - .NET
     schedule:
       interval: weekly
