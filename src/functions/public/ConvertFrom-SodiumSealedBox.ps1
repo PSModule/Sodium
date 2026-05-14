@@ -55,6 +55,7 @@
             ValueFromPipelineByPropertyName
         )]
         [Alias('CipherText')]
+        [ValidateNotNullOrEmpty()]
         [string] $SealedBox,
 
         # The base64-encoded public key used for decryption.
@@ -63,38 +64,55 @@
 
         # The base64-encoded private key used for decryption.
         [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [string] $PrivateKey
     )
 
     begin {
-        if (-not $script:Supported) { throw 'Sodium is not supported on this platform.' }
-        $null = [PSModule.Sodium]::sodium_init()
+        Initialize-Sodium
     }
 
     process {
-        $ciphertext = [System.Convert]::FromBase64String($SealedBox)
+        $privateKeyByteArray = $null
+        $decryptedBytes = $null
+        try {
+            $ciphertext = [System.Convert]::FromBase64String($SealedBox)
+            if ($ciphertext.Length -lt $script:SodiumSealBytes) {
+                throw "Invalid sealed box. Expected at least $script:SodiumSealBytes bytes but got $($ciphertext.Length)."
+            }
 
-        $privateKeyByteArray = [System.Convert]::FromBase64String($PrivateKey)
-        if ($privateKeyByteArray.Length -ne 32) { throw 'Invalid private key.' }
+            $privateKeyByteArray = [System.Convert]::FromBase64String($PrivateKey)
+            if ($privateKeyByteArray.Length -ne $script:SodiumPrivateKeyBytes) {
+                throw "Invalid private key. Expected $script:SodiumPrivateKeyBytes bytes but got $($privateKeyByteArray.Length)."
+            }
 
-        if ([string]::IsNullOrWhiteSpace($PublicKey)) {
-            $publicKeyByteArray = Get-SodiumPublicKey -PrivateKey $PrivateKey -AsByteArray
-        } else {
-            $publicKeyByteArray = [System.Convert]::FromBase64String($PublicKey)
-            if ($publicKeyByteArray.Length -ne 32) { throw 'Invalid public key.' }
+            if (-not $PublicKey) {
+                $publicKeyByteArray = [byte[]](Get-SodiumPublicKey -PrivateKey $PrivateKey -AsByteArray)
+            } else {
+                $publicKeyByteArray = [System.Convert]::FromBase64String($PublicKey)
+                if ($publicKeyByteArray.Length -ne $script:SodiumPublicKeyBytes) {
+                    throw "Invalid public key. Expected $script:SodiumPublicKeyBytes bytes but got $($publicKeyByteArray.Length)."
+                }
+            }
+
+            $decryptedBytes = [byte[]]::new($ciphertext.Length - $script:SodiumSealBytes)
+
+            $result = [PSModule.Sodium]::crypto_box_seal_open(
+                $decryptedBytes, $ciphertext, [UInt64]$ciphertext.Length, $publicKeyByteArray, $privateKeyByteArray
+            )
+
+            if ($result -ne 0) {
+                throw 'Decryption failed.'
+            }
+
+            return [System.Text.Encoding]::UTF8.GetString($decryptedBytes)
+        } finally {
+            if ($null -ne $privateKeyByteArray -and $privateKeyByteArray.Length -gt 0) {
+                [array]::Clear($privateKeyByteArray, 0, $privateKeyByteArray.Length)
+            }
+            if ($null -ne $decryptedBytes -and $decryptedBytes.Length -gt 0) {
+                [array]::Clear($decryptedBytes, 0, $decryptedBytes.Length)
+            }
         }
-
-        $overhead = [PSModule.Sodium]::crypto_box_sealbytes().ToUInt32()
-        $decryptedBytes = New-Object byte[] ($ciphertext.Length - $overhead)
-
-        $result = [PSModule.Sodium]::crypto_box_seal_open(
-            $decryptedBytes, $ciphertext, [UInt64]$ciphertext.Length, $publicKeyByteArray, $privateKeyByteArray
-        )
-
-        if ($result -ne 0) {
-            throw 'Decryption failed.'
-        }
-
-        return [System.Text.Encoding]::UTF8.GetString($decryptedBytes)
     }
 }

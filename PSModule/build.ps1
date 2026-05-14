@@ -1,3 +1,5 @@
+$ErrorActionPreference = 'Stop'
+
 Remove-Item -Path "$PSScriptRoot/../src/libs" -Recurse -Force -ErrorAction SilentlyContinue
 
 $targetRuntimes = @(
@@ -10,13 +12,20 @@ $targetRuntimes = @(
 )
 
 Push-Location $PSScriptRoot
-$targetRuntimes | ForEach-Object {
-    dotnet publish -r $_
-    $source = "$PSScriptRoot/bin/Release/net8.0/$_/publish"
-    $destination = "$PSScriptRoot/../src/libs/$_"
-    Copy-Item -Path $source -Destination $destination -Recurse -Force
+try {
+    $targetRuntimes | ForEach-Object {
+        dotnet publish -c Release -r $_
+        if ($LASTEXITCODE -ne 0) {
+            throw "dotnet publish failed for runtime '$_'."
+        }
+
+        $source = "$PSScriptRoot/bin/Release/net8.0/$_/publish"
+        $destination = "$PSScriptRoot/../src/libs/$_"
+        Copy-Item -Path $source -Destination $destination -Recurse -Force
+    }
+} finally {
+    Pop-Location
 }
-Pop-Location
 
 Get-ChildItem -Path $PSScriptRoot -Directory -Recurse | Where-Object { $_.Name -in 'bin', 'obj' } | ForEach-Object {
     Write-Warning "Deleting $($_.FullName)"

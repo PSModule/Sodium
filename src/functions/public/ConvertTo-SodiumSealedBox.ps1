@@ -52,36 +52,36 @@
 
         # The base64-encoded public key used for encryption.
         [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [string] $PublicKey
     )
     begin {
-        if (-not $script:Supported) { throw 'Sodium is not supported on this platform.' }
-        $null = [PSModule.Sodium]::sodium_init()
+        Initialize-Sodium
     }
 
     process {
-        # Convert public key from Base64 or space-separated string
+        $messageBytes = $null
         try {
             $publicKeyByteArray = [Convert]::FromBase64String($PublicKey)
-        } catch {
-            $PSCmdlet.ThrowTerminatingError($_)
+            if ($publicKeyByteArray.Length -ne $script:SodiumPublicKeyBytes) {
+                throw "Invalid public key. Expected $script:SodiumPublicKeyBytes bytes but got $($publicKeyByteArray.Length)."
+            }
+
+            $messageBytes = [System.Text.Encoding]::UTF8.GetBytes($Message)
+            $cipherLength = $messageBytes.Length + $script:SodiumSealBytes
+            $ciphertext = [byte[]]::new($cipherLength)
+
+            $result = [PSModule.Sodium]::crypto_box_seal($ciphertext, $messageBytes, [uint64]$messageBytes.Length, $publicKeyByteArray)
+
+            if ($result -ne 0) {
+                throw 'Encryption failed.'
+            }
+
+            return [Convert]::ToBase64String($ciphertext)
+        } finally {
+            if ($null -ne $messageBytes -and $messageBytes.Length -gt 0) {
+                [array]::Clear($messageBytes, 0, $messageBytes.Length)
+            }
         }
-        if ($publicKeyByteArray.Length -ne 32) {
-            throw "Invalid public key. Expected 32 bytes but got $($publicKeyByteArray.Length)."
-        }
-
-        $messageBytes = [System.Text.Encoding]::UTF8.GetBytes($Message)
-        $overhead = [PSModule.Sodium]::crypto_box_sealbytes().ToUInt32()
-        $cipherLength = $messageBytes.Length + $overhead
-        $ciphertext = New-Object byte[] $cipherLength
-
-        # Encrypt message
-        $result = [PSModule.Sodium]::crypto_box_seal($ciphertext, $messageBytes, [uint64]$messageBytes.Length, $publicKeyByteArray)
-
-        if ($result -ne 0) {
-            throw 'Encryption failed.'
-        }
-
-        return [Convert]::ToBase64String($ciphertext)
     }
 }

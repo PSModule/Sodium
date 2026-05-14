@@ -39,6 +39,14 @@
             { ConvertFrom-SodiumSealedBox -SealedBox $encryptedMessage -PublicKey $invalidPublicKey -PrivateKey $keyPair.PrivateKey } | Should -Throw
         }
 
+        It 'Throws a clear error when the sealed box is shorter than the Sodium overhead' {
+            $keyPair = New-SodiumKeyPair
+            $shortSealedBox = [Convert]::ToBase64String([byte[]]::new(16))
+
+            { ConvertFrom-SodiumSealedBox -SealedBox $shortSealedBox -PrivateKey $keyPair.PrivateKey } |
+                Should -Throw 'Invalid sealed box. Expected at least 48 bytes but got 16.'
+        }
+
         It 'Encrypts a message correctly when using pipeline input on ConvertTo-SodiumSealedBox' {
             $keyPair = New-SodiumKeyPair
             $publicKey = $keyPair.PublicKey
@@ -149,6 +157,13 @@
             $invalidPrivateKey = 'InvalidKey'
 
             { Get-SodiumPublicKey -PrivateKey $invalidPrivateKey } | Should -Throw
+        }
+
+        It 'Get-SodiumPublicKey - Throws a clear error when a private key has the wrong length' {
+            $shortPrivateKey = [Convert]::ToBase64String([byte[]]::new(16))
+
+            { Get-SodiumPublicKey -PrivateKey $shortPrivateKey } |
+                Should -Throw 'Invalid private key. Expected 32 bytes but got 16.'
         }
     }
 }

@@ -70,10 +70,10 @@
     [OutputType([string], ParameterSetName = 'Base64')]
     [OutputType([byte[]], ParameterSetName = 'AsByteArray')]
     [CmdletBinding(DefaultParameterSetName = 'Base64')]
-    [CmdletBinding()]
     param(
         # The private key to derive the public key from.
         [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [string] $PrivateKey,
 
         # Returns the byte array
@@ -82,22 +82,32 @@
     )
 
     begin {
-        if (-not $script:Supported) { throw 'Sodium is not supported on this platform.' }
-        $null = [PSModule.Sodium]::sodium_init()
+        Initialize-Sodium
     }
 
     process {
-        $publicKeyByteArray = New-Object byte[] 32
-        $privateKeyByteArray = [System.Convert]::FromBase64String($PrivateKey)
-        $rc = [PSModule.Sodium]::crypto_scalarmult_base($publicKeyByteArray, $privateKeyByteArray)
-        if ($rc -ne 0) { throw 'Unable to derive public key from private key.' }
-    }
+        $privateKeyByteArray = $null
+        try {
+            $publicKeyByteArray = [byte[]]::new($script:SodiumPublicKeyBytes)
+            $privateKeyByteArray = [System.Convert]::FromBase64String($PrivateKey)
+            if ($privateKeyByteArray.Length -ne $script:SodiumPrivateKeyBytes) {
+                throw "Invalid private key. Expected $script:SodiumPrivateKeyBytes bytes but got $($privateKeyByteArray.Length)."
+            }
 
-    end {
-        if ($AsByteArray) {
-            return $publicKeyByteArray
-        } else {
-            return [System.Convert]::ToBase64String($publicKeyByteArray)
+            $deriveResult = [PSModule.Sodium]::crypto_scalarmult_base($publicKeyByteArray, $privateKeyByteArray)
+            if ($deriveResult -ne 0) { throw 'Unable to derive public key from private key.' }
+
+            if ($AsByteArray) {
+                return $publicKeyByteArray
+            } else {
+                return [System.Convert]::ToBase64String($publicKeyByteArray)
+            }
+        } finally {
+            if ($null -ne $privateKeyByteArray -and $privateKeyByteArray.Length -gt 0) {
+                [array]::Clear($privateKeyByteArray, 0, $privateKeyByteArray.Length)
+            }
         }
     }
+
+    end {}
 }
