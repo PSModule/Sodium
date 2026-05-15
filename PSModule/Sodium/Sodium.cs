@@ -25,7 +25,7 @@ namespace PSModule
 
             [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
             [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
-            public static extern int crypto_box_seal_open(byte[] decrypted, byte[] ciphertext, ulong clen, byte[] publicKey, byte[] privateKey);
+            public static extern int crypto_box_seal_open(byte[] decrypted, byte[] ciphertext, ulong ciphertextLength, byte[] publicKey, byte[] privateKey);
 
             [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
             [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
@@ -75,20 +75,20 @@ namespace PSModule
             return Native.crypto_box_seal(ciphertext, message, mlen, publicKey);
         }
 
-        public static int crypto_box_seal_open(byte[] decrypted, byte[] ciphertext, ulong clen, byte[] publicKey, byte[] privateKey)
+        public static int crypto_box_seal_open(byte[] decrypted, byte[] ciphertext, ulong ciphertextLength, byte[] publicKey, byte[] privateKey)
         {
             var sealBytes = crypto_box_sealbytes().ToUInt64();
-            if (clen < sealBytes)
+            if (ciphertextLength < sealBytes)
             {
                 throw new ArgumentException($"The ciphertext must be at least {sealBytes} bytes.", nameof(ciphertext));
             }
 
-            ValidateMinimumBufferLength(ciphertext, clen, nameof(ciphertext));
-            ValidateMinimumBufferLength(decrypted, clen - sealBytes, nameof(decrypted));
+            ValidateMinimumBufferLength(ciphertext, ciphertextLength, nameof(ciphertext));
+            ValidateMinimumBufferLength(decrypted, ciphertextLength - sealBytes, nameof(decrypted));
             ValidateExactBufferLength(publicKey, GetRequiredLength(crypto_box_publickeybytes()), nameof(publicKey));
             ValidateExactBufferLength(privateKey, GetRequiredLength(crypto_box_secretkeybytes()), nameof(privateKey));
 
-            return Native.crypto_box_seal_open(decrypted, ciphertext, clen, publicKey, privateKey);
+            return Native.crypto_box_seal_open(decrypted, ciphertext, ciphertextLength, publicKey, privateKey);
         }
 
         public static UIntPtr crypto_box_publickeybytes()
