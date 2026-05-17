@@ -94,7 +94,7 @@
                 }
                 $deriveResult = [PSModule.Sodium]::crypto_scalarmult_base($publicKeyByteArray, $privateKeyByteArray)
                 if ($deriveResult -ne 0) { throw 'Unable to derive public key from private key.' }
-                return , $publicKeyByteArray
+                return $publicKeyByteArray
             } finally {
                 if ($null -ne $privateKeyByteArray -and $privateKeyByteArray.Length -gt 0) {
                     [array]::Clear($privateKeyByteArray, 0, $privateKeyByteArray.Length)
