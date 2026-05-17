@@ -3,49 +3,59 @@ using System.Runtime.InteropServices;
 
 namespace PSModule
 {
-    public static class Sodium
+    public static partial class Sodium
     {
-        private static class Native
+        private static partial class Native
         {
-            [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
+            [LibraryImport("libsodium")]
             [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
-            public static extern int sodium_init();
+            [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+            public static partial int sodium_init();
 
-            [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
+            [LibraryImport("libsodium")]
             [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
-            public static extern int crypto_box_keypair(byte[] publicKey, byte[] privateKey);
+            [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+            public static partial int crypto_box_keypair([Out] byte[] publicKey, [Out] byte[] privateKey);
 
-            [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
+            [LibraryImport("libsodium")]
             [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
-            public static extern int crypto_box_seed_keypair(byte[] publicKey, byte[] privateKey, byte[] seed);
+            [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+            public static partial int crypto_box_seed_keypair([Out] byte[] publicKey, [Out] byte[] privateKey, byte[] seed);
 
-            [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
+            [LibraryImport("libsodium")]
             [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
-            public static extern int crypto_box_seal(byte[] ciphertext, byte[] message, ulong mlen, byte[] publicKey);
+            [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+            public static partial int crypto_box_seal([Out] byte[] ciphertext, byte[] message, ulong mlen, byte[] publicKey);
 
-            [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
+            [LibraryImport("libsodium")]
             [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
-            public static extern int crypto_box_seal_open(byte[] decrypted, byte[] ciphertext, ulong ciphertextLength, byte[] publicKey, byte[] privateKey);
+            [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+            public static partial int crypto_box_seal_open([Out] byte[] decrypted, byte[] ciphertext, ulong ciphertextLength, byte[] publicKey, byte[] privateKey);
 
-            [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
+            [LibraryImport("libsodium")]
             [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
-            public static extern UIntPtr crypto_box_publickeybytes();
+            [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+            public static partial UIntPtr crypto_box_publickeybytes();
 
-            [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
+            [LibraryImport("libsodium")]
             [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
-            public static extern UIntPtr crypto_box_secretkeybytes();
+            [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+            public static partial UIntPtr crypto_box_secretkeybytes();
 
-            [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
+            [LibraryImport("libsodium")]
             [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
-            public static extern UIntPtr crypto_box_sealbytes();
+            [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+            public static partial UIntPtr crypto_box_sealbytes();
 
-            [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
+            [LibraryImport("libsodium")]
             [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
-            public static extern UIntPtr crypto_box_seedbytes();
+            [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+            public static partial UIntPtr crypto_box_seedbytes();
 
-            [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
+            [LibraryImport("libsodium")]
             [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
-            public static extern int crypto_scalarmult_base(byte[] publicKey, byte[] privateKey);
+            [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+            public static partial int crypto_scalarmult_base([Out] byte[] publicKey, byte[] privateKey);
         }
 
         // libsodium guarantees these *_bytes() functions return constants and are safe to call without sodium_init().
