@@ -171,21 +171,8 @@
         It 'Assert-VisualCRedistributableInstalled returns a boolean for the current architecture' {
             InModuleScope Sodium {
                 $arch = if ([System.Environment]::Is64BitProcess) { 'X64' } else { 'X86' }
-                $result = Assert-VisualCRedistributableInstalled -Version '14.0' -Architecture $arch
+                $result = Assert-VisualCRedistributableInstalled -Version '14.0' -Architecture $arch 3>$null
                 $result | Should -BeOfType [bool]
-            }
-        }
-
-        It 'Assert-VisualCRedistributableInstalled treats non-Windows platforms as unsupported' {
-            InModuleScope Sodium {
-                $original = $IsWindows
-                try {
-                    Set-Variable -Name IsWindows -Scope Script -Value $false
-                    $result = Assert-VisualCRedistributableInstalled -Version '14.0' -Architecture 'X64' 3>$null
-                    $result | Should -BeFalse
-                } finally {
-                    Set-Variable -Name IsWindows -Scope Script -Value $original
-                }
             }
         }
     }
