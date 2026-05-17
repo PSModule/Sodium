@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <AssemblyName>PSModule.Sodium</AssemblyName>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Management.Automation" Version="7.4.0" PrivateAssets="All" />
-        <PackageReference Include="libsodium" Version="1.0.20.1" />
+        <PackageReference Include="System.Management.Automation" Version="7.6.1" PrivateAssets="All" />
+        <PackageReference Include="libsodium" Version="1.0.22" />
     </ItemGroup>
 
 </Project>
