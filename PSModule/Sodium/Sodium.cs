@@ -41,8 +41,18 @@ namespace PSModule
 
             [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
             [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
+            public static extern UIntPtr crypto_box_seedbytes();
+
+            [DllImport("libsodium", CallingConvention = CallingConvention.Cdecl)]
+            [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
             public static extern int crypto_scalarmult_base(byte[] publicKey, byte[] privateKey);
         }
+
+        // libsodium guarantees these *_bytes() functions return constants and are safe to call without sodium_init().
+        private static readonly int PublicKeyBytes = GetRequiredLength(Native.crypto_box_publickeybytes());
+        private static readonly int SecretKeyBytes = GetRequiredLength(Native.crypto_box_secretkeybytes());
+        private static readonly int SealBytes = GetRequiredLength(Native.crypto_box_sealbytes());
+        private static readonly int SeedBytes = GetRequiredLength(Native.crypto_box_seedbytes());
 
         public static int sodium_init()
         {
@@ -51,17 +61,17 @@ namespace PSModule
 
         public static int crypto_box_keypair(byte[] publicKey, byte[] privateKey)
         {
-            ValidateMinimumBufferLength(publicKey, GetRequiredLength(crypto_box_publickeybytes()), nameof(publicKey));
-            ValidateMinimumBufferLength(privateKey, GetRequiredLength(crypto_box_secretkeybytes()), nameof(privateKey));
+            ValidateMinimumBufferLength(publicKey, PublicKeyBytes, nameof(publicKey));
+            ValidateMinimumBufferLength(privateKey, SecretKeyBytes, nameof(privateKey));
 
             return Native.crypto_box_keypair(publicKey, privateKey);
         }
 
         public static int crypto_box_seed_keypair(byte[] publicKey, byte[] privateKey, byte[] seed)
         {
-            ValidateMinimumBufferLength(publicKey, GetRequiredLength(crypto_box_publickeybytes()), nameof(publicKey));
-            ValidateMinimumBufferLength(privateKey, GetRequiredLength(crypto_box_secretkeybytes()), nameof(privateKey));
-            ValidateExactBufferLength(seed, GetRequiredLength(crypto_box_secretkeybytes()), nameof(seed));
+            ValidateMinimumBufferLength(publicKey, PublicKeyBytes, nameof(publicKey));
+            ValidateMinimumBufferLength(privateKey, SecretKeyBytes, nameof(privateKey));
+            ValidateExactBufferLength(seed, SeedBytes, nameof(seed));
 
             return Native.crypto_box_seed_keypair(publicKey, privateKey, seed);
         }
@@ -69,15 +79,15 @@ namespace PSModule
         public static int crypto_box_seal(byte[] ciphertext, byte[] message, ulong mlen, byte[] publicKey)
         {
             ValidateMinimumBufferLength(message, mlen, nameof(message));
-            ValidateMinimumBufferLength(ciphertext, checked(mlen + crypto_box_sealbytes().ToUInt64()), nameof(ciphertext));
-            ValidateExactBufferLength(publicKey, GetRequiredLength(crypto_box_publickeybytes()), nameof(publicKey));
+            ValidateMinimumBufferLength(ciphertext, checked(mlen + (ulong)SealBytes), nameof(ciphertext));
+            ValidateExactBufferLength(publicKey, PublicKeyBytes, nameof(publicKey));
 
             return Native.crypto_box_seal(ciphertext, message, mlen, publicKey);
         }
 
         public static int crypto_box_seal_open(byte[] decrypted, byte[] ciphertext, ulong ciphertextLength, byte[] publicKey, byte[] privateKey)
         {
-            var sealBytes = crypto_box_sealbytes().ToUInt64();
+            var sealBytes = (ulong)SealBytes;
             if (ciphertextLength < sealBytes)
             {
                 throw new ArgumentException($"The ciphertext must be at least {sealBytes} bytes.", nameof(ciphertext));
@@ -85,31 +95,36 @@ namespace PSModule
 
             ValidateMinimumBufferLength(ciphertext, ciphertextLength, nameof(ciphertext));
             ValidateMinimumBufferLength(decrypted, ciphertextLength - sealBytes, nameof(decrypted));
-            ValidateExactBufferLength(publicKey, GetRequiredLength(crypto_box_publickeybytes()), nameof(publicKey));
-            ValidateExactBufferLength(privateKey, GetRequiredLength(crypto_box_secretkeybytes()), nameof(privateKey));
+            ValidateExactBufferLength(publicKey, PublicKeyBytes, nameof(publicKey));
+            ValidateExactBufferLength(privateKey, SecretKeyBytes, nameof(privateKey));
 
             return Native.crypto_box_seal_open(decrypted, ciphertext, ciphertextLength, publicKey, privateKey);
         }
 
         public static UIntPtr crypto_box_publickeybytes()
         {
-            return Native.crypto_box_publickeybytes();
+            return (UIntPtr)PublicKeyBytes;
         }
 
         public static UIntPtr crypto_box_secretkeybytes()
         {
-            return Native.crypto_box_secretkeybytes();
+            return (UIntPtr)SecretKeyBytes;
         }
 
         public static UIntPtr crypto_box_sealbytes()
         {
-            return Native.crypto_box_sealbytes();
+            return (UIntPtr)SealBytes;
+        }
+
+        public static UIntPtr crypto_box_seedbytes()
+        {
+            return (UIntPtr)SeedBytes;
         }
 
         public static int crypto_scalarmult_base(byte[] publicKey, byte[] privateKey)
         {
-            ValidateMinimumBufferLength(publicKey, GetRequiredLength(crypto_box_publickeybytes()), nameof(publicKey));
-            ValidateExactBufferLength(privateKey, GetRequiredLength(crypto_box_secretkeybytes()), nameof(privateKey));
+            ValidateMinimumBufferLength(publicKey, PublicKeyBytes, nameof(publicKey));
+            ValidateExactBufferLength(privateKey, SecretKeyBytes, nameof(privateKey));
 
             return Native.crypto_scalarmult_base(publicKey, privateKey);
         }

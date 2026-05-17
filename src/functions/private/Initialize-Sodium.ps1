@@ -34,6 +34,7 @@
         $script:SodiumPublicKeyBytes = [PSModule.Sodium]::crypto_box_publickeybytes().ToUInt32()
         $script:SodiumPrivateKeyBytes = [PSModule.Sodium]::crypto_box_secretkeybytes().ToUInt32()
         $script:SodiumSealBytes = [PSModule.Sodium]::crypto_box_sealbytes().ToUInt32()
+        $script:SodiumSeedBytes = [PSModule.Sodium]::crypto_box_seedbytes().ToUInt32()
         $script:SodiumInitialized = $true
     }
 
