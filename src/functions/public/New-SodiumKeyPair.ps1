@@ -84,9 +84,7 @@
         [string] $Seed
     )
 
-    begin {
-        Initialize-Sodium
-    }
+    begin {}
 
     process {
         $publicKey = [byte[]]::new($script:SodiumPublicKeyBytes)

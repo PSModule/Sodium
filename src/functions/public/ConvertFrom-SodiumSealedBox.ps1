@@ -68,9 +68,7 @@
         [string] $PrivateKey
     )
 
-    begin {
-        Initialize-Sodium
-    }
+    begin {}
 
     process {
         $privateKeyByteArray = $null

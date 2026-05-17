@@ -39,3 +39,5 @@ Import-Module $assemblyPath -ErrorAction Stop
 # Optimistically mark supported; Initialize-Sodium will run the Windows VC++ runtime check lazily only if native init fails.
 $script:Supported = $true
 $script:ProcessArchitecture = $processArchitecture.ToString()
+
+Initialize-Sodium

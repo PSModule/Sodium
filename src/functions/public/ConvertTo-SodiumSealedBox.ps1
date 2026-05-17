@@ -55,9 +55,7 @@
         [ValidateNotNullOrEmpty()]
         [string] $PublicKey
     )
-    begin {
-        Initialize-Sodium
-    }
+    begin {}
 
     process {
         $messageBytes = $null

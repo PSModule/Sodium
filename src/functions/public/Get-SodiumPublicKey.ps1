@@ -81,9 +81,7 @@
         [switch] $AsByteArray
     )
 
-    begin {
-        Initialize-Sodium
-    }
+    begin {}
 
     process {
         $privateKeyByteArray = $null
