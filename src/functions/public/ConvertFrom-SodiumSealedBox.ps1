@@ -87,7 +87,11 @@
             }
 
             if (-not $PublicKey) {
-                $publicKeyByteArray = [byte[]](Get-SodiumPublicKey -PrivateKey $PrivateKey -AsByteArray)
+                $publicKeyByteArray = [byte[]]::new($script:SodiumPublicKeyBytes)
+                $deriveResult = [PSModule.Sodium]::crypto_scalarmult_base($publicKeyByteArray, $privateKeyByteArray)
+                if ($deriveResult -ne 0) {
+                    throw 'Unable to derive public key from private key.'
+                }
             } else {
                 $publicKeyByteArray = [System.Convert]::FromBase64String($PublicKey)
                 if ($publicKeyByteArray.Length -ne $script:SodiumPublicKeyBytes) {
