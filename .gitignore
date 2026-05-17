@@ -16,7 +16,3 @@ outputs/*
 bin/
 obj/
 libs/
-
-# Local performance harness (not part of module)
-tools/perf/
-tools/Measure-Speed.ps1
