@@ -205,7 +205,7 @@ namespace PSModule
         public static string DerivePublicKeyBase64(string privateKeyBase64)
         {
             ArgumentNullException.ThrowIfNull(privateKeyBase64);
-            var privateKey = DecodeBase64Exact(privateKeyBase64, SecretKeyBytes, nameof(privateKeyBase64));
+            var privateKey = DecodeBase64Exact(privateKeyBase64, SecretKeyBytes, "private key");
             var publicKey = new byte[PublicKeyBytes];
             try
             {
