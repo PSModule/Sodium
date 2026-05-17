@@ -97,12 +97,7 @@
             switch ($PSCmdlet.ParameterSetName) {
                 'SeededKeyPair' {
                     $seedBytes = [System.Text.Encoding]::UTF8.GetBytes($Seed)
-                    $sha256 = [System.Security.Cryptography.SHA256]::Create()
-                    try {
-                        $derivedSeed = $sha256.ComputeHash($seedBytes)
-                    } finally {
-                        $sha256.Dispose()
-                    }
+                    $derivedSeed = [System.Security.Cryptography.SHA256]::HashData($seedBytes)
                     $result = [PSModule.Sodium]::crypto_box_seed_keypair($publicKey, $privateKey, $derivedSeed)
                     break
                 }
