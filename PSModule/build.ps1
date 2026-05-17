@@ -19,7 +19,7 @@ try {
             throw "dotnet publish failed for runtime '$_'."
         }
 
-        $source = "$PSScriptRoot/bin/Release/net8.0/$_/publish"
+        $source = "$PSScriptRoot/bin/Release/net10.0/$_/publish"
         $destination = "$PSScriptRoot/../src/libs/$_"
         Copy-Item -Path $source -Destination $destination -Recurse -Force
     }
