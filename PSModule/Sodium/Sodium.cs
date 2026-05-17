@@ -1,5 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace PSModule
 {
@@ -137,6 +139,161 @@ namespace PSModule
             ValidateExactBufferLength(privateKey, SecretKeyBytes, nameof(privateKey));
 
             return Native.crypto_scalarmult_base(publicKey, privateKey);
+        }
+
+        // ---------- Base64-centric high-level API (see issue #52) ----------
+        // These helpers do base64/UTF-8 encoding and native interop in a single managed call,
+        // avoiding the overhead of multiple PowerShell-level method invocations on the hot path.
+
+        public sealed class KeyPairBase64
+        {
+            public string PublicKey { get; }
+            public string PrivateKey { get; }
+
+            internal KeyPairBase64(string publicKey, string privateKey)
+            {
+                PublicKey = publicKey;
+                PrivateKey = privateKey;
+            }
+        }
+
+        public static KeyPairBase64 GenerateKeyPairBase64()
+        {
+            var publicKey = new byte[PublicKeyBytes];
+            var privateKey = new byte[SecretKeyBytes];
+            try
+            {
+                if (Native.crypto_box_keypair(publicKey, privateKey) != 0)
+                {
+                    throw new InvalidOperationException("Key pair generation failed.");
+                }
+                return new KeyPairBase64(Convert.ToBase64String(publicKey), Convert.ToBase64String(privateKey));
+            }
+            finally
+            {
+                CryptographicOperations.ZeroMemory(privateKey);
+            }
+        }
+
+        public static KeyPairBase64 GenerateKeyPairBase64(string seedText)
+        {
+            ArgumentNullException.ThrowIfNull(seedText);
+            var publicKey = new byte[PublicKeyBytes];
+            var privateKey = new byte[SecretKeyBytes];
+            var seedSource = Encoding.UTF8.GetBytes(seedText);
+            var seed = new byte[SeedBytes];
+            try
+            {
+                if (!SHA256.TryHashData(seedSource, seed, out var written) || written != SeedBytes)
+                {
+                    throw new InvalidOperationException("Failed to derive seed bytes from input.");
+                }
+                if (Native.crypto_box_seed_keypair(publicKey, privateKey, seed) != 0)
+                {
+                    throw new InvalidOperationException("Seeded key pair generation failed.");
+                }
+                return new KeyPairBase64(Convert.ToBase64String(publicKey), Convert.ToBase64String(privateKey));
+            }
+            finally
+            {
+                CryptographicOperations.ZeroMemory(privateKey);
+                CryptographicOperations.ZeroMemory(seed);
+                CryptographicOperations.ZeroMemory(seedSource);
+            }
+        }
+
+        public static string DerivePublicKeyBase64(string privateKeyBase64)
+        {
+            ArgumentNullException.ThrowIfNull(privateKeyBase64);
+            var privateKey = DecodeBase64Exact(privateKeyBase64, SecretKeyBytes, nameof(privateKeyBase64));
+            var publicKey = new byte[PublicKeyBytes];
+            try
+            {
+                if (Native.crypto_scalarmult_base(publicKey, privateKey) != 0)
+                {
+                    throw new InvalidOperationException("Unable to derive public key from private key.");
+                }
+                return Convert.ToBase64String(publicKey);
+            }
+            finally
+            {
+                CryptographicOperations.ZeroMemory(privateKey);
+            }
+        }
+
+        public static string SealBase64(string plaintext, string publicKeyBase64)
+        {
+            ArgumentNullException.ThrowIfNull(plaintext);
+            ArgumentNullException.ThrowIfNull(publicKeyBase64);
+            var publicKey = DecodeBase64Exact(publicKeyBase64, PublicKeyBytes, nameof(publicKeyBase64));
+            var message = Encoding.UTF8.GetBytes(plaintext);
+            var ciphertext = new byte[message.Length + SealBytes];
+            if (Native.crypto_box_seal(ciphertext, message, (ulong)message.LongLength, publicKey) != 0)
+            {
+                throw new InvalidOperationException("Encryption failed.");
+            }
+            return Convert.ToBase64String(ciphertext);
+        }
+
+        public static string OpenSealBase64(string ciphertextBase64, string privateKeyBase64)
+        {
+            return OpenSealBase64Core(ciphertextBase64, privateKeyBase64, publicKeyBase64: null);
+        }
+
+        public static string OpenSealBase64(string ciphertextBase64, string privateKeyBase64, string publicKeyBase64)
+        {
+            return OpenSealBase64Core(ciphertextBase64, privateKeyBase64, publicKeyBase64);
+        }
+
+        private static string OpenSealBase64Core(string ciphertextBase64, string privateKeyBase64, string publicKeyBase64)
+        {
+            ArgumentNullException.ThrowIfNull(ciphertextBase64);
+            ArgumentNullException.ThrowIfNull(privateKeyBase64);
+
+            var ciphertext = Convert.FromBase64String(ciphertextBase64);
+            if (ciphertext.Length < SealBytes)
+            {
+                throw new ArgumentException($"Invalid sealed box. Expected at least {SealBytes} bytes but got {ciphertext.Length}.", nameof(ciphertextBase64));
+            }
+            var privateKey = DecodeBase64Exact(privateKeyBase64, SecretKeyBytes, nameof(privateKeyBase64));
+            var publicKey = new byte[PublicKeyBytes];
+            var decrypted = new byte[ciphertext.Length - SealBytes];
+            try
+            {
+                if (string.IsNullOrEmpty(publicKeyBase64))
+                {
+                    if (Native.crypto_scalarmult_base(publicKey, privateKey) != 0)
+                    {
+                        throw new InvalidOperationException("Unable to derive public key from private key.");
+                    }
+                }
+                else
+                {
+                    var providedPk = DecodeBase64Exact(publicKeyBase64, PublicKeyBytes, nameof(publicKeyBase64));
+                    Buffer.BlockCopy(providedPk, 0, publicKey, 0, PublicKeyBytes);
+                }
+
+                if (Native.crypto_box_seal_open(decrypted, ciphertext, (ulong)ciphertext.LongLength, publicKey, privateKey) != 0)
+                {
+                    throw new InvalidOperationException("Decryption failed.");
+                }
+                return Encoding.UTF8.GetString(decrypted);
+            }
+            finally
+            {
+                CryptographicOperations.ZeroMemory(privateKey);
+                CryptographicOperations.ZeroMemory(decrypted);
+            }
+        }
+
+        private static byte[] DecodeBase64Exact(string value, int expectedLength, string parameterName)
+        {
+            var bytes = Convert.FromBase64String(value);
+            if (bytes.Length != expectedLength)
+            {
+                throw new ArgumentException($"Invalid base64 value. Expected {expectedLength} bytes but got {bytes.Length}.", parameterName);
+            }
+            return bytes;
         }
 
         private static int GetRequiredLength(UIntPtr length)

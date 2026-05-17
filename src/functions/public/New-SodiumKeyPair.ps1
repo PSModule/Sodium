@@ -87,41 +87,14 @@
     begin {}
 
     process {
-        $publicKey = [byte[]]::new($script:SodiumPublicKeyBytes)
-        $privateKey = [byte[]]::new($script:SodiumPrivateKeyBytes)
-        $seedBytes = $null
-        $derivedSeed = $null
-        try {
-            switch ($PSCmdlet.ParameterSetName) {
-                'SeededKeyPair' {
-                    $seedBytes = [System.Text.Encoding]::UTF8.GetBytes($Seed)
-                    $derivedSeed = [System.Security.Cryptography.SHA256]::HashData($seedBytes)
-                    $result = [PSModule.Sodium]::crypto_box_seed_keypair($publicKey, $privateKey, $derivedSeed)
-                    break
-                }
-                default {
-                    $result = [PSModule.Sodium]::crypto_box_keypair($publicKey, $privateKey)
-                }
-            }
-
-            if ($result -ne 0) {
-                throw 'Key pair generation failed.'
-            }
-
-            return [pscustomobject]@{
-                PublicKey  = [Convert]::ToBase64String($publicKey)
-                PrivateKey = [Convert]::ToBase64String($privateKey)
-            }
-        } finally {
-            if ($null -ne $privateKey -and $privateKey.Length -gt 0) {
-                [array]::Clear($privateKey, 0, $privateKey.Length)
-            }
-            if ($null -ne $seedBytes -and $seedBytes.Length -gt 0) {
-                [array]::Clear($seedBytes, 0, $seedBytes.Length)
-            }
-            if ($null -ne $derivedSeed -and $derivedSeed.Length -gt 0) {
-                [array]::Clear($derivedSeed, 0, $derivedSeed.Length)
-            }
+        if ($PSCmdlet.ParameterSetName -eq 'SeededKeyPair') {
+            $kp = [PSModule.Sodium]::GenerateKeyPairBase64($Seed)
+        } else {
+            $kp = [PSModule.Sodium]::GenerateKeyPairBase64()
+        }
+        return [pscustomobject]@{
+            PublicKey  = $kp.PublicKey
+            PrivateKey = $kp.PrivateKey
         }
     }
 }

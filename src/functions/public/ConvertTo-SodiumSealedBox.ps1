@@ -58,28 +58,6 @@
     begin {}
 
     process {
-        $messageBytes = $null
-        try {
-            $publicKeyByteArray = [Convert]::FromBase64String($PublicKey)
-            if ($publicKeyByteArray.Length -ne $script:SodiumPublicKeyBytes) {
-                throw "Invalid public key. Expected $script:SodiumPublicKeyBytes bytes but got $($publicKeyByteArray.Length)."
-            }
-
-            $messageBytes = [System.Text.Encoding]::UTF8.GetBytes($Message)
-            $cipherLength = $messageBytes.Length + $script:SodiumSealBytes
-            $ciphertext = [byte[]]::new($cipherLength)
-
-            $result = [PSModule.Sodium]::crypto_box_seal($ciphertext, $messageBytes, [uint64]$messageBytes.Length, $publicKeyByteArray)
-
-            if ($result -ne 0) {
-                throw 'Encryption failed.'
-            }
-
-            return [Convert]::ToBase64String($ciphertext)
-        } finally {
-            if ($null -ne $messageBytes -and $messageBytes.Length -gt 0) {
-                [array]::Clear($messageBytes, 0, $messageBytes.Length)
-            }
-        }
+        return [PSModule.Sodium]::SealBase64($Message, $PublicKey)
     }
 }

@@ -71,50 +71,9 @@
     begin {}
 
     process {
-        $privateKeyByteArray = $null
-        $decryptedBytes = $null
-        try {
-            $ciphertext = [System.Convert]::FromBase64String($SealedBox)
-            if ($ciphertext.Length -lt $script:SodiumSealBytes) {
-                throw "Invalid sealed box. Expected at least $script:SodiumSealBytes bytes but got $($ciphertext.Length)."
-            }
-
-            $privateKeyByteArray = [System.Convert]::FromBase64String($PrivateKey)
-            if ($privateKeyByteArray.Length -ne $script:SodiumPrivateKeyBytes) {
-                throw "Invalid private key. Expected $script:SodiumPrivateKeyBytes bytes but got $($privateKeyByteArray.Length)."
-            }
-
-            if (-not $PublicKey) {
-                $publicKeyByteArray = [byte[]]::new($script:SodiumPublicKeyBytes)
-                $deriveResult = [PSModule.Sodium]::crypto_scalarmult_base($publicKeyByteArray, $privateKeyByteArray)
-                if ($deriveResult -ne 0) {
-                    throw 'Unable to derive public key from private key.'
-                }
-            } else {
-                $publicKeyByteArray = [System.Convert]::FromBase64String($PublicKey)
-                if ($publicKeyByteArray.Length -ne $script:SodiumPublicKeyBytes) {
-                    throw "Invalid public key. Expected $script:SodiumPublicKeyBytes bytes but got $($publicKeyByteArray.Length)."
-                }
-            }
-
-            $decryptedBytes = [byte[]]::new($ciphertext.Length - $script:SodiumSealBytes)
-
-            $result = [PSModule.Sodium]::crypto_box_seal_open(
-                $decryptedBytes, $ciphertext, [UInt64]$ciphertext.Length, $publicKeyByteArray, $privateKeyByteArray
-            )
-
-            if ($result -ne 0) {
-                throw 'Decryption failed.'
-            }
-
-            return [System.Text.Encoding]::UTF8.GetString($decryptedBytes)
-        } finally {
-            if ($null -ne $privateKeyByteArray -and $privateKeyByteArray.Length -gt 0) {
-                [array]::Clear($privateKeyByteArray, 0, $privateKeyByteArray.Length)
-            }
-            if ($null -ne $decryptedBytes -and $decryptedBytes.Length -gt 0) {
-                [array]::Clear($decryptedBytes, 0, $decryptedBytes.Length)
-            }
+        if ($PublicKey) {
+            return [PSModule.Sodium]::OpenSealBase64($SealedBox, $PrivateKey, $PublicKey)
         }
+        return [PSModule.Sodium]::OpenSealBase64($SealedBox, $PrivateKey)
     }
 }
