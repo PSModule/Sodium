@@ -58,6 +58,10 @@
     begin {}
 
     process {
-        return [PSModule.Sodium]::SealBase64($Message, $PublicKey)
+        try {
+            return [PSModule.Sodium]::SealBase64($Message, $PublicKey)
+        } catch [System.Management.Automation.MethodInvocationException] {
+            throw $_.Exception.InnerException
+        }
     }
 }

@@ -71,9 +71,13 @@
     begin {}
 
     process {
-        if ($PublicKey) {
-            return [PSModule.Sodium]::OpenSealBase64($SealedBox, $PrivateKey, $PublicKey)
+        try {
+            if ($PublicKey) {
+                return [PSModule.Sodium]::OpenSealBase64($SealedBox, $PrivateKey, $PublicKey)
+            }
+            return [PSModule.Sodium]::OpenSealBase64($SealedBox, $PrivateKey)
+        } catch [System.Management.Automation.MethodInvocationException] {
+            throw $_.Exception.InnerException
         }
-        return [PSModule.Sodium]::OpenSealBase64($SealedBox, $PrivateKey)
     }
 }

@@ -87,10 +87,14 @@
     begin {}
 
     process {
-        if ($PSCmdlet.ParameterSetName -eq 'SeededKeyPair') {
-            $kp = [PSModule.Sodium]::GenerateKeyPairBase64($Seed)
-        } else {
-            $kp = [PSModule.Sodium]::GenerateKeyPairBase64()
+        try {
+            if ($PSCmdlet.ParameterSetName -eq 'SeededKeyPair') {
+                $kp = [PSModule.Sodium]::GenerateKeyPairBase64($Seed)
+            } else {
+                $kp = [PSModule.Sodium]::GenerateKeyPairBase64()
+            }
+        } catch [System.Management.Automation.MethodInvocationException] {
+            throw $_.Exception.InnerException
         }
         return [pscustomobject]@{
             PublicKey  = $kp.PublicKey

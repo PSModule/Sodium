@@ -101,7 +101,11 @@
                 }
             }
         }
-        return [PSModule.Sodium]::DerivePublicKeyBase64($PrivateKey)
+        try {
+            return [PSModule.Sodium]::DerivePublicKeyBase64($PrivateKey)
+        } catch [System.Management.Automation.MethodInvocationException] {
+            throw $_.Exception.InnerException
+        }
     }
 
     end {}

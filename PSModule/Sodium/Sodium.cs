@@ -225,7 +225,7 @@ namespace PSModule
         {
             ArgumentNullException.ThrowIfNull(plaintext);
             ArgumentNullException.ThrowIfNull(publicKeyBase64);
-            var publicKey = DecodeBase64Exact(publicKeyBase64, PublicKeyBytes, nameof(publicKeyBase64));
+            var publicKey = DecodeBase64Exact(publicKeyBase64, PublicKeyBytes, "public key");
             var message = Encoding.UTF8.GetBytes(plaintext);
             var ciphertext = new byte[message.Length + SealBytes];
             if (Native.crypto_box_seal(ciphertext, message, (ulong)message.LongLength, publicKey) != 0)
@@ -253,9 +253,9 @@ namespace PSModule
             var ciphertext = Convert.FromBase64String(ciphertextBase64);
             if (ciphertext.Length < SealBytes)
             {
-                throw new ArgumentException($"Invalid sealed box. Expected at least {SealBytes} bytes but got {ciphertext.Length}.", nameof(ciphertextBase64));
+                throw new InvalidOperationException($"Invalid sealed box. Expected at least {SealBytes} bytes but got {ciphertext.Length}.");
             }
-            var privateKey = DecodeBase64Exact(privateKeyBase64, SecretKeyBytes, nameof(privateKeyBase64));
+            var privateKey = DecodeBase64Exact(privateKeyBase64, SecretKeyBytes, "private key");
             var publicKey = new byte[PublicKeyBytes];
             var decrypted = new byte[ciphertext.Length - SealBytes];
             try
@@ -269,7 +269,7 @@ namespace PSModule
                 }
                 else
                 {
-                    var providedPk = DecodeBase64Exact(publicKeyBase64, PublicKeyBytes, nameof(publicKeyBase64));
+                    var providedPk = DecodeBase64Exact(publicKeyBase64, PublicKeyBytes, "public key");
                     Buffer.BlockCopy(providedPk, 0, publicKey, 0, PublicKeyBytes);
                 }
 
@@ -286,12 +286,12 @@ namespace PSModule
             }
         }
 
-        private static byte[] DecodeBase64Exact(string value, int expectedLength, string parameterName)
+        private static byte[] DecodeBase64Exact(string value, int expectedLength, string label)
         {
             var bytes = Convert.FromBase64String(value);
             if (bytes.Length != expectedLength)
             {
-                throw new ArgumentException($"Invalid base64 value. Expected {expectedLength} bytes but got {bytes.Length}.", parameterName);
+                throw new InvalidOperationException($"Invalid {label}. Expected {expectedLength} bytes but got {bytes.Length}.");
             }
             return bytes;
         }
