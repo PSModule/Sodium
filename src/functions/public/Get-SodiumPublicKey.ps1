@@ -81,24 +81,16 @@
         [switch] $AsByteArray
     )
 
-    begin {}
+    begin {
+        Initialize-Sodium
+    }
 
     process {
         if ($AsByteArray) {
-            $privateKeyByteArray = $null
             try {
-                $publicKeyByteArray = [byte[]]::new($script:SodiumPublicKeyBytes)
-                $privateKeyByteArray = [System.Convert]::FromBase64String($PrivateKey)
-                if ($privateKeyByteArray.Length -ne $script:SodiumPrivateKeyBytes) {
-                    throw "Invalid private key. Expected $script:SodiumPrivateKeyBytes bytes but got $($privateKeyByteArray.Length)."
-                }
-                $deriveResult = [PSModule.Sodium]::crypto_scalarmult_base($publicKeyByteArray, $privateKeyByteArray)
-                if ($deriveResult -ne 0) { throw 'Unable to derive public key from private key.' }
-                return $publicKeyByteArray
-            } finally {
-                if ($null -ne $privateKeyByteArray -and $privateKeyByteArray.Length -gt 0) {
-                    [array]::Clear($privateKeyByteArray, 0, $privateKeyByteArray.Length)
-                }
+                return [System.Convert]::FromBase64String([PSModule.Sodium]::DerivePublicKeyBase64($PrivateKey))
+            } catch [System.Management.Automation.MethodInvocationException] {
+                throw $_.Exception.InnerException
             }
         }
         try {

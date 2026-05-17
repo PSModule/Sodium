@@ -80,11 +80,13 @@
             ParameterSetName = 'SeededKeyPair',
             ValueFromPipeline
         )]
-        [ValidateNotNullOrEmpty()]
+        [AllowEmptyString()]
         [string] $Seed
     )
 
-    begin {}
+    begin {
+        Initialize-Sodium
+    }
 
     process {
         try {

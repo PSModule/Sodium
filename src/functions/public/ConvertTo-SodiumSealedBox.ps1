@@ -55,7 +55,9 @@
         [ValidateNotNullOrEmpty()]
         [string] $PublicKey
     )
-    begin {}
+    begin {
+        Initialize-Sodium
+    }
 
     process {
         try {

@@ -36,7 +36,7 @@ switch ($true) {
 $assemblyPath = Join-Path -Path $PSScriptRoot -ChildPath "libs/$runtimeIdentifier/PSModule.Sodium.dll"
 Import-Module $assemblyPath -ErrorAction Stop
 
-# Optimistically mark supported; Initialize-Sodium will run the Windows VC++ runtime check lazily only if native init fails.
+# Optimistically mark supported; Initialize-Sodium runs during module import and checks Windows VC++ runtime only if native init fails.
 $script:Supported = $true
 $script:ProcessArchitecture = $processArchitecture.ToString()
 

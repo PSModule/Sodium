@@ -68,11 +68,13 @@
         [string] $PrivateKey
     )
 
-    begin {}
+    begin {
+        Initialize-Sodium
+    }
 
     process {
         try {
-            if ($PublicKey) {
+            if (-not [string]::IsNullOrWhiteSpace($PublicKey)) {
                 return [PSModule.Sodium]::OpenSealBase64($SealedBox, $PrivateKey, $PublicKey)
             }
             return [PSModule.Sodium]::OpenSealBase64($SealedBox, $PrivateKey)

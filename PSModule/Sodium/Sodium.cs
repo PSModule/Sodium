@@ -228,11 +228,18 @@ namespace PSModule
             var publicKey = DecodeBase64Exact(publicKeyBase64, PublicKeyBytes, "public key");
             var message = Encoding.UTF8.GetBytes(plaintext);
             var ciphertext = new byte[message.Length + SealBytes];
-            if (Native.crypto_box_seal(ciphertext, message, (ulong)message.LongLength, publicKey) != 0)
+            try
             {
-                throw new InvalidOperationException("Encryption failed.");
+                if (Native.crypto_box_seal(ciphertext, message, (ulong)message.LongLength, publicKey) != 0)
+                {
+                    throw new InvalidOperationException("Encryption failed.");
+                }
+                return Convert.ToBase64String(ciphertext);
             }
-            return Convert.ToBase64String(ciphertext);
+            finally
+            {
+                CryptographicOperations.ZeroMemory(message);
+            }
         }
 
         public static string OpenSealBase64(string ciphertextBase64, string privateKeyBase64)
@@ -253,7 +260,7 @@ namespace PSModule
             var ciphertext = Convert.FromBase64String(ciphertextBase64);
             if (ciphertext.Length < SealBytes)
             {
-                throw new InvalidOperationException($"Invalid sealed box. Expected at least {SealBytes} bytes but got {ciphertext.Length}.");
+                throw new ArgumentException($"Invalid sealed box. Expected at least {SealBytes} bytes but got {ciphertext.Length}.");
             }
             var privateKey = DecodeBase64Exact(privateKeyBase64, SecretKeyBytes, "private key");
             var publicKey = new byte[PublicKeyBytes];
@@ -291,7 +298,7 @@ namespace PSModule
             var bytes = Convert.FromBase64String(value);
             if (bytes.Length != expectedLength)
             {
-                throw new InvalidOperationException($"Invalid {label}. Expected {expectedLength} bytes but got {bytes.Length}.");
+                throw new ArgumentException($"Invalid {label}. Expected {expectedLength} bytes but got {bytes.Length}.");
             }
             return bytes;
         }

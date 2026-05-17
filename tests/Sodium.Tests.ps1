@@ -140,6 +140,14 @@
             $keyPair1.PublicKey | Should -Not -Be $keyPair2.PublicKey
             $keyPair1.PrivateKey | Should -Not -Be $keyPair2.PrivateKey
         }
+
+        It 'Allows an empty seed and remains deterministic for compatibility' {
+            $keyPair1 = New-SodiumKeyPair -Seed ''
+            $keyPair2 = New-SodiumKeyPair -Seed ''
+
+            $keyPair1.PublicKey | Should -Be $keyPair2.PublicKey
+            $keyPair1.PrivateKey | Should -Be $keyPair2.PrivateKey
+        }
     }
 
     Context 'Public Key Derivation' {
@@ -168,11 +176,11 @@
     }
 
     Context 'Runtime diagnostics' {
-        It 'Assert-VisualCRedistributableInstalled returns a boolean for the current architecture' {
+        It 'Assert-VisualCRedistributableInstalled validates the current Windows architecture runtime' -Skip:(-not $IsWindows) {
             InModuleScope Sodium {
                 $arch = if ([System.Environment]::Is64BitProcess) { 'X64' } else { 'X86' }
                 $result = Assert-VisualCRedistributableInstalled -Version '14.0' -Architecture $arch 3>$null
-                $result | Should -BeOfType [bool]
+                $result | Should -BeTrue
             }
         }
     }
