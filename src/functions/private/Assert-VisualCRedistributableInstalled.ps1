@@ -22,26 +22,37 @@ function Assert-VisualCRedistributableInstalled {
     #>
     [CmdletBinding()]
     [OutputType([bool])]
-    param (
+    param(
         # The minimum required version of the Visual C++ Redistributable.
         [Parameter(Mandatory)]
-        [Version] $Version
+        [Version] $Version,
+
+        # The process architecture that determines which Redistributable runtime is required.
+        [Parameter()]
+        [ValidateSet('X64', 'X86')]
+        [string] $Architecture = $(if ([System.Environment]::Is64BitProcess) { 'X64' } else { 'X86' })
     )
 
-    process {
+    begin {
         $result = $false
+    }
+
+    process {
         if ($IsWindows) {
-            $key = 'HKLM:\SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\X64'
-            if (Test-Path -Path $key) {
-                $installedVersion = (Get-ItemProperty -Path $key).Version
-                $result = [Version]($installedVersion.SubString(1, $installedVersion.Length - 1)) -ge $Version
+            $key = "HKLM:\SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\$Architecture"
+            $runtimeInfo = Get-ItemProperty -Path $key -ErrorAction SilentlyContinue
+            if ($runtimeInfo -and $runtimeInfo.Version -and ($runtimeInfo.Installed -ne 0)) {
+                $installedVersion = [Version]$runtimeInfo.Version.TrimStart('v', 'V')
+                $result = $installedVersion -ge $Version
             }
         }
         if (-not $result) {
-            Write-Warning 'The Visual C++ Redistributable for Visual Studio 2015 or later is required.'
+            Write-Warning "The Visual C++ Redistributable for Visual Studio 2015 or later ($Architecture) is required."
             Write-Warning 'Download and install the appropriate version from:'
             Write-Warning ' - https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads'
         }
         $result
     }
+
+    end {}
 }

@@ -39,6 +39,14 @@
             { ConvertFrom-SodiumSealedBox -SealedBox $encryptedMessage -PublicKey $invalidPublicKey -PrivateKey $keyPair.PrivateKey } | Should -Throw
         }
 
+        It 'Throws a clear error when the sealed box is shorter than the Sodium overhead' {
+            $keyPair = New-SodiumKeyPair
+            $shortSealedBox = [Convert]::ToBase64String([byte[]]::new(16))
+
+            { ConvertFrom-SodiumSealedBox -SealedBox $shortSealedBox -PrivateKey $keyPair.PrivateKey } |
+                Should -Throw 'Invalid sealed box. Expected at least 48 bytes but got 16.'
+        }
+
         It 'Encrypts a message correctly when using pipeline input on ConvertTo-SodiumSealedBox' {
             $keyPair = New-SodiumKeyPair
             $publicKey = $keyPair.PublicKey
@@ -132,6 +140,14 @@
             $keyPair1.PublicKey | Should -Not -Be $keyPair2.PublicKey
             $keyPair1.PrivateKey | Should -Not -Be $keyPair2.PrivateKey
         }
+
+        It 'Allows an empty seed and remains deterministic for compatibility' {
+            $keyPair1 = New-SodiumKeyPair -Seed ''
+            $keyPair2 = New-SodiumKeyPair -Seed ''
+
+            $keyPair1.PublicKey | Should -Be $keyPair2.PublicKey
+            $keyPair1.PrivateKey | Should -Be $keyPair2.PrivateKey
+        }
     }
 
     Context 'Public Key Derivation' {
@@ -149,6 +165,23 @@
             $invalidPrivateKey = 'InvalidKey'
 
             { Get-SodiumPublicKey -PrivateKey $invalidPrivateKey } | Should -Throw
+        }
+
+        It 'Get-SodiumPublicKey - Throws a clear error when a private key has the wrong length' {
+            $shortPrivateKey = [Convert]::ToBase64String([byte[]]::new(16))
+
+            { Get-SodiumPublicKey -PrivateKey $shortPrivateKey } |
+                Should -Throw 'Invalid private key. Expected 32 bytes but got 16.'
+        }
+    }
+
+    Context 'Runtime diagnostics' {
+        It 'Assert-VisualCRedistributableInstalled validates the current Windows architecture runtime' -Skip:(-not $IsWindows) {
+            InModuleScope Sodium {
+                $arch = if ([System.Environment]::Is64BitProcess) { 'X64' } else { 'X86' }
+                $result = Assert-VisualCRedistributableInstalled -Version '14.0' -Architecture $arch 3>$null
+                $result | Should -BeTrue
+            }
         }
     }
 }
