@@ -80,40 +80,27 @@
             ParameterSetName = 'SeededKeyPair',
             ValueFromPipeline
         )]
+        [AllowEmptyString()]
         [string] $Seed
     )
 
     begin {
-        if (-not $script:Supported) { throw 'Sodium is not supported on this platform.' }
-        $null = [PSModule.Sodium]::sodium_init()
+        Initialize-Sodium
     }
 
     process {
-        $pkSize = [PSModule.Sodium]::crypto_box_publickeybytes().ToUInt32()
-        $skSize = [PSModule.Sodium]::crypto_box_secretkeybytes().ToUInt32()
-        $publicKey = New-Object byte[] $pkSize
-        $privateKey = New-Object byte[] $skSize
-
-        switch ($PSCmdlet.ParameterSetName) {
-            'SeededKeyPair' {
-                # Derive a 32-byte seed from the provided string seed (using SHA-256)
-                $seedBytes = [System.Text.Encoding]::UTF8.GetBytes($Seed)
-                $derivedSeed = [System.Security.Cryptography.SHA256]::Create().ComputeHash($seedBytes)
-                $result = [PSModule.Sodium]::crypto_box_seed_keypair($publicKey, $privateKey, $derivedSeed)
-                break
+        try {
+            if ($PSCmdlet.ParameterSetName -eq 'SeededKeyPair') {
+                $kp = [PSModule.Sodium]::GenerateKeyPairBase64($Seed)
+            } else {
+                $kp = [PSModule.Sodium]::GenerateKeyPairBase64()
             }
-            default {
-                $result = [PSModule.Sodium]::crypto_box_keypair($publicKey, $privateKey)
-            }
+        } catch [System.Management.Automation.MethodInvocationException] {
+            throw $_.Exception.InnerException
         }
-
-        if ($result -ne 0) {
-            throw 'Key pair generation failed.'
-        }
-
         return [pscustomobject]@{
-            PublicKey  = [Convert]::ToBase64String($publicKey)
-            PrivateKey = [Convert]::ToBase64String($privateKey)
+            PublicKey  = $kp.PublicKey
+            PrivateKey = $kp.PrivateKey
         }
     }
 }

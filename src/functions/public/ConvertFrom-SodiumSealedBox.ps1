@@ -55,6 +55,7 @@
             ValueFromPipelineByPropertyName
         )]
         [Alias('CipherText')]
+        [ValidateNotNullOrEmpty()]
         [string] $SealedBox,
 
         # The base64-encoded public key used for decryption.
@@ -63,38 +64,22 @@
 
         # The base64-encoded private key used for decryption.
         [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [string] $PrivateKey
     )
 
     begin {
-        if (-not $script:Supported) { throw 'Sodium is not supported on this platform.' }
-        $null = [PSModule.Sodium]::sodium_init()
+        Initialize-Sodium
     }
 
     process {
-        $ciphertext = [System.Convert]::FromBase64String($SealedBox)
-
-        $privateKeyByteArray = [System.Convert]::FromBase64String($PrivateKey)
-        if ($privateKeyByteArray.Length -ne 32) { throw 'Invalid private key.' }
-
-        if ([string]::IsNullOrWhiteSpace($PublicKey)) {
-            $publicKeyByteArray = Get-SodiumPublicKey -PrivateKey $PrivateKey -AsByteArray
-        } else {
-            $publicKeyByteArray = [System.Convert]::FromBase64String($PublicKey)
-            if ($publicKeyByteArray.Length -ne 32) { throw 'Invalid public key.' }
+        try {
+            if (-not [string]::IsNullOrWhiteSpace($PublicKey)) {
+                return [PSModule.Sodium]::OpenSealBase64($SealedBox, $PrivateKey, $PublicKey)
+            }
+            return [PSModule.Sodium]::OpenSealBase64($SealedBox, $PrivateKey)
+        } catch [System.Management.Automation.MethodInvocationException] {
+            throw $_.Exception.InnerException
         }
-
-        $overhead = [PSModule.Sodium]::crypto_box_sealbytes().ToUInt32()
-        $decryptedBytes = New-Object byte[] ($ciphertext.Length - $overhead)
-
-        $result = [PSModule.Sodium]::crypto_box_seal_open(
-            $decryptedBytes, $ciphertext, [UInt64]$ciphertext.Length, $publicKeyByteArray, $privateKeyByteArray
-        )
-
-        if ($result -ne 0) {
-            throw 'Decryption failed.'
-        }
-
-        return [System.Text.Encoding]::UTF8.GetString($decryptedBytes)
     }
 }
