@@ -19,7 +19,14 @@
         if (-not $script:Supported) { throw 'Sodium is not supported on this platform.' }
         if ($script:SodiumInitialized) { return }
 
-        $initializationResult = [PSModule.Sodium]::sodium_init()
+        try {
+            $initializationResult = [PSModule.Sodium]::sodium_init()
+        } catch {
+            if ($IsWindows) {
+                $script:Supported = Assert-VisualCRedistributableInstalled -Version '14.0' -Architecture $script:ProcessArchitecture
+            }
+            throw
+        }
         if ($initializationResult -lt 0) {
             throw 'Sodium initialization failed.'
         }

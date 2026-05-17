@@ -36,8 +36,6 @@ switch ($true) {
 $assemblyPath = Join-Path -Path $PSScriptRoot -ChildPath "libs/$runtimeIdentifier/PSModule.Sodium.dll"
 Import-Module $assemblyPath -ErrorAction Stop
 
-if ($IsWindows) {
-    $script:Supported = Assert-VisualCRedistributableInstalled -Version '14.0' -Architecture $processArchitecture.ToString()
-} else {
-    $script:Supported = $true
-}
+# Optimistically mark supported; Initialize-Sodium will run the Windows VC++ runtime check lazily only if native init fails.
+$script:Supported = $true
+$script:ProcessArchitecture = $processArchitecture.ToString()
