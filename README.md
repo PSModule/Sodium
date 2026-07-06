@@ -1,6 +1,6 @@
 # Sodium
 
-Sodium is a PowerShell module for handling Sodium-encrypted secrets.
+Sodium is a PowerShell module for handling libsodium-based encryption and decryption.
 
 ## Installation
 
@@ -11,6 +11,8 @@ Install-PSResource -Name Sodium
 Import-Module -Name Sodium
 ```
 
+On Windows, the module requires the Microsoft Visual C++ Redistributable for Visual Studio 2015 or later.
+
 ## Documentation
 
 Documentation is published at [psmodule.io/Sodium](https://psmodule.io/Sodium/).
@@ -19,7 +21,7 @@ Use PowerShell help and command discovery for module details:
 
 ```powershell
 Get-Command -Module Sodium
-Get-Help <CommandName> -Examples
+Get-Help ConvertTo-SodiumSealedBox -Examples
 ```
 
 ## Contributing
