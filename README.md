@@ -13,7 +13,7 @@ requires that secrets be encrypted using libsodium.
 This module relies on the following:
 
 - The [libsodium](https://github.com/jedisct1/libsodium) library for cryptographic operations.
-- Cross-platform PowerShell 7.
+- Cross-platform PowerShell 7.4 or later (the module ships a net8.0 binary).
 
 On Windows, the module also requires the Microsoft Visual C++ Redistributable for Visual Studio 2015 or later.
 
@@ -64,7 +64,7 @@ Decrypt a sealed box back to the original message. Both the public and private k
 $params = @{
     SealedBox  = '905j4S/JyP9XBBmOIdHSOXiDu7fUtZo9TFIMnAfBMESgcVBwttLnEyxJn4xPEX5OMKQ+Bc4P6Hg='
     PublicKey  = '9fv51aqi00MYN4UR7Ew/DLXMS9t1NapLs7yyo+vegz4='
-    PrivateKey = 'MiJAFUZxZ1UCbQTwKfH7HY6AhIFYQlnok5fBD2K+y/g='                                     #gitleaks:allow
+    PrivateKey = 'MiJAFUZxZ1UCbQTwKfH7HY6AhIFYQlnok5fBD2K+y/g=' #gitleaks:allow
 }
 ConvertFrom-SodiumSealedBox @params
 
