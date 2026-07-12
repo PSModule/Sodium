@@ -13,7 +13,7 @@ requires that secrets be encrypted using libsodium.
 This module relies on the following:
 
 - The [libsodium](https://github.com/jedisct1/libsodium) library for cryptographic operations.
-- Cross-platform PowerShell 7.6 or later.
+- Cross-platform PowerShell 7.
 
 On Windows, the module also requires the Microsoft Visual C++ Redistributable for Visual Studio 2015 or later.
 
