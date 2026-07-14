@@ -1,34 +1,37 @@
 # Sodium
 
-A PowerShell module that provides direct bindings to the [`libsodium`](https://github.com/jedisct1/libsodium) cryptographic library.
+Sodium is a PowerShell module that provides direct bindings to the [`libsodium`](https://github.com/jedisct1/libsodium)
+cryptographic library, enabling libsodium-based encryption and decryption directly from PowerShell.
 
 This module was initially created to serve the needs of the [GitHub PowerShell module](https://github.com/PSModule/GitHub).
-GitHub's method for creating or updating [secrets via the REST API](https://docs.github.com/en/rest/guides/encrypting-secrets-for-the-rest-api?apiVersion=2022-11-28#example-encrypting-a-secret-using-c)
-requires that secrets be encrypted using the [libsodium](https://github.com/jedisct1/libsodium) library.
+GitHub's method for creating or updating
+[secrets via the REST API](https://docs.github.com/en/rest/guides/encrypting-secrets-for-the-rest-api?apiVersion=2022-11-28#example-encrypting-a-secret-using-c)
+requires that secrets be encrypted using libsodium.
 
 ## Prerequisites
 
-This module relies on the following external resources:
+This module relies on the following:
 
-- The [PSModule framework](https://github.com/PSModule) for building, testing, and publishing the module.
 - The [libsodium](https://github.com/jedisct1/libsodium) library for cryptographic operations.
+- Cross-platform PowerShell 7.4 or later (the module ships a net8.0 binary).
+
+On Windows, the module also requires the Microsoft Visual C++ Redistributable for Visual Studio 2015 or later.
 
 ## Installation
 
-To install the module from the PowerShell Gallery, use the following command:
+Install the module from the PowerShell Gallery:
 
 ```powershell
 Install-PSResource -Name Sodium
 Import-Module -Name Sodium
 ```
 
-## Examples
+## Usage
 
-### Example 1: Generate a new key pair
+### Example: Generate a new key pair
 
-The module provides functionality to create a new cryptographic key pair.
-The keys are returned as a PowerShell custom object with `PublicKey` and `PrivateKey` properties, encoded in base64 format.
-For more info on the key pair generation, refer to the [Public-key signatures documentation](https://doc.libsodium.org/public-key_cryptography/public-key_signatures).
+Create a new cryptographic key pair. The keys are returned as an object with `PublicKey` and `PrivateKey`
+properties, encoded in base64.
 
 ```powershell
 New-SodiumKeyPair
@@ -38,80 +41,46 @@ PublicKey                                    PrivateKey
 9fv51aqi00MYN4UR7Ew/DLXMS9t1NapLs7yyo+vegz4= MiJAFUZxZ1UCbQTwKfH7HY6AhIFYQlnok5fBD2K+y/g=
 ```
 
-### Example 2: Deterministic Key Pair Generation
+### Example: Encrypt a message with a public key
 
-Generate a key pair deterministically using a seed. The same seed will always produce the same key pair.
-
-```powershell
-New-SodiumKeyPair -Seed 'MySecureSeed'
-
-PublicKey PrivateKey
--------- - ----------
-WQakMx2mIAQMwLqiZteHUTwmMP6mUdK2FL0WEybWgB8= ci5/7eZ0IbGXtqQMaNvxhJ2d9qwFxA8Kjx+vivSTXqU=
-```
-
-### Example 3: Encrypt a message using a public key (Sealed Boxes encryption)
-
-After generating a key pair, a message can be encrypted using the associated public key with [Sealed Boxes encryption](https://doc.libsodium.org/public-key_cryptography/sealed_boxes).
-Below, a message is encrypted using the public key from the previous example.
+Encrypt a message using a recipient's public key with
+[sealed boxes](https://doc.libsodium.org/public-key_cryptography/sealed_boxes).
 
 ```powershell
 $params = @{
-    Message   = "mymessage"
-    PublicKey = "9fv51aqi00MYN4UR7Ew/DLXMS9t1NapLs7yyo+vegz4="
+    Message   = 'mymessage'
+    PublicKey = '9fv51aqi00MYN4UR7Ew/DLXMS9t1NapLs7yyo+vegz4='
 }
 ConvertTo-SodiumSealedBox @params
 
 905j4S/JyP9XBBmOIdHSOXiDu7fUtZo9TFIMnAfBMESgcVBwttLnEyxJn4xPEX5OMKQ+Bc4P6Hg=
 ```
 
-### Example 4: Decrypt a Sodium-encrypted sealed box string
+### Example: Decrypt a sealed box
 
-To decrypt a string that was encrypted using [Sealed Boxes encryption](https://doc.libsodium.org/public-key_cryptography/sealed_boxes), both the private and public keys are required.
+Decrypt a sealed box back to the original message. Both the public and private keys are required.
 
 ```powershell
 $params = @{
     SealedBox  = '905j4S/JyP9XBBmOIdHSOXiDu7fUtZo9TFIMnAfBMESgcVBwttLnEyxJn4xPEX5OMKQ+Bc4P6Hg='
     PublicKey  = '9fv51aqi00MYN4UR7Ew/DLXMS9t1NapLs7yyo+vegz4='
-    PrivateKey = 'MiJAFUZxZ1UCbQTwKfH7HY6AhIFYQlnok5fBD2K+y/g='                                                        #gitleaks:allow
+    PrivateKey = 'MiJAFUZxZ1UCbQTwKfH7HY6AhIFYQlnok5fBD2K+y/g=' #gitleaks:allow
 }
 ConvertFrom-SodiumSealedBox @params
 
 mymessage
 ```
 
-### Finding More Examples
+## Documentation
 
-For additional examples, refer to the [examples](examples) folder.
+Documentation is published at [psmodule.io/Sodium](https://psmodule.io/Sodium/).
 
-Alternatively, you can use the following command to list all available commands in this module:
+Use PowerShell help and command discovery for module details:
 
 ```powershell
 Get-Command -Module Sodium
+Get-Help -Name ConvertTo-SodiumSealedBox -Examples
 ```
-
-To view examples for a specific command, use:
-
-```powershell
-Get-Help <CommandName> -Examples
-```
-
-## Contributing
-
-Coder or not, you can contribute to this project! We welcome all contributions.
-
-### For Users
-
-If you don't code, you still have valuable insights that can improve this project.
-If the module behaves unexpectedly, throws errors, or lacks functionality, you can help by submitting bug reports and feature requests.
-Please check the [issues](https://github.com/PSModule/Sodium/issues) tab and submit a new issue if needed.
-
-### For Developers
-
-If you are a developer, we welcome your contributions.
-Please read the [Contribution Guidelines](CONTRIBUTING.md) for more information.
-
-You can help by picking up an existing issue or submitting a new one if you have an idea for a feature or improvement.
 
 ## Acknowledgements
 
