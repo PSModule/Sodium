@@ -3,7 +3,7 @@ $processArchitecture = [System.Runtime.InteropServices.RuntimeInformation]::Proc
 $runtimeIdentifier = Resolve-SodiumRuntimeIdentifier -ProcessArchitecture $processArchitecture `
     -Linux:$IsLinux -MacOS:$IsMacOS -Windows:$IsWindows
 
-$assemblyPath = Join-Path -Path $PSScriptRoot -ChildPath "libs/$runtimeIdentifier/PSModule.Sodium.dll"
+$assemblyPath = [System.IO.Path]::Combine($PSScriptRoot, 'libs', $runtimeIdentifier, 'PSModule.Sodium.dll')
 Import-Module $assemblyPath -ErrorAction Stop
 
 # Optimistically mark supported; Initialize-Sodium runs during module import and checks Windows VC++ runtime only if native init fails.

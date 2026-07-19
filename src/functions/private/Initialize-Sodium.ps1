@@ -30,10 +30,10 @@
             throw 'Sodium initialization failed.'
         }
 
-        $script:SodiumPublicKeyBytes = [PSModule.Sodium]::crypto_box_publickeybytes().ToUInt32()
-        $script:SodiumPrivateKeyBytes = [PSModule.Sodium]::crypto_box_secretkeybytes().ToUInt32()
-        $script:SodiumSealBytes = [PSModule.Sodium]::crypto_box_sealbytes().ToUInt32()
-        $script:SodiumSeedBytes = [PSModule.Sodium]::crypto_box_seedbytes().ToUInt32()
+        $script:SodiumPublicKeyBytes = 32u
+        $script:SodiumPrivateKeyBytes = 32u
+        $script:SodiumSealBytes = 48u
+        $script:SodiumSeedBytes = 32u
         $script:SodiumInitialized = $true
     }
 
