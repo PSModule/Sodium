@@ -193,6 +193,51 @@ Describe 'Sodium' {
                 $result | Should -BeTrue
             }
         }
+
+        It 'Assert-VisualCRedistributableInstalled reports a missing runtime' {
+            InModuleScope Sodium {
+                Mock Get-ItemProperty { $null }
+
+                $result = Assert-VisualCRedistributableInstalled -Version '14.0' -Architecture 'X64' 3>$null
+                $result | Should -BeFalse
+            }
+        }
+
+        It 'Initialize-Sodium treats repeated initialization as a no-op' {
+            InModuleScope Sodium {
+                $script:SodiumInitialized | Should -BeTrue
+                { Initialize-Sodium } | Should -Not -Throw
+            }
+        }
+
+        It 'Initialize-Sodium restores cached native buffer sizes' {
+            InModuleScope Sodium {
+                $script:SodiumInitialized = $false
+                $script:SodiumPublicKeyBytes = $null
+                $script:SodiumPrivateKeyBytes = $null
+                $script:SodiumSealBytes = $null
+                $script:SodiumSeedBytes = $null
+
+                Initialize-Sodium
+
+                $script:SodiumInitialized | Should -BeTrue
+                $script:SodiumPublicKeyBytes | Should -Be 32
+                $script:SodiumPrivateKeyBytes | Should -Be 32
+                $script:SodiumSealBytes | Should -Be 48
+                $script:SodiumSeedBytes | Should -Be 32
+            }
+        }
+
+        It 'Initialize-Sodium rejects an unsupported platform' {
+            InModuleScope Sodium {
+                $script:Supported = $false
+                try {
+                    { Initialize-Sodium } | Should -Throw 'Sodium is not supported on this platform.'
+                } finally {
+                    $script:Supported = $true
+                }
+            }
+        }
     }
 
     Context 'Parallel sessions' {
