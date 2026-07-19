@@ -198,8 +198,13 @@ Describe 'Sodium' {
             InModuleScope Sodium {
                 Mock Get-ItemProperty { $null }
 
-                $result = Assert-VisualCRedistributableInstalled -Version '14.0' -Architecture 'X64' 3>$null
-                $result | Should -BeFalse
+                Set-Variable -Name IsWindows -Value $true -Scope Script
+                try {
+                    $result = Assert-VisualCRedistributableInstalled -Version '14.0' -Architecture 'X64' 3>$null
+                    $result | Should -BeFalse
+                } finally {
+                    Remove-Variable -Name IsWindows -Scope Script
+                }
             }
         }
 
