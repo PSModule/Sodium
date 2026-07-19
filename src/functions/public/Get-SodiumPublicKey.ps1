@@ -67,6 +67,10 @@
         https://psmodule.io/Sodium/Functions/Get-SodiumPublicKey/
     #>
 
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSUseOutputTypeCorrectly', '',
+        Justification = 'The unary comma preserves the byte array as one pipeline object.'
+    )]
     [OutputType([string], ParameterSetName = 'Base64')]
     [OutputType([byte[]], ParameterSetName = 'AsByteArray')]
     [CmdletBinding(DefaultParameterSetName = 'Base64')]
@@ -84,7 +88,7 @@
     process {
         if ($AsByteArray) {
             try {
-                return [PSModule.Sodium]::DerivePublicKey($PrivateKey)
+                return , ([PSModule.Sodium]::DerivePublicKey($PrivateKey))
             } catch [System.Management.Automation.MethodInvocationException] {
                 throw $_.Exception.InnerException
             }

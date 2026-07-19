@@ -167,7 +167,7 @@ Describe 'Sodium' {
             $keyPair = New-SodiumKeyPair
             $derivedPublicKey = Get-SodiumPublicKey -PrivateKey $keyPair.PrivateKey -AsByteArray
 
-            $derivedPublicKey | Should -BeOfType ([byte])
+            ($derivedPublicKey -is [byte[]]) | Should -BeTrue
             [Convert]::ToBase64String($derivedPublicKey) | Should -Be $keyPair.PublicKey
         }
 
@@ -200,6 +200,25 @@ Describe 'Sodium' {
 
                 $result = Assert-VisualCRedistributableInstalled -Version '14.0' -Architecture 'X64' 3>$null
                 $result | Should -BeFalse
+            }
+        }
+
+        It 'Assert-VisualCRedistributableInstalled accepts a matching runtime' {
+            InModuleScope Sodium {
+                Mock Get-ItemProperty {
+                    [pscustomobject]@{
+                        Installed = 1
+                        Version   = 'v14.30.30704.0'
+                    }
+                }
+
+                Set-Variable -Name IsWindows -Value $true -Scope Script
+                try {
+                    $result = Assert-VisualCRedistributableInstalled -Version '14.0'
+                    $result | Should -BeTrue
+                } finally {
+                    Remove-Variable -Name IsWindows -Scope Script
+                }
             }
         }
 

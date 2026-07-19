@@ -23,16 +23,7 @@
             $initializationResult = [PSModule.Sodium]::sodium_init()
         } catch {
             $script:Supported = $false
-            if ($IsWindows) {
-                if ($script:ProcessArchitecture -in @('X64', 'X86')) {
-                    $hasRuntime = Assert-VisualCRedistributableInstalled -Version '14.0' -Architecture $script:ProcessArchitecture
-                    if (-not $hasRuntime) {
-                        $message = "Sodium native initialization failed; the Visual C++ Redistributable for " +
-                        "$($script:ProcessArchitecture) appears to be missing or below the required version."
-                        throw $message
-                    }
-                }
-            }
+            Assert-SodiumNativeRuntime
             throw
         }
         if ($initializationResult -lt 0) {
