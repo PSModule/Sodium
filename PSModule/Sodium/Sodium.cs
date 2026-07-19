@@ -204,6 +204,11 @@ namespace PSModule
 
         public static string DerivePublicKeyBase64(string privateKeyBase64)
         {
+            return Convert.ToBase64String(DerivePublicKey(privateKeyBase64));
+        }
+
+        public static byte[] DerivePublicKey(string privateKeyBase64)
+        {
             ArgumentNullException.ThrowIfNull(privateKeyBase64);
             var privateKey = DecodeBase64Exact(privateKeyBase64, SecretKeyBytes, "private key");
             var publicKey = new byte[PublicKeyBytes];
@@ -213,7 +218,7 @@ namespace PSModule
                 {
                     throw new InvalidOperationException("Unable to derive public key from private key.");
                 }
-                return Convert.ToBase64String(publicKey);
+                return publicKey;
             }
             finally
             {

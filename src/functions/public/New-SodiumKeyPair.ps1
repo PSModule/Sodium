@@ -84,10 +84,6 @@
         [string] $Seed
     )
 
-    begin {
-        Initialize-Sodium
-    }
-
     process {
         try {
             if ($PSCmdlet.ParameterSetName -eq 'SeededKeyPair') {

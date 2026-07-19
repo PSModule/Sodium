@@ -81,14 +81,10 @@
         [switch] $AsByteArray
     )
 
-    begin {
-        Initialize-Sodium
-    }
-
     process {
         if ($AsByteArray) {
             try {
-                return [System.Convert]::FromBase64String([PSModule.Sodium]::DerivePublicKeyBase64($PrivateKey))
+                return [PSModule.Sodium]::DerivePublicKey($PrivateKey)
             } catch [System.Management.Automation.MethodInvocationException] {
                 throw $_.Exception.InnerException
             }
@@ -100,5 +96,4 @@
         }
     }
 
-    end {}
 }

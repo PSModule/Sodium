@@ -68,10 +68,6 @@
         [string] $PrivateKey
     )
 
-    begin {
-        Initialize-Sodium
-    }
-
     process {
         try {
             if (-not [string]::IsNullOrWhiteSpace($PublicKey)) {
