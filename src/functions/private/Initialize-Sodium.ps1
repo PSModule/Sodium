@@ -30,6 +30,8 @@
             throw 'Sodium initialization failed.'
         }
 
+        # Fixed crypto_box constants (curve25519xsalsa20poly1305). The C# layer queries and validates the real
+        # native values at type initialization; hardcoding here avoids four extra interop call sites at import.
         $script:SodiumPublicKeyBytes = 32u
         $script:SodiumPrivateKeyBytes = 32u
         $script:SodiumSealBytes = 48u
