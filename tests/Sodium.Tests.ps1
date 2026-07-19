@@ -257,6 +257,30 @@ Describe 'Sodium' {
                 }
             }
         }
+
+        It 'Resolve-SodiumRuntimeIdentifier maps every supported runtime' {
+            InModuleScope Sodium {
+                Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'Arm64' -Linux | Should -Be 'linux-arm64'
+                Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'X64' -Linux | Should -Be 'linux-x64'
+                Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'Arm64' -MacOS | Should -Be 'osx-arm64'
+                Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'X64' -MacOS | Should -Be 'osx-x64'
+                Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'X64' -Windows | Should -Be 'win-x64'
+                Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'X86' -Windows | Should -Be 'win-x86'
+            }
+        }
+
+        It 'Resolve-SodiumRuntimeIdentifier rejects unsupported runtimes' {
+            InModuleScope Sodium {
+                { Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'Arm' -Linux } |
+                    Should -Throw 'Unsupported Linux process architecture: Arm.*'
+                { Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'Arm' -MacOS } |
+                    Should -Throw 'Unsupported macOS process architecture: Arm.*'
+                { Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'Arm' -Windows } |
+                    Should -Throw 'Unsupported Windows process architecture: Arm.*'
+                { Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'X64' } |
+                    Should -Throw 'Unsupported platform.*'
+            }
+        }
     }
 
     Context 'Parallel sessions' {
