@@ -30,7 +30,9 @@ param(
 $ErrorActionPreference = 'Stop'
 
 if (-not $ModulePath) {
-    $ModulePath = & (Join-Path -Path $PSScriptRoot -ChildPath 'Build-LocalModule.ps1') -OutputPath (Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath 'SodiumBench')
+    $buildScript = Join-Path -Path $PSScriptRoot -ChildPath 'Build-LocalModule.ps1'
+    $tempBuildPath = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath 'SodiumBench'
+    $ModulePath = & $buildScript -OutputPath $tempBuildPath
 }
 
 $times = for ($i = 0; $i -lt $Samples; $i++) {
