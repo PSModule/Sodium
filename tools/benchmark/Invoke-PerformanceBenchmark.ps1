@@ -31,12 +31,16 @@ param(
 $ErrorActionPreference = 'Stop'
 
 if (-not $ModulePath) {
-    $ModulePath = & (Join-Path $PSScriptRoot 'Build-LocalModule.ps1') -OutputPath (Join-Path ([System.IO.Path]::GetTempPath()) 'SodiumBench')
+    $ModulePath = & (Join-Path -Path $PSScriptRoot -ChildPath 'Build-LocalModule.ps1') -OutputPath (Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath 'SodiumBench')
 }
 
 Import-Module $ModulePath -Force
 
 function Measure-Op {
+    <#
+        .SYNOPSIS
+        Measures an operation over N iterations and returns aggregate timing metrics.
+    #>
     param([string]$Name, [scriptblock]$Setup, [scriptblock]$Op, [int]$N = $Iterations)
     $ctx = if ($Setup) { & $Setup } else { $null }
     for ($i = 0; $i -lt 25; $i++) { $null = & $Op $ctx }
@@ -99,11 +103,11 @@ $results += Measure-Op -Name 'Full roundtrip (keypair+seal+open)' -N ([math]::Ma
 }
 
 $results += Measure-Op -Name 'ConvertTo-SodiumSealedBox invalid key (throw)' -N 500 -Op {
-    try { ConvertTo-SodiumSealedBox -Message 'x' -PublicKey 'InvalidKey' } catch { }
+    try { ConvertTo-SodiumSealedBox -Message 'x' -PublicKey 'InvalidKey' } catch { $null = $_ }
 }
 
 $results += Measure-Op -Name 'Get-SodiumPublicKey invalid key (throw)' -N 500 -Op {
-    try { Get-SodiumPublicKey -PrivateKey 'InvalidKey' } catch { }
+    try { Get-SodiumPublicKey -PrivateKey 'InvalidKey' } catch { $null = $_ }
 }
 
 # Mirrors the 'Parallel sessions' test context: module import + crypto roundtrip in 4 runspaces.
@@ -125,7 +129,7 @@ $results += [pscustomobject]@{
     OpsPerSec = [math]::Round(1 / $swPar.Elapsed.TotalSeconds, 2)
 }
 
-$results | Format-Table -AutoSize | Out-String -Width 200 | Write-Host
-$outFile = Join-Path $OutputPath "bench-$Label.json"
+$results | Format-Table -AutoSize | Out-String -Width 200 | Write-Output
+$outFile = Join-Path -Path $OutputPath -ChildPath "bench-$Label.json"
 $results | ConvertTo-Json | Set-Content -Path $outFile
 Write-Verbose "Saved $outFile" -Verbose

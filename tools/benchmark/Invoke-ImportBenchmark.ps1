@@ -30,7 +30,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 if (-not $ModulePath) {
-    $ModulePath = & (Join-Path $PSScriptRoot 'Build-LocalModule.ps1') -OutputPath (Join-Path ([System.IO.Path]::GetTempPath()) 'SodiumBench')
+    $ModulePath = & (Join-Path -Path $PSScriptRoot -ChildPath 'Build-LocalModule.ps1') -OutputPath (Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath 'SodiumBench')
 }
 
 $times = for ($i = 0; $i -lt $Samples; $i++) {
@@ -50,7 +50,7 @@ $result = [pscustomobject]@{
     MinMs   = [math]::Round($stats.Minimum, 1)
     MaxMs   = [math]::Round($stats.Maximum, 1)
 }
-$result | Format-Table -AutoSize | Out-String | Write-Host
-$outFile = Join-Path $OutputPath "import-$Label.json"
+$result | Format-Table -AutoSize | Out-String | Write-Output
+$outFile = Join-Path -Path $OutputPath -ChildPath "import-$Label.json"
 $result | ConvertTo-Json | Set-Content -Path $outFile
 Write-Verbose "Saved $outFile" -Verbose

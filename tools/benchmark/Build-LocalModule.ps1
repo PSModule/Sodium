@@ -13,7 +13,7 @@
 param(
     # Path to the module source folder. Defaults to <repo>/src.
     [Parameter()]
-    [string] $SourcePath = (Join-Path $PSScriptRoot '..' '..' 'src'),
+    [string] $SourcePath = (Join-Path -Path $PSScriptRoot -ChildPath '..\..\src'),
 
     # Folder in which the 'Sodium' module folder is created.
     [Parameter(Mandatory)]
@@ -37,31 +37,31 @@ New-Item -ItemType Directory -Path $moduleDir -Force | Out-Null
 $sb = [System.Text.StringBuilder]::new()
 $publicFunctions = @()
 
-foreach ($file in (Get-ChildItem (Join-Path $SourcePath 'variables' 'private') -Filter *.ps1 -ErrorAction SilentlyContinue)) {
+foreach ($file in (Get-ChildItem (Join-Path -Path $SourcePath -ChildPath 'variables\private') -Filter *.ps1 -ErrorAction SilentlyContinue)) {
     [void]$sb.AppendLine((Get-Content $file.FullName -Raw))
 }
-foreach ($file in (Get-ChildItem (Join-Path $SourcePath 'functions' 'private') -Filter *.ps1)) {
+foreach ($file in (Get-ChildItem (Join-Path -Path $SourcePath -ChildPath 'functions\private') -Filter *.ps1)) {
     [void]$sb.AppendLine((Get-Content $file.FullName -Raw))
 }
-foreach ($file in (Get-ChildItem (Join-Path $SourcePath 'functions' 'public') -Filter *.ps1)) {
+foreach ($file in (Get-ChildItem (Join-Path -Path $SourcePath -ChildPath 'functions\public') -Filter *.ps1)) {
     [void]$sb.AppendLine((Get-Content $file.FullName -Raw))
     $publicFunctions += $file.BaseName
 }
-$mainPath = Join-Path $SourcePath 'main.ps1'
+$mainPath = Join-Path -Path $SourcePath -ChildPath 'main.ps1'
 if (Test-Path $mainPath) {
     [void]$sb.AppendLine((Get-Content $mainPath -Raw))
 }
 [void]$sb.AppendLine("Export-ModuleMember -Function '$($publicFunctions -join "', '")' -Alias '*'")
 
-Set-Content -Path (Join-Path $moduleDir 'Sodium.psm1') -Value $sb.ToString() -Encoding UTF8BOM
+Set-Content -Path (Join-Path -Path $moduleDir -ChildPath 'Sodium.psm1') -Value $sb.ToString() -Encoding UTF8BOM
 
-Copy-Item -Path (Join-Path $SourcePath 'libs') -Destination $moduleDir -Recurse
+Copy-Item -Path (Join-Path -Path $SourcePath -ChildPath 'libs') -Destination $moduleDir -Recurse
 
-New-ModuleManifest -Path (Join-Path $moduleDir 'Sodium.psd1') `
+New-ModuleManifest -Path (Join-Path -Path $moduleDir -ChildPath 'Sodium.psd1') `
     -RootModule 'Sodium.psm1' `
     -ModuleVersion '999.0.0' `
     -FunctionsToExport $publicFunctions `
     -CmdletsToExport @() -VariablesToExport @() -AliasesToExport @()
 
 Write-Verbose "Built module at $moduleDir" -Verbose
-Join-Path $moduleDir 'Sodium.psd1'
+Join-Path -Path $moduleDir -ChildPath 'Sodium.psd1'

@@ -27,7 +27,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 if (-not $ModulePath) {
-    $ModulePath = & (Join-Path $PSScriptRoot 'Build-LocalModule.ps1') -OutputPath (Join-Path ([System.IO.Path]::GetTempPath()) 'SodiumBench')
+    $ModulePath = & (Join-Path -Path $PSScriptRoot -ChildPath 'Build-LocalModule.ps1') -OutputPath (Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath 'SodiumBench')
 }
 
 Import-Module Profiler
@@ -35,9 +35,10 @@ Import-Module $ModulePath -Force
 
 $kp = New-SodiumKeyPair
 $box = ConvertTo-SodiumSealedBox -Message 'Hello world!' -PublicKey $kp.PublicKey
+$traceIterations = $Iterations
 
 $trace = Trace-Script {
-    for ($i = 0; $i -lt $Iterations; $i++) {
+    for ($i = 0; $i -lt $traceIterations; $i++) {
         $null = New-SodiumKeyPair
         $null = New-SodiumKeyPair -Seed 'DeterministicSeed'
         $null = ConvertTo-SodiumSealedBox -Message 'Hello world!' -PublicKey $kp.PublicKey
@@ -49,6 +50,6 @@ $trace = Trace-Script {
 
 $trace.Top50SelfDuration |
     Select-Object -First $Top SelfPercent, SelfDuration, HitCount, Function, Line, Text |
-    Format-Table -AutoSize | Out-String -Width 220 | Write-Host
+    Format-Table -AutoSize | Out-String -Width 220 | Write-Output
 
 $trace
