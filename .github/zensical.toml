@@ -1,18 +1,28 @@
 [project]
 site_name = "Sodium"
+site_url = "https://psmodule.io/Sodium/"
 repo_name = "PSModule/Sodium"
 repo_url = "https://github.com/PSModule/Sodium"
+edit_uri = "edit/main/"
+copyright = "Copyright &copy; 2023 - 2025 PSModule"
 
 [project.theme]
 variant = "classic"
 language = "en"
+font.text = "Mona Sans"
+font.code = "Source Code Pro"
 logo = "Assets/icon.png"
 favicon = "Assets/icon.png"
 features = [
+    "announce.dismiss",
+    "content.action.edit",
+    "content.action.view",
+    "content.code.annotate",
     "navigation.instant",
     "navigation.instant.prefetch",
     "navigation.instant.preview",
     "navigation.instant.progress",
+    "navigation.footer",
     "navigation.top",
     "navigation.tracking",
     "navigation.expand",
@@ -49,19 +59,34 @@ toggle.name = "Switch to system preference"
 repo = "material/github"
 link = "material/link-variant"
 
+[project.plugins.meta]
+
+[project.plugins.search]
+
 [project.markdown_extensions.toc]
 permalink = "#"
 
 [project.markdown_extensions.attr_list]
+[project.markdown_extensions.abbr]
 [project.markdown_extensions.admonition]
+[project.markdown_extensions.def_list]
+[project.markdown_extensions.footnotes]
 [project.markdown_extensions.md_in_html]
+[project.markdown_extensions.tables]
 [project.markdown_extensions.pymdownx.details]
 [project.markdown_extensions.pymdownx.superfences]
+[project.markdown_extensions.pymdownx.tasklist]
+custom_checkbox = true
 
 [[project.extra.social]]
 icon = "fontawesome/brands/discord"
 link = "https://discord.gg/jedJWCPAhD"
 name = "PSModule on Discord"
+
+[[project.extra.social]]
+icon = "material/powershell"
+link = "https://www.powershellgallery.com/profiles/PSModule.io"
+name = "PSModule on the PowerShell Gallery"
 
 [[project.extra.social]]
 icon = "fontawesome/brands/github"
