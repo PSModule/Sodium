@@ -55,10 +55,6 @@
         [ValidateNotNullOrEmpty()]
         [string] $PublicKey
     )
-    begin {
-        Initialize-Sodium
-    }
-
     process {
         try {
             return [PSModule.Sodium]::SealBase64($Message, $PublicKey)

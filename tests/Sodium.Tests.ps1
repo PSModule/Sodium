@@ -163,6 +163,14 @@ Describe 'Sodium' {
             $derivedPublicKey | Should -Be $expectedPublicKey
         }
 
+        It 'Get-SodiumPublicKey - Returns the public key as a byte array' {
+            $keyPair = New-SodiumKeyPair
+            $derivedPublicKey = Get-SodiumPublicKey -PrivateKey $keyPair.PrivateKey -AsByteArray
+
+            ($derivedPublicKey -is [byte[]]) | Should -BeTrue
+            [Convert]::ToBase64String($derivedPublicKey) | Should -Be $keyPair.PublicKey
+        }
+
         It 'Get-SodiumPublicKey - Throws an error when an invalid private key is provided' {
             $invalidPrivateKey = 'InvalidKey'
 
@@ -183,6 +191,141 @@ Describe 'Sodium' {
                 $arch = if ([System.Environment]::Is64BitProcess) { 'X64' } else { 'X86' }
                 $result = Assert-VisualCRedistributableInstalled -Version '14.0' -Architecture $arch 3>$null
                 $result | Should -BeTrue
+            }
+        }
+
+        It 'Assert-VisualCRedistributableInstalled reports a missing runtime' {
+            InModuleScope Sodium {
+                Mock Get-ItemProperty { $null }
+
+                Set-Variable -Name IsWindows -Value $true -Scope Script
+                try {
+                    $result = Assert-VisualCRedistributableInstalled -Version '14.0' -Architecture 'X64' 3>$null
+                    $result | Should -BeFalse
+                } finally {
+                    Remove-Variable -Name IsWindows -Scope Script
+                }
+            }
+        }
+
+        It 'Assert-VisualCRedistributableInstalled accepts a matching runtime' {
+            InModuleScope Sodium {
+                Mock Get-ItemProperty {
+                    [pscustomobject]@{
+                        Installed = 1
+                        Version   = 'v14.30.30704.0'
+                    }
+                }
+
+                Set-Variable -Name IsWindows -Value $true -Scope Script
+                try {
+                    $result = Assert-VisualCRedistributableInstalled -Version '14.0'
+                    $result | Should -BeTrue
+                } finally {
+                    Remove-Variable -Name IsWindows -Scope Script
+                }
+            }
+        }
+
+        It 'Initialize-Sodium treats repeated initialization as a no-op' {
+            InModuleScope Sodium {
+                $script:SodiumInitialized | Should -BeTrue
+                { Initialize-Sodium } | Should -Not -Throw
+            }
+        }
+
+        It 'Initialize-Sodium restores cached native buffer sizes' {
+            InModuleScope Sodium {
+                $script:SodiumInitialized = $false
+                $script:SodiumPublicKeyBytes = $null
+                $script:SodiumPrivateKeyBytes = $null
+                $script:SodiumSealBytes = $null
+                $script:SodiumSeedBytes = $null
+
+                Initialize-Sodium
+
+                $script:SodiumInitialized | Should -BeTrue
+                $script:SodiumPublicKeyBytes | Should -Be 32
+                $script:SodiumPrivateKeyBytes | Should -Be 32
+                $script:SodiumSealBytes | Should -Be 48
+                $script:SodiumSeedBytes | Should -Be 32
+            }
+        }
+
+        It 'Initialize-Sodium rejects an unsupported platform' {
+            InModuleScope Sodium {
+                $script:Supported = $false
+                try {
+                    { Initialize-Sodium } | Should -Throw 'Sodium is not supported on this platform.'
+                } finally {
+                    $script:Supported = $true
+                }
+            }
+        }
+
+        It 'Resolve-SodiumRuntimeIdentifier maps every supported runtime' {
+            InModuleScope Sodium {
+                Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'Arm64' -Linux | Should -Be 'linux-arm64'
+                Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'X64' -Linux | Should -Be 'linux-x64'
+                Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'Arm64' -MacOS | Should -Be 'osx-arm64'
+                Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'X64' -MacOS | Should -Be 'osx-x64'
+                Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'X64' -Windows | Should -Be 'win-x64'
+                Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'X86' -Windows | Should -Be 'win-x86'
+            }
+        }
+
+        It 'Resolve-SodiumRuntimeIdentifier rejects unsupported runtimes' {
+            InModuleScope Sodium {
+                { Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'Arm' -Linux } |
+                    Should -Throw 'Unsupported Linux process architecture: Arm.*'
+                { Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'Arm' -MacOS } |
+                    Should -Throw 'Unsupported macOS process architecture: Arm.*'
+                { Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'Arm' -Windows } |
+                    Should -Throw 'Unsupported Windows process architecture: Arm.*'
+                { Resolve-SodiumRuntimeIdentifier -ProcessArchitecture 'X64' } |
+                    Should -Throw 'Unsupported platform.*'
+            }
+        }
+    }
+
+    Context 'Parallel sessions' {
+        It 'Loads and completes crypto round trips in parallel runspaces' {
+            $modulePath = (Get-Module -Name Sodium -ErrorAction Stop).Path
+            Test-Path -Path $modulePath | Should -BeTrue
+            $results = 1..4 | ForEach-Object -Parallel {
+                Import-Module -Name $using:modulePath -Force
+                $keyPair = New-SodiumKeyPair -Seed "Runspace-$_"
+                $message = "Parallel runspace $_"
+                $sealedBox = ConvertTo-SodiumSealedBox -Message $message -PublicKey $keyPair.PublicKey
+                ConvertFrom-SodiumSealedBox -SealedBox $sealedBox -PrivateKey $keyPair.PrivateKey
+            } -ThrottleLimit 4
+
+            $results | Should -HaveCount 4
+            $results | Should -Contain 'Parallel runspace 1'
+            $results | Should -Contain 'Parallel runspace 4'
+        }
+
+        It 'Loads and completes crypto round trips in parallel processes' {
+            $modulePath = (Get-Module -Name Sodium -ErrorAction Stop).Path
+            $jobs = 1..4 | ForEach-Object {
+                Start-Job -ScriptBlock {
+                    $id = $args[0]
+                    $modulePath = $args[1]
+                    Import-Module -Name $modulePath -Force
+                    $keyPair = New-SodiumKeyPair -Seed "Process-$id"
+                    $message = "Parallel process $id"
+                    $sealedBox = ConvertTo-SodiumSealedBox -Message $message -PublicKey $keyPair.PublicKey
+                    ConvertFrom-SodiumSealedBox -SealedBox $sealedBox -PrivateKey $keyPair.PrivateKey
+                } -ArgumentList $_, $modulePath
+            }
+
+            try {
+                $results = $jobs | Receive-Job -Wait
+                $results | Should -HaveCount 4
+                $results | Should -Contain 'Parallel process 1'
+                $results | Should -Contain 'Parallel process 4'
+            } finally {
+                $jobs | Remove-Job -Force
             }
         }
     }
