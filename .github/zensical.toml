@@ -26,7 +26,7 @@ features = [
 
 [[project.theme.palette]]
 media = "(prefers-color-scheme)"
-toggle.icon = "material/link"
+toggle.icon = "lucide/sun-moon"
 toggle.name = "Switch to dark mode"
 
 [[project.theme.palette]]
@@ -34,7 +34,7 @@ media = "(prefers-color-scheme: dark)"
 scheme = "slate"
 primary = "black"
 accent = "light blue"
-toggle.icon = "material/toggle-switch-off-outline"
+toggle.icon = "lucide/moon"
 toggle.name = "Switch to light mode"
 
 [[project.theme.palette]]
@@ -42,7 +42,7 @@ media = "(prefers-color-scheme: light)"
 scheme = "default"
 primary = "black"
 accent = "light blue"
-toggle.icon = "material/toggle-switch"
+toggle.icon = "lucide/sun"
 toggle.name = "Switch to system preference"
 
 [project.theme.icon]
