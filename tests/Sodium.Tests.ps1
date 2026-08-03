@@ -1,6 +1,19 @@
 ﻿#Requires -Modules @{ ModuleName = 'Pester'; ModuleVersion = '6.0.0'; MaximumVersion = '6.*' }
 
 Describe 'Sodium' {
+    BeforeAll {
+        $script:ModuleName = 'Sodium'
+        if (-not (Get-Module -Name $script:ModuleName -ErrorAction SilentlyContinue)) {
+            $srcRoot = Split-Path -Path $PSScriptRoot -Parent
+            $manifestPath = Join-Path -Path $srcRoot -ChildPath 'src\Sodium.psd1'
+            if (Test-Path -Path $manifestPath) {
+                Import-Module -Name $manifestPath -Force -ErrorAction Stop
+            } else {
+                throw "Module '$script:ModuleName' is not loaded and no source manifest was found at '$manifestPath'. Build the module first."
+            }
+        }
+    }
+
     Context 'SealedBox - Encryption and Decryption' {
         It 'Encrypts and decrypts a message correctly using valid keys' {
             $keyPair = New-SodiumKeyPair
@@ -47,6 +60,71 @@ Describe 'Sodium' {
 
             { ConvertFrom-SodiumSealedBox -SealedBox $shortSealedBox -PrivateKey $keyPair.PrivateKey } |
                 Should -Throw 'Invalid sealed box. Expected at least 48 bytes but got 16.'
+        }
+
+        It 'Rejects an empty message because the parameter is mandatory' {
+            $keyPair = New-SodiumKeyPair
+
+            { ConvertTo-SodiumSealedBox -Message '' -PublicKey $keyPair.PublicKey } | Should -Throw
+        }
+
+        It 'Encrypts and decrypts a message containing Unicode and special characters' {
+            $keyPair = New-SodiumKeyPair
+            $message = 'Hello 🌍! Æøå 日本語 <script>alert(1)</script>'
+
+            $encryptedMessage = ConvertTo-SodiumSealedBox -Message $message -PublicKey $keyPair.PublicKey
+            $decryptedString = ConvertFrom-SodiumSealedBox -SealedBox $encryptedMessage -PublicKey $keyPair.PublicKey -PrivateKey $keyPair.PrivateKey
+
+            $decryptedString | Should -BeExactly $message
+        }
+
+        It 'Produces a different sealed box each time the same message is encrypted' {
+            $keyPair = New-SodiumKeyPair
+            $message = 'Deterministic input should not yield deterministic output'
+
+            $encrypted1 = ConvertTo-SodiumSealedBox -Message $message -PublicKey $keyPair.PublicKey
+            $encrypted2 = ConvertTo-SodiumSealedBox -Message $message -PublicKey $keyPair.PublicKey
+
+            $encrypted1 | Should -Not -Be $encrypted2
+        }
+
+        It 'Fails decryption when the public key does not match the private key' {
+            $keyPair1 = New-SodiumKeyPair
+            $keyPair2 = New-SodiumKeyPair
+            $message = 'Mismatched public key test'
+
+            $encryptedMessage = ConvertTo-SodiumSealedBox -Message $message -PublicKey $keyPair1.PublicKey
+
+            { ConvertFrom-SodiumSealedBox -SealedBox $encryptedMessage -PublicKey $keyPair2.PublicKey -PrivateKey $keyPair1.PrivateKey } |
+                Should -Throw 'Decryption failed.'
+        }
+
+        It 'Rejects encryption with a public key that is valid base64 but the wrong length' {
+            $message = 'Wrong length public key'
+            $shortPublicKey = [Convert]::ToBase64String([byte[]]::new(16))
+
+            { ConvertTo-SodiumSealedBox -Message $message -PublicKey $shortPublicKey } |
+                Should -Throw 'Invalid public key. Expected 32 bytes but got 16.'
+        }
+
+        It 'Rejects decryption with a private key that is valid base64 but the wrong length' {
+            $keyPair = New-SodiumKeyPair
+            $message = 'Wrong length private key'
+            $encryptedMessage = ConvertTo-SodiumSealedBox -Message $message -PublicKey $keyPair.PublicKey
+            $shortPrivateKey = [Convert]::ToBase64String([byte[]]::new(16))
+
+            { ConvertFrom-SodiumSealedBox -SealedBox $encryptedMessage -PrivateKey $shortPrivateKey } |
+                Should -Throw 'Invalid private key. Expected 32 bytes but got 16.'
+        }
+
+        It 'Requires a non-null message parameter' {
+            $keyPair = New-SodiumKeyPair
+
+            { ConvertTo-SodiumSealedBox -Message $null -PublicKey $keyPair.PublicKey } | Should -Throw
+        }
+
+        It 'Requires a non-empty public key parameter' {
+            { ConvertTo-SodiumSealedBox -Message 'test' -PublicKey '' } | Should -Throw
         }
 
         It 'Encrypts a message correctly when using pipeline input on ConvertTo-SodiumSealedBox' {
@@ -103,6 +181,13 @@ Describe 'Sodium' {
             $result = $encryptedMessage | ConvertFrom-SodiumSealedBox -PrivateKey $kp.PrivateKey
             $result | Should -Be $message
         }
+
+        It 'Requires a non-empty private key when no public key is given' {
+            $kp = New-SodiumKeyPair
+            $encryptedMessage = ConvertTo-SodiumSealedBox -Message 'test' -PublicKey $kp.PublicKey
+
+            { ConvertFrom-SodiumSealedBox -SealedBox $encryptedMessage -PrivateKey '' } | Should -Throw
+        }
     }
 
     Context 'Key Pair Generation' {
@@ -150,6 +235,24 @@ Describe 'Sodium' {
             $keyPair1.PublicKey | Should -Be $keyPair2.PublicKey
             $keyPair1.PrivateKey | Should -Be $keyPair2.PrivateKey
         }
+
+        It 'Returns a PSCustomObject with PublicKey and PrivateKey properties' {
+            $keyPair = New-SodiumKeyPair
+
+            $keyPair | Should -BeOfType [PSCustomObject]
+            $keyPair.PublicKey | Should -Not -BeNullOrEmpty
+            $keyPair.PrivateKey | Should -Not -BeNullOrEmpty
+            ($keyPair | Get-Member -MemberType NoteProperty).Name | Should -Contain 'PublicKey'
+            ($keyPair | Get-Member -MemberType NoteProperty).Name | Should -Contain 'PrivateKey'
+        }
+
+        It 'Generates different random key pairs when no seed is provided' {
+            $keyPair1 = New-SodiumKeyPair
+            $keyPair2 = New-SodiumKeyPair
+
+            $keyPair1.PublicKey | Should -Not -Be $keyPair2.PublicKey
+            $keyPair1.PrivateKey | Should -Not -Be $keyPair2.PrivateKey
+        }
     }
 
     Context 'Public Key Derivation' {
@@ -183,6 +286,11 @@ Describe 'Sodium' {
             { Get-SodiumPublicKey -PrivateKey $shortPrivateKey } |
                 Should -Throw 'Invalid private key. Expected 32 bytes but got 16.'
         }
+
+        It 'Get-SodiumPublicKey - Requires a non-empty private key' {
+            { Get-SodiumPublicKey -PrivateKey '' } | Should -Throw
+        }
+
     }
 
     Context 'Runtime diagnostics' {
